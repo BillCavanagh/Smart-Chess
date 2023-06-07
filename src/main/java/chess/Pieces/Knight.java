@@ -2,7 +2,6 @@ package chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import chess.Board;
 import chess.Color;
 import chess.Move;

@@ -2,7 +2,6 @@ package chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import chess.Board;
 import chess.Color;
 import chess.Move;
@@ -10,7 +9,6 @@ import chess.Move;
 public class Bishop extends DefaultPiece{
     public Bishop(Color color, int row, int col){
         super(color,Piece.BISHOP,row,col);
-        
     }
     @Override
     public Set<Move> getPossibleMoves(Board board){
@@ -30,7 +28,6 @@ public class Bishop extends DefaultPiece{
                 }
                 break;
             }
-            
         }
         i = 0;
         while (this.row - i - 1 >= 0 && this.col + i + 1 < Board.COLS){// top right diagonal rows down cols up
@@ -46,7 +43,6 @@ public class Bishop extends DefaultPiece{
                 }
                 break;
             }
-            
         }
         i = 0;
         while (this.row + i + 1 < Board.ROWS && this.col - i - 1 >= 0){// bottom left diagonal rows up cols down
@@ -62,7 +58,6 @@ public class Bishop extends DefaultPiece{
                 }
                 break;
             }
-            
         }
         i = 0;
         while (this.row + i + 1 < Board.ROWS && this.col + i + 1 < Board.COLS){// bottom right diagonal rows up cols up
@@ -78,9 +73,7 @@ public class Bishop extends DefaultPiece{
                 }
                 break;
             }
-            
         }
-        
         return possibleMoves;
     }
     @Override

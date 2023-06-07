@@ -2,7 +2,6 @@ package chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import chess.Board;
 import chess.Color;
 import chess.Move;
@@ -75,5 +74,4 @@ public class Rook extends DefaultPiece{
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
     }
-    
 }
