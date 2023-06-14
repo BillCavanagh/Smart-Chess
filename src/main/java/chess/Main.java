@@ -3,7 +3,7 @@ package chess;
 import java.util.Map;
 import java.util.Scanner;
 
-import chess.Pieces.DefaultPiece;
+import chess.Pieces.*;
 
 public class Main {
     public void gameLoop(Board board){
@@ -11,8 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println(board);
-            Map<DefaultPiece,Move> whiteMoves = board.determineCurrentPossibleMoves(Color.WHITE);
-            Map<DefaultPiece,Move> blackMoves = board.determineCurrentPossibleMoves(Color.BLACK);
+            board.updatePossibleMoves();
             if(moveCount % 2 == 0){
                 System.out.println("White to move");
             }
@@ -27,6 +26,7 @@ public class Main {
                     continue;
                 }
                 char[] inputAsArray = input.toCharArray();
+                Move move = new Move((int)inputAsArray[0],(int)inputAsArray[1],);
 
             }
         }

@@ -28,6 +28,12 @@ public abstract class DefaultPiece {
     public char getShorthand(){
         return piece.shorthand;
     }
+    public int getRow(){
+        return row;
+    }
+    public int getCol(){
+        return col;
+    }
     public void setRow(int row){
         this.row = row;
     }

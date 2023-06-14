@@ -17,6 +17,9 @@ public class Move {
         this.col = col;
         this.isCastle = isCastle;
     }
+    public DefaultPiece getPiece(){
+        return piece;
+    }
     public int getRow(){
         return row;
     }

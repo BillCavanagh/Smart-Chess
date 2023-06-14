@@ -8,4 +8,7 @@ public enum Piece {
         this.value = value;
         this.shorthand = shorthand;
     }
+    private Piece(char shorthand){
+        this.shorthand = shorthand;
+    }
 }

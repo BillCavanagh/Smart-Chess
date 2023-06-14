@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,12 +15,14 @@ public class Board {
     public static final int COLS = 8;
     protected List<DefaultPiece> whitePieces;
     protected List<DefaultPiece> blackPieces;
-    protected Map<DefaultPiece,Move> currentPossibleMoves;
+    protected Set<Move> currentWhiteMoves;
+    protected Set<Move> currentBlackMoves;
 
     public Board(){
         this.whitePieces = new ArrayList<>();
         this.blackPieces = new ArrayList<>();
-        this.currentPossibleMoves = new HashMap<>();
+        this.currentBlackMoves = new HashSet<>();
+        this.currentWhiteMoves = new HashSet<>();
         init_Board();
     }
     public void init_Board(){
@@ -64,30 +67,44 @@ public class Board {
         }
         return false;
     }
-    public Map<DefaultPiece,Move> determineCurrentPossibleMoves(Color color){
-        Map<DefaultPiece,Move> moves = new HashMap<>();
+    public void updatePossibleMoves(){
+        for (DefaultPiece piece : blackPieces){
+            Set<Move> pieceMoves = piece.getPossibleMoves(this);
+            for (Move move : pieceMoves){
+                currentBlackMoves.add(move);
+            }
+        }
+        for (DefaultPiece piece : whitePieces){
+            Set<Move> pieceMoves = piece.getPossibleMoves(this);
+            for (Move move : pieceMoves){
+                currentWhiteMoves.add(move);
+            }
+        }
+    }
+    public boolean makeMove(Move move, Color color){
         if (color == Color.BLACK){
-            for (DefaultPiece piece : blackPieces){
-                Set<Move> pieceMoves = piece.getPossibleMoves(this);
-                for (Move move : pieceMoves){
-                    moves.put(piece,move);
+            if (currentBlackMoves.contains(move)){
+                if (!move.isCastle()){
+                    board[move.getRow()][move.getCol()] = move.getPiece(); // make the move 
+                    board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
+                    move.getPiece().setRow(move.getRow()); // update the piece's row
+                    move.getPiece().setCol(move.getCol()); // update the piece's row
+                    return true;
                 }
             }
         }
         else{
-            for (DefaultPiece piece : blackPieces){
-                Set<Move> pieceMoves = piece.getPossibleMoves(this);
-                for (Move move : pieceMoves){
-                    moves.put(piece,move);
+            if (currentWhiteMoves.contains(move)){
+                if (!move.isCastle()){
+                    board[move.getRow()][move.getCol()] = move.getPiece(); // make the move 
+                    board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
+                    move.getPiece().setRow(move.getRow()); // update the piece's row
+                    move.getPiece().setCol(move.getCol()); // update the piece's row
+                    return true;
                 }
             }
         }
-        return moves;
-    }
-    public boolean makeMove(Move move, Color color){
-        if (color == Color.BLACK){
-            
-        }
+        return false;
     }
     // public void determineStartingPiece(int row, int col){ Literal 2D array method makes more sense instead of computing something that will be the same every time
     //     switch (row){
