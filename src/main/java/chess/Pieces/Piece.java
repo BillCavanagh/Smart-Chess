@@ -1,7 +1,7 @@
 package chess.Pieces;
 
 public enum Piece {
-    PAWN(1,'P'),BISHOP(3,'B'),KNIGHT(3,'N'),ROOK(3,'R'),QUEEN(3,'Q'),KING(3,'K');
+    PAWN(1,'p'),BISHOP(3,'b'),KNIGHT(3,'n'),ROOK(3,'r'),QUEEN(3,'q'),KING(3,'k');
     protected int value;
     protected char shorthand;
     private Piece(int value, char shorthand){
@@ -10,5 +10,11 @@ public enum Piece {
     }
     private Piece(char shorthand){
         this.shorthand = shorthand;
+    }
+    public char getShorthand(){
+        return shorthand;
+    }
+    public int getValue(){
+        return value;
     }
 }

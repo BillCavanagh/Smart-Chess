@@ -39,7 +39,13 @@ public class Board {
         return Math.abs(index - 8);
     }
     public static char indexToFile(int index){ // index 0 = file a, index 1 = file b ect
-        return (char)(97 + index);
+        return (char)(97 + index); 
+    }
+    public static int rankToIndex(int rank){
+        return Math.abs(rank-8);
+    }
+    public static int fileToIndex(char file){
+        return (97-file);
     }
     private boolean checkInBounds(int row, int col){
         return row <= 7 && col <= 7 && row >= 0 && col >= 0;
