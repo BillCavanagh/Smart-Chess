@@ -24,6 +24,7 @@ public class Board {
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
         init_Board();
+        init_pieces();
     }
     public void init_Board(){
         board = new DefaultPiece[][]{{new Rook(Color.BLACK,0,0),new Knight(Color.BLACK,0,1),new Bishop(Color.BLACK,0,2),new Queen(Color.BLACK,0,3),new King(Color.BLACK,0,4),new Bishop(Color.BLACK,0,5),new Knight(Color.BLACK,0,6),new Rook(Color.BLACK,0,7)},
@@ -35,17 +36,29 @@ public class Board {
                 {new Pawn(Color.WHITE,6,0),new Pawn(Color.WHITE,6,1),new Pawn(Color.WHITE,6,2),new Pawn(Color.WHITE,6,3),new Pawn(Color.WHITE,6,4),new Pawn(Color.WHITE,6,5),new Pawn(Color.WHITE,6,6),new Pawn(Color.WHITE,6,7)},   
                 {new Rook(Color.WHITE,7,0),new Knight(Color.WHITE,7,1),new Bishop(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Bishop(Color.WHITE,7,5),new Knight(Color.WHITE,7,6),new Rook(Color.WHITE,7,7)}};
     }
+    public void init_pieces(){
+        for (int row = 0; row < 2; row++){ // black
+            for (int col = 0; col < 8; col++){
+                blackPieces.add(board[row][col]);
+            }
+        } 
+        for (int row = 6; row < 8; row++){ // white
+            for (int col = 0; col < 8; col++){
+                whitePieces.add(board[row][col]);
+            }
+        } 
+    }
     public static int indexToRank(int index){ // index 0 = rank 8, index 1 = rank 7 ect
         return Math.abs(index - 8);
     }
     public static char indexToFile(int index){ // index 0 = file a, index 1 = file b ect
         return (char)(97 + index); 
     }
-    public static int rankToIndex(int rank){
-        return Math.abs(rank-8);
+    public static int rankToIndex(int rank){ // rank = 8 index = 0, rank = 7 index = 1 ect
+        return 8-rank;
     }
-    public static int fileToIndex(char file){
-        return (97-file);
+    public static int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
+        return (file-97);
     }
     private boolean checkInBounds(int row, int col){
         return row <= 7 && col <= 7 && row >= 0 && col >= 0;
@@ -74,6 +87,8 @@ public class Board {
         return false;
     }
     public void updatePossibleMoves(){
+        currentBlackMoves = new HashSet<>();
+        currentWhiteMoves = new HashSet<>();
         for (DefaultPiece piece : blackPieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){

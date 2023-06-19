@@ -40,7 +40,16 @@ public abstract class DefaultPiece {
     public void setCol(int col){
         this.col = col;
     }
-   
+   @Override
+   public boolean equals(Object obj) {
+        if (obj instanceof DefaultPiece){
+            DefaultPiece other = (DefaultPiece) obj;
+            if (this.row == other.row && this.col == other.col && this.color.equals(other.color)){
+                return true;
+            }
+        }       
+        return false;
+   }
     public abstract Set<Move> getPossibleMoves(Board board);
     public abstract String toString();
 }   

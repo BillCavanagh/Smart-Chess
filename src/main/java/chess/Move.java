@@ -17,6 +17,9 @@ public class Move {
         this.col = col;
         this.isCastle = isCastle;
     }
+    public Move(){
+
+    }
     public DefaultPiece getPiece(){
         return piece;
     }
@@ -42,7 +45,7 @@ public class Move {
     public boolean equals(Object obj) {
         if (obj instanceof Move){
             Move other = (Move) obj;
-            if (this.row == other.row && this.col == other.col){
+            if (this.row == other.row && this.col == other.col && this.piece.equals(other.piece)){
                 return true;
             }
         }
