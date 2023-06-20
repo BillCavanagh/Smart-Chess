@@ -1,6 +1,10 @@
 package chess;
 
+import java.util.HashSet;
+import java.util.Objects;
+
 import chess.Pieces.DefaultPiece;
+import chess.Pieces.Pawn;
 
 public class Move {
     public int row;
@@ -50,5 +54,16 @@ public class Move {
             }
         }
         return false;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(row,col,piece);
+    }
+    public static void main(String[] args) {
+        Move move1 = new Move(1,1,new Pawn(Color.WHITE,1,1));
+        Move move2 = new Move(1,1,new Pawn(Color.WHITE,1,1));
+        HashSet<Move> moves = new HashSet<>();
+        moves.add(move1);
+        System.out.println(moves.contains(move2));
     }
 }

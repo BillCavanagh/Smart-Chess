@@ -44,7 +44,7 @@ public class Main {
                 move = parseInput(input);
             }
             if (board.makeMove(move,white ? Color.WHITE : Color.BLACK)){
-                break;
+                moveCount++;
             }
             else{
                 System.out.println("Invalid input try again (move not possible)");
