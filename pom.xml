@@ -84,7 +84,7 @@
           <configuration>
             <mainClass><ChessGUI class="java"></ChessGUI></mainClass>
           </configuration>
-            </plugin>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
