@@ -41,6 +41,9 @@ public abstract class DefaultPiece {
     public void setCol(int col){
         this.col = col;
     }
+    public Piece getPiece(){
+        return piece;
+    }
    @Override
    public boolean equals(Object obj) {
         if (obj instanceof DefaultPiece){
