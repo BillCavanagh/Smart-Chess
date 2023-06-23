@@ -13,6 +13,7 @@ public abstract class DefaultPiece {
     protected int row;
     protected int col;
     protected Set<Move> possibleMoves;
+    protected boolean hasMoved;
     public DefaultPiece(Color color, Piece piece, int row, int col){
         this.color = color;
         this.piece = piece;
@@ -60,4 +61,9 @@ public abstract class DefaultPiece {
    }
     public abstract Set<Move> getPossibleMoves(Board board);
     public abstract String toString();
+    public void move(){
+        if (piece.shorthand == 'p' || piece.shorthand == 'k' || piece.shorthand == 'r'){
+            hasMoved = true;
+        }
+    }
 }   

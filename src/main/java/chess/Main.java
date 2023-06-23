@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.Map;
 import java.util.Scanner;
 
 import chess.Pieces.*;
