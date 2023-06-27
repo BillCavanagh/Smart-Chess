@@ -126,10 +126,6 @@ public class Board {
                     if (board[move.getRow()][move.getCol()] != null){ // if the space it is moving to is not empty, note: moves can only be generate to spaces with either null or opposing or color so a check if its the opposing color is not necessary
                         blackPieces.remove(board[move.getRow()][move.getCol()]);
                     }
-                    if (move.getPiece().getShorthand() == 'p' || ){
-                        Pawn pawn = (Pawn)move.getPiece();
-                        pawn.move();
-                    }
                     board[move.getRow()][move.getCol()] = move.getPiece(); // make the move 
                     board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
                     move.getPiece().setRow(move.getRow()); // update the piece's row
