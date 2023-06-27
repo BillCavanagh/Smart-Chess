@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -25,8 +26,8 @@ public class ChessGUI extends Application{
     Map<Character,String> blackImages = Map.of('b',"file:images/Black_Bishop.png",'k',"file:images/Black_King.png",
     'n',"file:images/Black_Knight.png",'p',"file:images/Black_Pawn.png",'q',"file:images/Black_Queen.png",'r',"file:images/Black_Rook.png");
     String blankImage = "file:images/Blank.png";
-    Color DARK = Color.BROWN;
-    Color LIGHT = Color.BEIGE;
+    Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
+    Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     Board board = new Board();
     GridPane chessBoard = new GridPane();
     public Image getPieceImage(DefaultPiece piece){
@@ -42,23 +43,25 @@ public class ChessGUI extends Application{
             return new Image(blankImage);
         }
     }
-    public Label getSpace(DefaultPiece piece, Color color,int row, int col){
+    public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
         int rank = Board.indexToRank(row);
         char file = Board.indexToFile(col);
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(20);
-        imageView.setFitWidth(20);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
         imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
-        Label space = new Label(file + "" + rank,new ImageView(image));
+        Label text = new Label(file + "" + rank);
+        text.setFont(new Font("Times New Roman",10));
+        text.setMinSize(50, 50);
+        text.setAlignment(Pos.BOTTOM_LEFT);
+        StackPane space = new StackPane(imageView,text);
         space.setBackground(Background.fill(color));
-        space.setMaxSize(20.0,20.0);
-        space.setBorder(new Border(new BorderStroke(Color.BLACK, null, null, null)));
+        space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;
     }
     public void assembleChessBoard(){
         boolean light = true;
-        //int col = 0;
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++){
                 if (col != 0){
@@ -76,11 +79,9 @@ public class ChessGUI extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         assembleChessBoard();
-        
         primaryStage.setScene(new Scene(chessBoard));
         primaryStage.setTitle("Chess");
         primaryStage.show();
-        
     }
     public static void main(String[] args) {
         launch(args);
