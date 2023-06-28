@@ -17,12 +17,13 @@ public class Board {
     protected List<DefaultPiece> blackPieces;
     protected Set<Move> currentWhiteMoves;
     protected Set<Move> currentBlackMoves;
-    
+    public boolean white;
     public Board(){
         this.whitePieces = new ArrayList<>();
         this.blackPieces = new ArrayList<>();
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
+        this.white = true;
         init_Board();
         init_pieces();
     }
@@ -72,6 +73,9 @@ public class Board {
     public void removePiece(int row, int col){
         board[row][col] = null;
     }
+    public boolean getTurn(){
+        return white;
+    }
     public boolean checkAvailable(Color color,int row, int col){
         if (!this.checkInBounds(row, col)){
             return false;
@@ -109,11 +113,18 @@ public class Board {
                     if (board[move.getRow()][move.getCol()] != null){ // if the space it is moving to is not empty, note: moves can only be generate to spaces with either null or opposing or color so a check if its the opposing color is not necessary
                         whitePieces.remove(board[move.getRow()][move.getCol()]);
                     }
-                    board[move.getRow()][move.getCol()] = move.getPiece(); // make the move 
-                    board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
-                    move.getPiece().setRow(move.getRow()); // update the piece's row
-                    move.getPiece().setCol(move.getCol()); // update the piece's row
-                    ChessGUI.updateChessBoard(move.getRow(),move.getCol());
+                    int oldRow = move.getPiece().getRow();
+                    int oldCol = move.getPiece().getCol();
+                    int newRow = move.getRow(); 
+                    int newCol = move.getCol();
+                    DefaultPiece piece = move.getPiece();
+                    board[newRow][newCol] = piece; // make the move 
+                    board[oldRow][oldCol] = null; // update the old position
+                    piece.setRow(newCol); // update the piece's row
+                    piece.setCol(newCol); // update the piece's col
+                    ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
+                    ChessGUI.updateChessBoard(newRow,newCol); // update new position
+                    white = white ? false : true; // change turn
                     return true;
                 }
                 else{
@@ -127,11 +138,18 @@ public class Board {
                     if (board[move.getRow()][move.getCol()] != null){ // if the space it is moving to is not empty, note: moves can only be generate to spaces with either null or opposing or color so a check if its the opposing color is not necessary
                         blackPieces.remove(board[move.getRow()][move.getCol()]);
                     }
-                    board[move.getRow()][move.getCol()] = move.getPiece(); // make the move 
-                    board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
-                    move.getPiece().setRow(move.getRow()); // update the piece's row
-                    move.getPiece().setCol(move.getCol()); // update the piece's row
-                    ChessGUI.updateChessBoard(move.getRow(),move.getCol());
+                    int oldRow = move.getPiece().getRow();
+                    int oldCol = move.getPiece().getCol();
+                    int newRow = move.getRow(); 
+                    int newCol = move.getCol();
+                    DefaultPiece piece = move.getPiece();
+                    board[newRow][newCol] = piece; // make the move 
+                    board[oldRow][oldCol] = null; // update the old position
+                    piece.setRow(newCol); // update the piece's row
+                    piece.setCol(newCol); // update the piece's col
+                    ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
+                    ChessGUI.updateChessBoard(newRow,newCol); // update new position
+                    white = white ? false : true; // change turn
                     return true;
                 }
             }

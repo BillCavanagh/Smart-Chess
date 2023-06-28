@@ -4,8 +4,11 @@ import java.util.Map;
 
 import chess.Pieces.DefaultPiece;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -16,6 +19,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,18 +27,24 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ChessGUI extends Application{
+    // images/color stuff
     public static Map<Character,String> whiteImages = Map.of('b',"file:images/White_Bishop.png",'k',"file:images/White_King.png",
     'n',"file:images/White_Knight.png",'p',"file:images/White_Pawn.png",'q',"file:images/White_Queen.png",'r',"file:images/White_Rook.png");
     public static Map<Character,String> blackImages = Map.of('b',"file:images/Black_Bishop.png",'k',"file:images/Black_King.png",
     'n',"file:images/Black_Knight.png",'p',"file:images/Black_Pawn.png",'q',"file:images/Black_Queen.png",'r',"file:images/Black_Rook.png");
     public static String blankImage = "file:images/Blank.png";
-    public static int TILE_SIZE = 100;
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
+    // model (board)
     public static Board board = new Board();
+    // GUI stuff
+    public static int TILE_SIZE = 100;
     public static GridPane chessBoard = new GridPane();
     public static TextField textField = new TextField("");
-    public static VBox game = new VBox(chessBoard,textField);
+    public static Button submitButton = new Button("Submit move");
+    public static Label turn = new Label(board.getTurn() == true ? "White to Move" : "Black to Move");
+    public static HBox bottomPanel = new HBox(textField,submitButton,turn);
+    public static VBox game = new VBox(chessBoard,bottomPanel);
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
             if (piece.getColor() == chess.Color.WHITE){
@@ -100,6 +110,23 @@ public class ChessGUI extends Application{
         assembleChessBoard();
         textField.setMaxSize(TILE_SIZE*8,TILE_SIZE*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                board.updatePossibleMoves();
+                String text = textField.getText(); // get input
+                Move move = Main.parseInput(text); // parse input
+                if (board.makeMove(move,board.getTurn() ? chess.Color.WHITE : chess.Color.BLACK)){ // make move
+                    textField.setText("");
+                }
+                else{ // invalid move
+                    textField.setText("Invalid Move");
+                }
+                turn.setText(board.getTurn() == true ? "White to Move" : "Black to Move");
+                
+            }
+        };
+        submitButton.setOnAction(event);
         primaryStage.setScene(new Scene(game));
         primaryStage.setTitle("Chess");
         primaryStage.show();
