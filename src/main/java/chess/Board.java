@@ -17,7 +17,7 @@ public class Board {
     protected List<DefaultPiece> blackPieces;
     protected Set<Move> currentWhiteMoves;
     protected Set<Move> currentBlackMoves;
-
+    
     public Board(){
         this.whitePieces = new ArrayList<>();
         this.blackPieces = new ArrayList<>();
@@ -113,6 +113,7 @@ public class Board {
                     board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
                     move.getPiece().setRow(move.getRow()); // update the piece's row
                     move.getPiece().setCol(move.getCol()); // update the piece's row
+                    ChessGUI.updateChessBoard(move.getRow(),move.getCol());
                     return true;
                 }
                 else{
@@ -130,6 +131,7 @@ public class Board {
                     board[move.getPiece().getRow()][move.getPiece().getCol()] = null; // update the old position
                     move.getPiece().setRow(move.getRow()); // update the piece's row
                     move.getPiece().setCol(move.getCol()); // update the piece's row
+                    ChessGUI.updateChessBoard(move.getRow(),move.getCol());
                     return true;
                 }
             }
