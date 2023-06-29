@@ -51,12 +51,12 @@ public class Pawn extends DefaultPiece {
             }
         }
         if (captureLeft != null){
-            if (board.getPiece(captureLeft.row,captureLeft.col) != null && board.getPiece(captureLeft.row, col).getColor() != this.color){ // check for captures
+            if (board.getPiece(captureLeft.row,captureLeft.col) != null && board.getPiece(captureLeft.row, captureLeft.col).getColor() != this.color){ // check for captures
                 possibleMoves.add(captureLeft);
             }
         }
         if (captureRight != null){
-            if (board.getPiece(captureRight.row,captureRight.col) != null && board.getPiece(captureRight.row, col).getColor() != this.color){ // check for captures
+            if (board.getPiece(captureRight.row,captureRight.col) != null && board.getPiece(captureRight.row, captureRight.col).getColor() != this.color){ // check for captures
                 possibleMoves.add(captureRight);
             }
         }

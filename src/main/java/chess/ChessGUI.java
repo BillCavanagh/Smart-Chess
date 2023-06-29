@@ -45,6 +45,21 @@ public class ChessGUI extends Application{
     public static Label turn = new Label(board.getTurn() == true ? "White to Move" : "Black to Move");
     public static HBox bottomPanel = new HBox(textField,submitButton,turn);
     public static VBox game = new VBox(chessBoard,bottomPanel);
+    public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
+        if (input.length() != 6){
+            return null;
+        }
+        char pieceShorthand = input.charAt(0);
+        int rowFrom = Board.rankToIndex(input.charAt(2)-48);
+        int colFrom = Board.fileToIndex(input.charAt(1));
+        if (board.getPiece(rowFrom,colFrom).getShorthand() != pieceShorthand){
+            return null;
+        }
+        int rowTo = Board.rankToIndex(input.charAt(5)-48); 
+        int colTo = Board.fileToIndex(input.charAt(4));
+        Move move = new Move(rowTo,colTo,board.getPiece(rowFrom,colFrom));
+        return move;
+    }
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
             if (piece.getColor() == chess.Color.WHITE){
@@ -115,7 +130,7 @@ public class ChessGUI extends Application{
             public void handle(ActionEvent event) {
                 board.updatePossibleMoves();
                 String text = textField.getText(); // get input
-                Move move = Main.parseInput(text); // parse input
+                Move move = parseInput(text); // parse input
                 if (board.makeMove(move,board.getTurn() ? chess.Color.WHITE : chess.Color.BLACK)){ // make move
                     textField.setText("");
                 }
@@ -123,7 +138,6 @@ public class ChessGUI extends Application{
                     textField.setText("Invalid Move");
                 }
                 turn.setText(board.getTurn() == true ? "White to Move" : "Black to Move");
-                
             }
         };
         submitButton.setOnAction(event);
