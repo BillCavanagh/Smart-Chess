@@ -61,7 +61,7 @@ public class Board {
     public static int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
         return (file-97);
     }
-    private boolean checkInBounds(int row, int col){
+    private boolean inBounds(int row, int col){
         return row <= 7 && col <= 7 && row >= 0 && col >= 0;
     }
     public DefaultPiece getPiece(int row, int col){
@@ -70,23 +70,22 @@ public class Board {
     public void setPiece(DefaultPiece piece, int row, int col){
         board[row][col] = piece;
     }
-    public void removePiece(int row, int col){
+    public void removePiece(Color color, int row, int col){
+        blackPieces.remove(getPiece(row,col));
         board[row][col] = null;
     }
     public boolean getTurn(){
         return white;
     }
     public boolean checkAvailable(Color color,int row, int col){
-        if (!this.checkInBounds(row, col)){
+        if (!inBounds(row, col)){
             return false;
         }
-        if (this.getPiece(row,col) == null){ // if the square is empty or is a piece of a different color it is a valid move
+        if (getPiece(row,col) == null){ // if the square is empty it is a valid move
             return true;
         }
-        else{
-            if (color != this.getPiece(row,col).getColor()){
-                return true;
-            }
+        if (color != getPiece(row,col).getColor()){ // if the square has a piece of the opposing color it is valid
+            return true;
         }
         return false;
     }
@@ -106,55 +105,42 @@ public class Board {
             }
         }
     }
+    public void movePiece(int oldRow, int oldCol, int newRow, int newCol){ 
+        DefaultPiece piece = getPiece(oldRow,oldCol);
+        if (getPiece(newRow,newCol) != null){ // if the new position has a piece, it must be removed from the appropriate set
+            removePiece(piece.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
+        }
+        setPiece(piece,newRow,newCol); // update new position on board
+        setPiece(null,oldRow,oldCol); // update old position on board
+        piece.setRow(newRow); // update piece row
+        piece.setCol(newCol); // update piece col
+        ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
+        ChessGUI.updateChessBoard(newRow,newCol); // update new position
+    }
+
     public boolean makeMove(Move move, Color color){
-        if (color == Color.BLACK){
-            if (currentBlackMoves.contains(move)){
-                if (!move.isCastle()){
-                    if (board[move.getRow()][move.getCol()] != null){ // if the space it is moving to is not empty, note: moves can only be generate to spaces with either null or opposing or color so a check if its the opposing color is not necessary
-                        whitePieces.remove(board[move.getRow()][move.getCol()]);
-                    }
-                    int oldRow = move.getPiece().getRow();
-                    int oldCol = move.getPiece().getCol();
-                    int newRow = move.getRow(); 
-                    int newCol = move.getCol();
-                    DefaultPiece piece = move.getPiece();
-                    board[newRow][newCol] = piece; // make the move 
-                    board[oldRow][oldCol] = null; // update the old position
-                    piece.setRow(newCol); // update the piece's row
-                    piece.setCol(newCol); // update the piece's col
-                    ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
-                    ChessGUI.updateChessBoard(newRow,newCol); // update new position
-                    white = white ? false : true; // change turn
-                    return true;
-                }
-                else{
-                    // TODO Castle case
-                }
-            }
+        if (color == Color.BLACK && !currentBlackMoves.contains(move)){
+            return false;
         }
+        if (color == Color.WHITE && !currentWhiteMoves.contains(move)){
+            return false;
+        }
+        if (!move.isCastle()){
+            int oldRow = move.getPiece().getRow();
+            int oldCol = move.getPiece().getCol();
+            int newRow = move.getRow(); 
+            int newCol = move.getCol();
+            if (getPiece(move.getRow(),move.getCol()) != null){ 
+                removePiece(color == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
+            }
+            movePiece(oldRow,oldCol,newRow,newCol);
+            white = white ? false : true; // change turn
+            return true;
+        } 
         else{
-            if (currentWhiteMoves.contains(move)){
-                if (!move.isCastle()){
-                    if (board[move.getRow()][move.getCol()] != null){ // if the space it is moving to is not empty, note: moves can only be generate to spaces with either null or opposing or color so a check if its the opposing color is not necessary
-                        blackPieces.remove(board[move.getRow()][move.getCol()]);
-                    }
-                    int oldRow = move.getPiece().getRow();
-                    int oldCol = move.getPiece().getCol();
-                    int newRow = move.getRow(); 
-                    int newCol = move.getCol();
-                    DefaultPiece piece = move.getPiece();
-                    board[newRow][newCol] = piece; // make the move 
-                    board[oldRow][oldCol] = null; // update the old position
-                    piece.setRow(newCol); // update the piece's row
-                    piece.setCol(newCol); // update the piece's col
-                    ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
-                    ChessGUI.updateChessBoard(newRow,newCol); // update new position
-                    white = white ? false : true; // change turn
-                    return true;
-                }
-            }
+        // TODO Castle case
+            return true;
         }
-        return false;
     }
     // public void determineStartingPiece(int row, int col){ Literal 2D array method makes more sense instead of computing something that will be the same every time
     //     switch (row){

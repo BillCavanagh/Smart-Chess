@@ -5,7 +5,7 @@ import java.util.Scanner;
 import chess.Pieces.*;
 
 public class Main {
-    public static Board board = ChessGUI.board;
+    public static Board board = new Board();
     public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
         if (input.length() != 6){
             return null;

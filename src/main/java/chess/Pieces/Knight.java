@@ -16,7 +16,7 @@ public class Knight extends DefaultPiece{
         possibleMoves = new HashSet<>();
         int currentRow = this.row-2;
         int currentCol = this.col-1;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // up 2 left 1
+        if (board.checkAvailable(color,currentRow, currentCol)){ // up 2 left 1
             possibleMoves.add(new Move(currentRow, currentCol,this));
         }
         currentCol += 2;
