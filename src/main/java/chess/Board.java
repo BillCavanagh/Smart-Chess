@@ -61,7 +61,7 @@ public class Board {
     public static int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
         return (file-97);
     }
-    private boolean inBounds(int row, int col){
+    public boolean inBounds(int row, int col){
         return row <= 7 && col <= 7 && row >= 0 && col >= 0;
     }
     public DefaultPiece getPiece(int row, int col){

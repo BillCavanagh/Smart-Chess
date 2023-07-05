@@ -14,38 +14,13 @@ public class Knight extends DefaultPiece{
     public Set<Move> getPossibleMoves(Board board) {
         // Knight possible moves are away by 2 in one direction and away by 1 in the other direction, 2 rows/1 col for example
         possibleMoves = new HashSet<>();
-        int currentRow = this.row-2;
-        int currentCol = this.col-1;
-        if (board.checkAvailable(color,currentRow, currentCol)){ // up 2 left 1
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentCol += 2;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // up 2 right 1
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentRow += 4;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // down 2 right 1
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentCol -= 2;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // down 2 left 1
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentCol -= 1; currentRow -= 1;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // down 1 left 2
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentRow -= 2;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // up 1 left 2
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentCol += 4;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // up 1 right 2
-            possibleMoves.add(new Move(currentRow, currentCol,this));
-        }
-        currentRow += 2;
-        if (board.checkAvailable(this.color,currentRow, currentCol)){ // down 1 right 2
-            possibleMoves.add(new Move(currentRow, currentCol,this));
+        int[][] positions = {{-2,-1},{-2,1},{-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2}};
+        for (int[] pos : positions){
+            int row = this.row + pos[0];
+            int col = this.col + pos[1];
+            if (board.checkAvailable(this.color, row, col)){
+                possibleMoves.add(new Move(row,col,this));
+            }
         }
         return possibleMoves;
     }
