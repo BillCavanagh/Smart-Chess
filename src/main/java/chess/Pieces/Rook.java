@@ -17,50 +17,66 @@ public class Rook extends DefaultPiece{
     public Set<Move> getPossibleMoves(Board board){
         // TODO castling case, king discovery check case
         // top left = 0,0 
-        for (int row = this.row+1; row < Board.ROWS; row++ ){ // // check vertical down
-            if (board.checkAvailable(this.color,row, this.col)){
-                possibleMoves.add(new Move(row,this.col,this));
-            }
-            else{
-                if(board.getPiece(row, col).getColor() != this.color){
-                    possibleMoves.add(new Move(row,this.col,this));
+        possibleMoves = new HashSet<>();
+        int[][] directions = {{-1, 0},{1,0},{0,-1},{0,1}}; // up, down, left, right
+        for (int[] direction : directions){
+            int row = this.row + direction[0];
+            int col = this.col + direction[1];
+            while (board.inBounds(row, col)){
+                if (board.checkAvailable(this.color, row, col)){
+                    possibleMoves.add(new Move(row,col,this));
                 }
-                break;
+                else{
+                    break;
+                }
+                row += direction[0];
+                col += direction[1];
             }
         }
-        for (int row = this.row-1; row >= 0; row-- ){ // check vertical up
-            if (board.checkAvailable(this.color,row, this.col)){
-                possibleMoves.add(new Move(row,this.col,this));
-            }
-            else{
-                if(board.getPiece(row, col).getColor() != this.color){
-                    possibleMoves.add(new Move(row,this.col,this));
-                }
-                break;
-            }
-        }
-        for (int col = this.col-1; col >= 0; col-- ){ // check horizontal left
-            if (board.checkAvailable(this.color,this.row, col)){
-                possibleMoves.add(new Move(this.row,col,this));
-            }
-            else{
-                if(board.getPiece(row, col).getColor() != this.color){
-                    possibleMoves.add(new Move(row,this.col,this));
-                }
-                break;
-            }
-        }
-        for (int col = this.col+1; col < Board.COLS; col++ ){ // check vertical down
-            if (board.checkAvailable(this.color,this.row,col)){
-                possibleMoves.add(new Move(this.row,col,this));
-            }
-            else{
-                if(board.getPiece(row, col).getColor() != this.color){
-                    possibleMoves.add(new Move(row,this.col,this));
-                }
-                break;
-            }
-        }
+        // for (int row = this.row+1; row < Board.ROWS; row++ ){ // // check vertical down
+        //     if (board.checkAvailable(this.color,row, this.col)){
+        //         possibleMoves.add(new Move(row,this.col,this));
+        //     }
+        //     else{
+        //         if(board.getPiece(row, col).getColor() != this.color){
+        //             possibleMoves.add(new Move(row,this.col,this));
+        //         }
+        //         break;
+        //     }
+        // }
+        // for (int row = this.row-1; row >= 0; row-- ){ // check vertical up
+        //     if (board.checkAvailable(this.color,row, this.col)){
+        //         possibleMoves.add(new Move(row,this.col,this));
+        //     }
+        //     else{
+        //         if(board.getPiece(row, col).getColor() != this.color){
+        //             possibleMoves.add(new Move(row,this.col,this));
+        //         }
+        //         break;
+        //     }
+        // }
+        // for (int col = this.col-1; col >= 0; col-- ){ // check horizontal left
+        //     if (board.checkAvailable(this.color,this.row, col)){
+        //         possibleMoves.add(new Move(this.row,col,this));
+        //     }
+        //     else{
+        //         if(board.getPiece(row, col).getColor() != this.color){
+        //             possibleMoves.add(new Move(row,this.col,this));
+        //         }
+        //         break;
+        //     }
+        // }
+        // for (int col = this.col+1; col < Board.COLS; col++ ){ // check vertical down
+        //     if (board.checkAvailable(this.color,this.row,col)){
+        //         possibleMoves.add(new Move(this.row,col,this));
+        //     }
+        //     else{
+        //         if(board.getPiece(row, col).getColor() != this.color){
+        //             possibleMoves.add(new Move(row,this.col,this));
+        //         }
+        //         break;
+        //     }
+        // }
         
         return possibleMoves;
     }

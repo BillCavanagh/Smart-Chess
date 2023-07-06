@@ -38,9 +38,11 @@ public abstract class DefaultPiece {
     }
     public void setRow(int row){
         this.row = row;
+        hasMoved = true;
     }
     public void setCol(int col){
         this.col = col;
+        hasMoved = true;
     }
     public Piece getPiece(){
         return piece;

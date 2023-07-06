@@ -14,7 +14,6 @@ public class Bishop extends DefaultPiece{
     public Set<Move> getPossibleMoves(Board board){
         //top left = 0,0
         possibleMoves = new HashSet<>();
-        int i = 0;
         int[][] directions = {{1, 1},{-1, 1},{1, -1},{-1, -1}};
         for (int[] direction : directions){
             int row = this.row + direction[0];
