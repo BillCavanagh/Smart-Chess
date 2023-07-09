@@ -11,6 +11,8 @@ import chess.Pieces.*;
 public class Board {
     
     protected DefaultPiece[][] board;
+    protected boolean[][] blackKingAvailable;
+    protected boolean[][] whiteKingAvailable;
     public static final int ROWS = 8;
     public static final int COLS = 8;
     protected List<DefaultPiece> whitePieces;
@@ -23,6 +25,26 @@ public class Board {
         this.blackPieces = new ArrayList<>();
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
+        this.blackKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+        };
+        this.whiteKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+        };
         this.white = true;
         init_Board();
         init_pieces();
@@ -78,16 +100,47 @@ public class Board {
         return white;
     }
     public boolean checkAvailable(Color color,int row, int col){
+        DefaultPiece piece = getPiece(row,col);
         if (!inBounds(row, col)){
             return false;
         }
-        if (getPiece(row,col) == null){ // if the square is empty it is a valid move
+        if (piece == null){ // if the square is empty it is a valid move
             return true;
         }
-        if (color != getPiece(row,col).getColor()){ // if the square has a piece of the opposing color it is valid
+        if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
             return true;
         }
         return false;
+    }
+    public boolean checkAvailable(Color color,int row, int col, boolean isKing){
+        DefaultPiece piece = getPiece(row,col);
+        if (!inBounds(row, col)){
+            return false;
+        }
+        if (piece == null){ // if the square is empty it is a valid move or it is a king and it is available
+            if ((isKing && checkAvailableKing(color,row,col)) || !isKing){
+                return true;
+            }
+            return false;
+        }
+        if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
+            return true;
+        }
+        return false;
+    }
+    public boolean checkAvailableKing(Color color, int row, int col){
+        if (color == Color.BLACK){
+            if (blackKingAvailable[row][col]){
+                return true;
+            }
+            return false;
+        }
+        else{
+            if (whiteKingAvailable[row][col]){
+                return true;
+            }
+            return false;            
+        }
     }
     public void updatePossibleMoves(){
         currentBlackMoves = new HashSet<>();
@@ -96,12 +149,14 @@ public class Board {
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
                 currentBlackMoves.add(move);
+                whiteKingAvailable[move.getRow()][move.getCol()] = false;
             }
         }
         for (DefaultPiece piece : whitePieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
                 currentWhiteMoves.add(move);
+                blackKingAvailable[move.getRow()][move.getCol()] = false;
             }
         }
     }

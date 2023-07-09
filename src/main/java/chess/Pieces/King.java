@@ -39,17 +39,17 @@ public class King extends DefaultPiece{
         // TODO allow check if possible moves run into checks (might be tough to do efficiently, maybe mantain all squares that are covered by enemy pieces?)
         possibleMoves = new HashSet<>();
         for (int col = this.col-1; col <= this.col +1; col ++){ // check upper
-            if (board.checkAvailable(this.color,this.row-1, col)){
+            if (board.checkAvailable(this.color,this.row-1, col,true)){
                 possibleMoves.add(new Move(this.row-1,col,this));
             }
         }
         for (int col = this.col-1; col <= this.col +1; col+=2){ // check horizontal
-            if (board.checkAvailable(this.color,this.row, col)){
+            if (board.checkAvailable(this.color,this.row, col,true)){
                 possibleMoves.add(new Move(this.row,col,this));
             }
         }
         for (int col = this.col-1; col <= this.col +1; col ++){ // check lower
-            if (board.checkAvailable(this.color,this.row+1, col)){
+            if (board.checkAvailable(this.color,this.row+1, col,true)){
                 possibleMoves.add(new Move(this.row+1,col,this));
             }
         }
