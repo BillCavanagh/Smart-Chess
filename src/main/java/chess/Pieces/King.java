@@ -37,6 +37,9 @@ public class King extends DefaultPiece{
     public void isInCheck(Board board){
         isInCheck = board.checkAvailableKing(color,row,col);
     }
+    public boolean getIsInCheck(){
+        return isInCheck;
+    }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
         possibleMoves = new HashSet<>();

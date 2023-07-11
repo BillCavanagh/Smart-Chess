@@ -106,9 +106,16 @@ public class Board {
         if (!inBounds(row, col)){
             return false;
         }
-        if (color == color.WHITE){
-            if (king.isInCheck)
-        } // check if king is in check, if so 
+        if (color == Color.WHITE){ // check if the king is in check, if so dont allow the move UNLESS it stops the check
+            if (whiteKing.getIsInCheck()){
+                // TODO Determine if the move will block the check
+            }
+        } 
+        else{
+            if (blackKing.getIsInCheck()){
+                // TODO Determine if the move will block the check
+            }
+        }
         if (piece == null){ // if the square is empty it is a valid move or it is a king and it is available
             if ((isKing && checkAvailableKing(color,row,col)) || !isKing){
                 return true;
