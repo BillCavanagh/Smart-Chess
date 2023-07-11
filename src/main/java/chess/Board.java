@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,8 @@ public class Board {
     protected DefaultPiece[][] board;
     protected boolean[][] blackKingAvailable;
     protected boolean[][] whiteKingAvailable;
+    protected King blackKing;
+    protected King whiteKing;
     public static final int ROWS = 8;
     public static final int COLS = 8;
     protected List<DefaultPiece> whitePieces;
@@ -25,26 +28,10 @@ public class Board {
         this.blackPieces = new ArrayList<>();
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
-        this.blackKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-        };
-        this.whiteKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-        };
+        this.blackKingAvailable = new boolean[ROWS][COLS];
+        Arrays.fill(blackKingAvailable,true);
+        this.whiteKingAvailable = new boolean[ROWS][COLS];
+        Arrays.fill(whiteKingAvailable,true);
         this.white = true;
         init_Board();
         init_pieces();
@@ -58,6 +45,8 @@ public class Board {
                 {null,null,null,null,null,null,null,null},
                 {new Pawn(Color.WHITE,6,0),new Pawn(Color.WHITE,6,1),new Pawn(Color.WHITE,6,2),new Pawn(Color.WHITE,6,3),new Pawn(Color.WHITE,6,4),new Pawn(Color.WHITE,6,5),new Pawn(Color.WHITE,6,6),new Pawn(Color.WHITE,6,7)},   
                 {new Rook(Color.WHITE,7,0),new Knight(Color.WHITE,7,1),new Bishop(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Bishop(Color.WHITE,7,5),new Knight(Color.WHITE,7,6),new Rook(Color.WHITE,7,7)}};
+        whiteKing = (King)board[7][4];
+        blackKing = (King)board[0][4];
     }
     public void init_pieces(){
         for (int row = 0; row < 2; row++){ // black
@@ -117,11 +106,14 @@ public class Board {
         if (!inBounds(row, col)){
             return false;
         }
+        if (color == color.WHITE){
+            if (king.isInCheck)
+        } // check if king is in check, if so 
         if (piece == null){ // if the square is empty it is a valid move or it is a king and it is available
             if ((isKing && checkAvailableKing(color,row,col)) || !isKing){
                 return true;
             }
-            return false;
+            return false; // should only return false when the piece is a king and cannot move to a checked space
         }
         if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
             return true;
@@ -129,18 +121,7 @@ public class Board {
         return false;
     }
     public boolean checkAvailableKing(Color color, int row, int col){
-        if (color == Color.BLACK){
-            if (blackKingAvailable[row][col]){
-                return true;
-            }
-            return false;
-        }
-        else{
-            if (whiteKingAvailable[row][col]){
-                return true;
-            }
-            return false;            
-        }
+        return color == Color.BLACK ? blackKingAvailable[row][col] : whiteKingAvailable[row][col];
     }
     public void updatePossibleMoves(){
         currentBlackMoves = new HashSet<>();
@@ -190,6 +171,8 @@ public class Board {
             }
             movePiece(oldRow,oldCol,newRow,newCol);
             white = white ? false : true; // change turn
+            blackKing.isInCheck(this); // update king pieces
+            whiteKing.isInCheck(this);
             return true;
         } 
         else{

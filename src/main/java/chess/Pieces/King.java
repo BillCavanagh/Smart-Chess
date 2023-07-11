@@ -8,7 +8,7 @@ import chess.Move;
 
 public class King extends DefaultPiece{
     private boolean hasMoved;
-    private boolean isInCheck;
+    protected boolean isInCheck;
     public King(Color color, int row, int col){
         super(color,Piece.KING,row,col);
         this.hasMoved = false;
@@ -34,9 +34,11 @@ public class King extends DefaultPiece{
             }
         }
     }
+    public void isInCheck(Board board){
+        isInCheck = board.checkAvailableKing(color,row,col);
+    }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
-        // TODO allow check if possible moves run into checks (might be tough to do efficiently, maybe mantain all squares that are covered by enemy pieces?)
         possibleMoves = new HashSet<>();
         for (int col = this.col-1; col <= this.col +1; col ++){ // check upper
             if (board.checkAvailable(this.color,this.row-1, col,true)){
