@@ -8,11 +8,9 @@ import chess.Move;
 
 public class King extends DefaultPiece{
     private boolean hasMoved;
-    protected boolean isInCheck;
     public King(Color color, int row, int col){
         super(color,Piece.KING,row,col);
         this.hasMoved = false;
-        this.isInCheck = false;
     }
     public void checkCastleAvailable(Board board){
         if (!this.hasMoved){
@@ -33,12 +31,6 @@ public class King extends DefaultPiece{
                 }
             }
         }
-    }
-    public void isInCheck(Board board){
-        isInCheck = board.checkAvailableKing(color,row,col);
-    }
-    public boolean getIsInCheck(){
-        return isInCheck;
     }
     @Override
     public Set<Move> getPossibleMoves(Board board) {

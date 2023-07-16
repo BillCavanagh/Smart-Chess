@@ -14,6 +14,8 @@ public class Board {
     protected DefaultPiece[][] board;
     protected boolean[][] blackKingAvailable;
     protected boolean[][] whiteKingAvailable;
+    protected ArrayList<DefaultPiece> attackingBlackKing;
+    protected ArrayList<DefaultPiece> attackingWhiteKing;
     protected King blackKing;
     protected King whiteKing;
     public static final int ROWS = 8;
@@ -29,12 +31,13 @@ public class Board {
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
         this.blackKingAvailable = new boolean[ROWS][COLS];
-        Arrays.fill(blackKingAvailable,true);
         this.whiteKingAvailable = new boolean[ROWS][COLS];
-        Arrays.fill(whiteKingAvailable,true);
+        this.attackingBlackKing = new ArrayList<>();
+        this.attackingWhiteKing = new ArrayList<>();
         this.white = true;
         init_Board();
         init_pieces();
+        updatePossibleMoves();
     }
     public void init_Board(){
         board = new DefaultPiece[][]{{new Rook(Color.BLACK,0,0),new Knight(Color.BLACK,0,1),new Bishop(Color.BLACK,0,2),new Queen(Color.BLACK,0,3),new King(Color.BLACK,0,4),new Bishop(Color.BLACK,0,5),new Knight(Color.BLACK,0,6),new Rook(Color.BLACK,0,7)},
@@ -88,6 +91,14 @@ public class Board {
     public boolean getTurn(){
         return white;
     }
+    public boolean willPreventCheck(Move move, Color color){
+        // things to check
+        // is the piece moving the king? if so, check if the space it is moving to is available
+        // if not, check which pieces are checking the king, if one is a knight it is not available
+        // check if the move intercepts the path between the pieces that are checking the king and the king, if *any* piece can still check the king, it is not available
+        // check if the move causes another piece to check the king, this can be done by checking if the piece is on the same diagonal/horizontal/vertical line as the king
+        
+    }
     public boolean checkAvailable(Color color,int row, int col){
         DefaultPiece piece = getPiece(row,col);
         if (!inBounds(row, col)){
@@ -106,21 +117,11 @@ public class Board {
         if (!inBounds(row, col)){
             return false;
         }
-        if (color == Color.WHITE){ // check if the king is in check, if so dont allow the move UNLESS it stops the check
-            if (whiteKing.getIsInCheck()){
-                // TODO Determine if the move will block the check
-            }
-        } 
-        else{
-            if (blackKing.getIsInCheck()){
-                // TODO Determine if the move will block the check
-            }
-        }
         if (piece == null){ // if the square is empty it is a valid move or it is a king and it is available
             if ((isKing && checkAvailableKing(color,row,col)) || !isKing){
                 return true;
             }
-            return false; // should only return false when the piece is a king and cannot move to a checked space
+            return true; // should only return false when the piece is a king and cannot move to a checked space
         }
         if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
             return true;
@@ -138,6 +139,9 @@ public class Board {
             for (Move move : pieceMoves){
                 currentBlackMoves.add(move);
                 whiteKingAvailable[move.getRow()][move.getCol()] = false;
+                if (board[move.getRow()][move.getCol()] instanceof King){
+                    attackingWhiteKing.add(move.getPiece());
+                }
             }
         }
         for (DefaultPiece piece : whitePieces){
@@ -145,6 +149,9 @@ public class Board {
             for (Move move : pieceMoves){
                 currentWhiteMoves.add(move);
                 blackKingAvailable[move.getRow()][move.getCol()] = false;
+                if (board[move.getRow()][move.getCol()] instanceof King){
+                    attackingBlackKing.add(move.getPiece());
+                }
             }
         }
     }
@@ -160,7 +167,6 @@ public class Board {
         ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
         ChessGUI.updateChessBoard(newRow,newCol); // update new position
     }
-
     public boolean makeMove(Move move, Color color){
         if (color == Color.BLACK && !currentBlackMoves.contains(move)){
             return false;
@@ -177,54 +183,13 @@ public class Board {
                 removePiece(color == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
             }
             movePiece(oldRow,oldCol,newRow,newCol);
-            white = white ? false : true; // change turn
-            blackKing.isInCheck(this); // update king pieces
-            whiteKing.isInCheck(this);
-            return true;
         } 
         else{
         // TODO Castle case
-            return true;
         }
+        white = white ? false : true; // change turn
+        return true;
     }
-    // public void determineStartingPiece(int row, int col){ Literal 2D array method makes more sense instead of computing something that will be the same every time
-    //     switch (row){
-    //         case 0: // black pieces
-    //         switch(col){
-    //             case 0: case 7: // black rooks
-    //             board[row][col] = new Rook(Color.BLACK,row,col); blackPieces.add(board[row][col]); break;
-    //             case 1: case 6: // black knights
-    //             board[row][col] = new Knight(Color.BLACK,row,col); blackPieces.add(board[row][col]);break;
-    //             case 2: case 5: // black bishops
-    //             board[row][col] = new Bishop(Color.BLACK,row,col); blackPieces.add(board[row][col]);break;
-    //             case 3: // black queen
-    //             board[row][col] = new Queen(Color.BLACK,row,col); blackPieces.add(board[row][col]);break;
-    //             case 4: // black king
-    //             board[row][col] = new King(Color.BLACK,row,col); blackPieces.add(board[row][col]); break;
-    //         }
-    //         break;
-    //         case 1: // black pawns
-    //         board[row][col] = new Pawn(Color.BLACK,row,col); blackPieces.add(board[row][col]);break;
-    //         case 2: case 3: case 4: case 5: // if position starts empty
-    //         board[row][col] = null; break;
-    //         case 6: // white pawns
-    //         board[row][col] = new Pawn(Color.WHITE,row,col); whitePieces.add(board[row][col]);break;
-    //         case 7: // white piecess
-    //         switch(col){
-    //             case 0: case 7: // white rooks
-    //             board[row][col] = new Rook(Color.WHITE,row,col); whitePieces.add(board[row][col]); break;
-    //             case 1: case 6: // white knights
-    //             board[row][col] = new Knight(Color.WHITE,row,col); whitePieces.add(board[row][col]);break;
-    //             case 2: case 5: // white bishops
-    //             board[row][col] = new Bishop(Color.WHITE,row,col); whitePieces.add(board[row][col]); break;
-    //             case 3: // white queen
-    //             board[row][col] = new Queen(Color.WHITE,row,col); whitePieces.add(board[row][col]);break;
-    //             case 4: // white king
-    //             board[row][col] = new King(Color.WHITE,row,col); whitePieces.add(board[row][col]);break;
-    //         }
-    //         break;
-    //     }
-    // }
     public String toString(){
         String string = "";
         for (int rank = 0; rank < board.length; rank++){
