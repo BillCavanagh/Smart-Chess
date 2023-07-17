@@ -91,39 +91,64 @@ public class Board {
     public boolean getTurn(){
         return white;
     }
-    public boolean willPreventCheck(Move move, Color color){
+    public boolean willPreventCheck(Move move){ // assumes the move would be valid if check wasnt a factor
+        DefaultPiece piece = move.getPiece();
+        int toRow = move.getRow();
+        int toCol = move.getCol();
+        Color color = piece.getColor();
+        if (piece instanceof King){ // if the piece is a king, it can only move to escape the check, enemy pieces adjacent would count as "available" if they arent guarded
+            if (color == Color.WHITE){
+                return whiteKingAvailable[toRow][toCol];
+            }
+            else{
+                return blackKingAvailable[toRow][toCol];
+            }
+        }
+        for (DefaultPiece attacker : color == Color.WHITE ? attackingWhiteKing : attackingBlackKing){
+            int attRow = attacker.getRow();
+            int attCol = attacker.getCol();
+            if (attacker instanceof Knight){ // if the piece is a knight the move must be a capture as the moving piece is not a king and cannot escape
+                if (!(toRow == attRow && toCol == attCol)){ // if the move does not capture the knight it is invalid
+                    return false;
+                }
+            }
+            else if (attacker instanceof Rook){ // if it is a rook, it must be a capture or block the row/file
+                boolean vertical = false;
+                if ()
+            }
+        }
         // things to check
-        // is the piece moving the king? if so, check if the space it is moving to is available
-        // if not, check which pieces are checking the king, if one is a knight it is not available
+        // is the piece moving the king? if so, check if the space it is moving to is available: done
+        // if not, check which pieces are checking the king, if one is a knight it is not available if the move isnt capturing the knight
         // check if the move intercepts the path between the pieces that are checking the king and the king, if *any* piece can still check the king, it is not available
         // check if the move causes another piece to check the king, this can be done by checking if the piece is on the same diagonal/horizontal/vertical line as the king
         
     }
     public boolean checkAvailable(Color color,int row, int col){
-        DefaultPiece piece = getPiece(row,col);
-        if (!inBounds(row, col)){
+        DefaultPiece toPiece = getPiece(row,col);
+        if (!inBounds(row, col)){ // if not in bounds it is not valid
             return false;
         }
-        if (piece == null){ // if the square is empty it is a valid move
+        if (toPiece == null){ // if the square is empty it is a valid move
             return true;
         }
-        if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
+        if (color != toPiece.getColor()){ // if the square has a piece of the opposing color it is valid
             return true;
         }
         return false;
     }
-    public boolean checkAvailable(Color color,int row, int col, boolean isKing){
-        DefaultPiece piece = getPiece(row,col);
-        if (!inBounds(row, col)){
+    public boolean checkAvailable(Color color,int row, int col, boolean isKingMove){
+        DefaultPiece toPiece = getPiece(row,col);
+        if (!inBounds(row, col)){ // if not in bounds it is not valid
             return false;
         }
-        if (piece == null){ // if the square is empty it is a valid move or it is a king and it is available
-            if ((isKing && checkAvailableKing(color,row,col)) || !isKing){
+        if (toPiece == null){ // if the square is empty it is a valid move or it is a king and it is available
+            if ((isKingMove && checkAvailableKing(color,row,col)) || !isKingMove){
                 return true;
             }
             return true; // should only return false when the piece is a king and cannot move to a checked space
         }
-        if (color != piece.getColor()){ // if the square has a piece of the opposing color it is valid
+        if (color != toPiece.getColor()){ // if the square has a piece of the opposing color it is valid
             return true;
         }
         return false;
