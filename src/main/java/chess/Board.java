@@ -96,6 +96,8 @@ public class Board {
         int toRow = move.getRow();
         int toCol = move.getCol();
         Color color = piece.getColor();
+        int kingRow = color == Color.WHITE ? whiteKing.getRow() : blackKing.getRow();
+        int kingCol = color == Color.WHITE ? whiteKing.getCol() : blackKing.getCol();
         if (piece instanceof King){ // if the piece is a king, it can only move to escape the check, enemy pieces adjacent would count as "available" if they arent guarded
             if (color == Color.WHITE){
                 return whiteKingAvailable[toRow][toCol];
@@ -104,19 +106,43 @@ public class Board {
                 return blackKingAvailable[toRow][toCol];
             }
         }
-        for (DefaultPiece attacker : color == Color.WHITE ? attackingWhiteKing : attackingBlackKing){
-            int attRow = attacker.getRow();
-            int attCol = attacker.getCol();
-            if (attacker instanceof Knight){ // if the piece is a knight the move must be a capture as the moving piece is not a king and cannot escape
-                if (!(toRow == attRow && toCol == attCol)){ // if the move does not capture the knight it is invalid
-                    return false;
-                }
-            }
-            else if (attacker instanceof Rook){ // if it is a rook, it must be a capture or block the row/file
-                boolean vertical = false;
-                if ()
-            }
+        if ((color == Color.WHITE ? attackingWhiteKing.size() : attackingBlackKing.size()) > 1){ // double checks prevent any move but king moves
+            return false;
         }
+        DefaultPiece attacker = color == Color.WHITE ? attackingWhiteKing.get(0) : attackingBlackKing.get(0);
+        int attRow = attacker.getRow();
+        int attCol = attacker.getCol();
+        switch (attacker.getPiece()){
+            case PAWN: case KNIGHT: // if the move does not capture the knight or pawn it is invalid as it cannot be blocked
+                if ((toRow == attRow && toCol == attCol)){ // if the move captures the knight  or not 
+                    return true;
+                }
+                break;
+            case BISHOP: // if it is a bishop, it must be a capture or block the diagonal 
+
+                break;
+            case ROOK: // if it is a rook, it must be a capture or block the row/file
+                if ((attCol == toCol && (kingRow > attRow ? toRow < kingRow && attRow < toRow : toRow > kingRow && attRow > toRow)) // if in the same col, if the king's row is greater than I.E lower than the attatcking piece, the toRow must be less than the king's row and greater than the attackers row, else reverse these
+                || attRow == toRow && (kingCol > attCol ? attCol < toCol && toCol < kingCol : attCol > toCol && toCol > kingCol)){ // if in the same row, if the king's col is greater than the attackers col I.E to the right, the toCol must be less than the king col and greater than the attackers col, else reverse these
+                    return true;
+                } 
+                if ((toRow == attRow && toCol == attCol)){ // if the move cannot block it must be able to capture
+                    return true;
+                } 
+                break;
+            case KING: break; // shouldnt happen, filler case for switch 
+            case QUEEN: // queens can be treated as either a rook or bishop as they can only check the king horizontally or diagonally
+                if (attacker.getRow() == (color == Color.WHITE ? blackKing.getRow() : whiteKing.getRow())){ // if the queen and king are in the same row treat queen as a rook 
+
+                }
+                else if (attacker.getCol() == (color == Color.WHITE ? blackKing.getCol() : whiteKing.getCol())){ // if the queen and king are in the same col treat queen as a rook
+
+                }
+                else{ // else treat it as a bishop
+
+                }
+        }
+        return false; // if it cannot make a valid move
         // things to check
         // is the piece moving the king? if so, check if the space it is moving to is available: done
         // if not, check which pieces are checking the king, if one is a knight it is not available if the move isnt capturing the knight
