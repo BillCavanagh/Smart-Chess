@@ -12,8 +12,8 @@ import chess.Pieces.*;
 public class Board {
     
     protected DefaultPiece[][] board;
-    protected boolean[][] blackKingAvailable;
-    protected boolean[][] whiteKingAvailable;
+    public boolean[][] blackKingAvailable;
+    public boolean[][] whiteKingAvailable;
     protected ArrayList<DefaultPiece> attackingBlackKing;
     protected ArrayList<DefaultPiece> attackingWhiteKing;
     protected King blackKing;
@@ -93,18 +93,12 @@ public class Board {
     }
     public boolean willPreventCheck(Move move){ // assumes the move would be valid if check wasnt a factor
         DefaultPiece piece = move.getPiece();
-        int toRow = move.getRow();
-        int toCol = move.getCol();
+        int defRow = move.getRow();
+        int defCol = move.getCol();
         Color color = piece.getColor();
-        int kingRow = color == Color.WHITE ? whiteKing.getRow() : blackKing.getRow();
-        int kingCol = color == Color.WHITE ? whiteKing.getCol() : blackKing.getCol();
+        DefaultPiece king = color == Color.WHITE ? whiteKing : blackKing;
         if (piece instanceof King){ // if the piece is a king, it can only move to escape the check, enemy pieces adjacent would count as "available" if they arent guarded
-            if (color == Color.WHITE){
-                return whiteKingAvailable[toRow][toCol];
-            }
-            else{
-                return blackKingAvailable[toRow][toCol];
-            }
+            return King.canBlockCheck(this,move,null,king);
         }
         if ((color == Color.WHITE ? attackingWhiteKing.size() : attackingBlackKing.size()) > 1){ // double checks prevent any move but king moves
             return false;
@@ -114,33 +108,23 @@ public class Board {
         int attCol = attacker.getCol();
         switch (attacker.getPiece()){
             case PAWN: case KNIGHT: // if the move does not capture the knight or pawn it is invalid as it cannot be blocked
-                if ((toRow == attRow && toCol == attCol)){ // if the move captures the knight  or not 
+                if ((defRow == attRow && defCol == attCol)){ // if the move captures the knight  or not 
                     return true;
                 }
                 break;
             case BISHOP: // if it is a bishop, it must be a capture or block the diagonal 
-
+                // how to check if a piece would be on the same diagonal? it must be offset by {1, 1},{-1, 1},{1, -1},{-1, -1} or a multiple of said directions
+                // check if the piece move is in the same diagonal as the king and bishop, if so it must be in between
+                if ()
                 break;
             case ROOK: // if it is a rook, it must be a capture or block the row/file
-                if ((attCol == toCol && (kingRow > attRow ? toRow < kingRow && attRow < toRow : toRow > kingRow && attRow > toRow)) // if in the same col, if the king's row is greater than I.E lower than the attatcking piece, the toRow must be less than the king's row and greater than the attackers row, else reverse these
-                || attRow == toRow && (kingCol > attCol ? attCol < toCol && toCol < kingCol : attCol > toCol && toCol > kingCol)){ // if in the same row, if the king's col is greater than the attackers col I.E to the right, the toCol must be less than the king col and greater than the attackers col, else reverse these
-                    return true;
-                } 
-                if ((toRow == attRow && toCol == attCol)){ // if the move cannot block it must be able to capture
-                    return true;
-                } 
+                return Rook.canBlockCheck(this, move, attacker, king);
                 break;
             case KING: break; // shouldnt happen, filler case for switch 
             case QUEEN: // queens can be treated as either a rook or bishop as they can only check the king horizontally or diagonally
-                if (attacker.getRow() == (color == Color.WHITE ? blackKing.getRow() : whiteKing.getRow())){ // if the queen and king are in the same row treat queen as a rook 
-
-                }
-                else if (attacker.getCol() == (color == Color.WHITE ? blackKing.getCol() : whiteKing.getCol())){ // if the queen and king are in the same col treat queen as a rook
-
-                }
-                else{ // else treat it as a bishop
-
-                }
+            // TODO make static methods in the rook/bishop class and see if either will block the check
+            return Rook.canBlockCheck(board, move, attacker, king) || Bishop.canBlockCheck();
+            
         }
         return false; // if it cannot make a valid move
         // things to check

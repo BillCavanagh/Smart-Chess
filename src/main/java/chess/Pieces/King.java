@@ -57,4 +57,7 @@ public class King extends DefaultPiece{
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
     }
+    public static boolean canBlockCheck(Board board, Move move, DefaultPiece attacker, DefaultPiece king){ // kings can only move out of check
+        return king.getColor() == Color.WHITE ? board.whiteKingAvailable[move.getRow()][move.getCol()] : board.blackKingAvailable[move.getRow()][move.getCol()];
+    }
 }

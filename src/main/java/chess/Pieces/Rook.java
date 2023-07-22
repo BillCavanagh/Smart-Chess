@@ -33,51 +33,6 @@ public class Rook extends DefaultPiece{
                 col += direction[1];
             }
         }
-        // for (int row = this.row+1; row < Board.ROWS; row++ ){ // // check vertical down
-        //     if (board.checkAvailable(this.color,row, this.col)){
-        //         possibleMoves.add(new Move(row,this.col,this));
-        //     }
-        //     else{
-        //         if(board.getPiece(row, col).getColor() != this.color){
-        //             possibleMoves.add(new Move(row,this.col,this));
-        //         }
-        //         break;
-        //     }
-        // }
-        // for (int row = this.row-1; row >= 0; row-- ){ // check vertical up
-        //     if (board.checkAvailable(this.color,row, this.col)){
-        //         possibleMoves.add(new Move(row,this.col,this));
-        //     }
-        //     else{
-        //         if(board.getPiece(row, col).getColor() != this.color){
-        //             possibleMoves.add(new Move(row,this.col,this));
-        //         }
-        //         break;
-        //     }
-        // }
-        // for (int col = this.col-1; col >= 0; col-- ){ // check horizontal left
-        //     if (board.checkAvailable(this.color,this.row, col)){
-        //         possibleMoves.add(new Move(this.row,col,this));
-        //     }
-        //     else{
-        //         if(board.getPiece(row, col).getColor() != this.color){
-        //             possibleMoves.add(new Move(row,this.col,this));
-        //         }
-        //         break;
-        //     }
-        // }
-        // for (int col = this.col+1; col < Board.COLS; col++ ){ // check vertical down
-        //     if (board.checkAvailable(this.color,this.row,col)){
-        //         possibleMoves.add(new Move(this.row,col,this));
-        //     }
-        //     else{
-        //         if(board.getPiece(row, col).getColor() != this.color){
-        //             possibleMoves.add(new Move(row,this.col,this));
-        //         }
-        //         break;
-        //     }
-        // }
-        
         return possibleMoves;
     }
     public void addPossibleMove(Move move){
@@ -89,5 +44,33 @@ public class Rook extends DefaultPiece{
     @Override
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
+    }
+    public static boolean canBlockCheck(Board board, Move move, DefaultPiece attacker, DefaultPiece king){ // assumes the attacker is a rook
+        int defRow = move.getRow();
+        int defCol = move.getCol();
+        int attRow = attacker.getRow();
+        int attCol = attacker.getCol();
+        int kingRow = king.getRow();
+        int kingCol = king.getCol();
+        if ((defRow == attRow && defCol == attCol)){ // is the move a capture? if so it can prevent check
+            return true;
+        } 
+        if (attCol == defCol){ // if in the same col
+            if (kingRow > attRow){ // if the king's row is greater than I.E lower than the attacking piece
+                return defRow < kingRow && attRow < defRow; // the defRow must be between the kingRow and the attRow I.E less than kingRow but greater than att
+            }
+            else { // if it is less, it still must be inbetween but greater than kingRow but less than attRow
+                return defRow > kingRow && attRow > defRow;
+            }
+        }  
+        else if(attRow == defRow){ // if in the same row
+            if (kingCol > attCol){
+                return attCol < defCol && defCol < kingCol;
+            }
+            else{
+                return attCol > defCol && defCol > kingCol;
+            }
+        }
+        return false; // if neither it cannot block the check;
     }
 }
