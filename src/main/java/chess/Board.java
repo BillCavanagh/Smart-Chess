@@ -91,54 +91,64 @@ public class Board {
     public boolean getTurn(){
         return white;
     }
-    public boolean willPreventCheck(Move move){ // assumes the move would be valid if check wasnt a factor
+    public DefaultPiece makeTempMove(Move move){ // assumes the move is valid
         DefaultPiece piece = move.getPiece();
-        int defRow = move.getRow();
-        int defCol = move.getCol();
-        Color color = piece.getColor();
-        DefaultPiece king = color == Color.WHITE ? whiteKing : blackKing;
-        if (piece instanceof King){ // if the piece is a king, it can only move to escape the check, enemy pieces adjacent would count as "available" if they arent guarded
-            return King.canBlockCheck(this,move,null,king);
+        int newRow = move.getRow();
+        int newCol = move.getCol();
+        int oldRow = piece.getRow();
+        int oldCol = piece.getCol();
+        DefaultPiece captured = getPiece(newRow,newCol);
+        setPiece(piece,newRow,newCol); // update new position on board
+        setPiece(null,oldRow,oldCol); // update old position on board
+        piece.setRow(newRow); // update piece row
+        piece.setCol(newCol); // update piece col
+        return captured;
+    }
+    public void undoTempMove(int oldRow, int oldCol, DefaultPiece mover, DefaultPiece captured){
+        int newRow = mover.getRow();
+        int newCol = mover.getCol();
+        setPiece(mover,oldRow,oldCol);
+        setPiece(captured,newRow,newCol);
+        mover.setRow(oldRow);
+        mover.setCol(oldCol);
+        if (captured != null){
+            if (mover.getColor() == Color.WHITE){
+                whitePieces.add(captured);
+            } 
+            else{
+                blackPieces.add(captured);
+            }           
         }
-        if ((color == Color.WHITE ? attackingWhiteKing.size() : attackingBlackKing.size()) > 1){ // double checks prevent any move but king moves
-            return false;
-        }
-        DefaultPiece attacker = color == Color.WHITE ? attackingWhiteKing.get(0) : attackingBlackKing.get(0);
-        int attRow = attacker.getRow();
-        int attCol = attacker.getCol();
-        switch (attacker.getPiece()){
-            case PAWN: case KNIGHT: // if the move does not capture the knight or pawn it is invalid as it cannot be blocked
-                if ((defRow == attRow && defCol == attCol)){ // if the move captures the knight  or not 
-                    return true;
+    }
+    public boolean noChecks(Color color){
+        for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){
+            Set<Move> pieceMoves = piece.getPossibleMoves(this);
+            for (Move move : pieceMoves){
+                if (getPiece(move.getRow(),move.getCol()) instanceof King){
+                    return false;
                 }
-                break;
-            case BISHOP: // if it is a bishop, it must be a capture or block the diagonal 
-                // how to check if a piece would be on the same diagonal? it must be offset by {1, 1},{-1, 1},{1, -1},{-1, -1} or a multiple of said directions
-                // check if the piece move is in the same diagonal as the king and bishop, if so it must be in between
-                if ()
-                break;
-            case ROOK: // if it is a rook, it must be a capture or block the row/file
-                return Rook.canBlockCheck(this, move, attacker, king);
-                break;
-            case KING: break; // shouldnt happen, filler case for switch 
-            case QUEEN: // queens can be treated as either a rook or bishop as they can only check the king horizontally or diagonally
-            // TODO make static methods in the rook/bishop class and see if either will block the check
-            return Rook.canBlockCheck(board, move, attacker, king) || Bishop.canBlockCheck();
-            
+            }
         }
-        return false; // if it cannot make a valid move
-        // things to check
-        // is the piece moving the king? if so, check if the space it is moving to is available: done
-        // if not, check which pieces are checking the king, if one is a knight it is not available if the move isnt capturing the knight
-        // check if the move intercepts the path between the pieces that are checking the king and the king, if *any* piece can still check the king, it is not available
-        // check if the move causes another piece to check the king, this can be done by checking if the piece is on the same diagonal/horizontal/vertical line as the king
-        
+        return true;
+    }
+    public boolean willPreventCheck(Move move){ // assumes the move would be valid if check wasnt a factor
+        // make the move, check if the opposite color can capture the king, if so, it is not allowed, undo the move 
+        DefaultPiece piece = move.getPiece();
+        int oldRow = piece.getRow();
+        int oldCol = piece.getCol();
+        DefaultPiece captured = makeTempMove(move); // temporarily make the move
+        boolean toReturn = false;
+        if (noChecks(piece.getColor())){ // see if the move results in no checks 
+            toReturn = true;
+        }
+        undoTempMove(oldRow,oldCol,piece,captured);
+        return toReturn; 
     }
     public boolean checkAvailable(Color color,int row, int col){
-        DefaultPiece toPiece = getPiece(row,col);
         if (!inBounds(row, col)){ // if not in bounds it is not valid
             return false;
         }
+        DefaultPiece toPiece = getPiece(row,col);
         if (toPiece == null){ // if the square is empty it is a valid move
             return true;
         }
@@ -148,10 +158,10 @@ public class Board {
         return false;
     }
     public boolean checkAvailable(Color color,int row, int col, boolean isKingMove){
-        DefaultPiece toPiece = getPiece(row,col);
         if (!inBounds(row, col)){ // if not in bounds it is not valid
             return false;
         }
+        DefaultPiece toPiece = getPiece(row,col);
         if (toPiece == null){ // if the square is empty it is a valid move or it is a king and it is available
             if ((isKingMove && checkAvailableKing(color,row,col)) || !isKingMove){
                 return true;
@@ -210,6 +220,9 @@ public class Board {
             return false;
         }
         if (!move.isCastle()){
+            if (!willPreventCheck(move)){
+                return false;
+            }
             int oldRow = move.getPiece().getRow();
             int oldCol = move.getPiece().getCol();
             int newRow = move.getRow(); 
@@ -223,6 +236,8 @@ public class Board {
         // TODO Castle case
         }
         white = white ? false : true; // change turn
+        attackingWhiteKing = new ArrayList<>();
+        attackingBlackKing = new ArrayList<>();
         return true;
     }
     public String toString(){
