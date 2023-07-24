@@ -43,8 +43,11 @@ public class ChessGUI extends Application{
     public static TextField textField = new TextField("");
     public static Button submitButton = new Button("Submit move");
     public static Label turn = new Label(board.getTurn() == true ? "White to Move" : "Black to Move");
-    public static HBox bottomPanel = new HBox(textField,submitButton,turn);
+    public static Label check = new Label("");
+    public static HBox bottomPanel = new HBox(textField,submitButton,turn,check);
     public static VBox game = new VBox(chessBoard,bottomPanel);
+    public static Label moves = new Label("");
+    public static HBox fullGame = new HBox(game,moves);
     public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
         if (input.length() != 6){
             return null;
@@ -120,6 +123,22 @@ public class ChessGUI extends Application{
     public static void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
+    public static void makeMoveList(){
+        String newText = "";
+        if (board.getTurn()){
+            newText = newText + "White moves: \n";
+            for (Move move : board.currentWhiteMoves){
+                newText += move.toString() + "\n";
+            }
+        }
+        else{
+            newText = newText + "Black moves: \n";
+            for (Move move : board.currentBlackMoves){
+                newText += move.toString() + "\n";
+            }
+        }
+        moves.setText(newText);
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         assembleChessBoard();
@@ -138,10 +157,13 @@ public class ChessGUI extends Application{
                     textField.setText("Invalid Move");
                 }
                 turn.setText(board.getTurn() == true ? "White to Move" : "Black to Move");
+                check.setText(board.kingIsInCheck(board.getTurn() == true ? chess.Color.WHITE : chess.Color.BLACK) ? "Check" : "");
+                makeMoveList();
             }
         };
         submitButton.setOnAction(event);
-        primaryStage.setScene(new Scene(game));
+        makeMoveList();
+        primaryStage.setScene(new Scene(fullGame));
         primaryStage.setTitle("Chess");
         primaryStage.show();
     }

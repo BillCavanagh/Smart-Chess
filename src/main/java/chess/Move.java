@@ -37,7 +37,8 @@ public class Move {
         return isCastle;
     }
     public String toString(){
-        return piece.getShorthand() + Board.indexToFile(col) + String.valueOf(Board.indexToRank(row));
+        return "" + piece.getShorthand() + Board.indexToFile(piece.getCol()) + String.valueOf(Board.indexToRank(piece.getRow())) + " " + 
+        Board.indexToFile(col) + String.valueOf(Board.indexToRank(row));
     }
     public void setRow(int row){
         this.row = row;

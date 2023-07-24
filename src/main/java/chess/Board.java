@@ -30,8 +30,26 @@ public class Board {
         this.blackPieces = new ArrayList<>();
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
-        this.blackKingAvailable = new boolean[ROWS][COLS];
-        this.whiteKingAvailable = new boolean[ROWS][COLS];
+        this.whiteKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true}
+        };
+        this.blackKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true}
+        };
         this.attackingBlackKing = new ArrayList<>();
         this.attackingWhiteKing = new ArrayList<>();
         this.white = true;
@@ -178,11 +196,33 @@ public class Board {
         return color == Color.BLACK ? blackKingAvailable[row][col] : whiteKingAvailable[row][col];
     }
     public boolean kingIsInCheck(Color color){
-        return color == Color.WHITE ? whiteKingAvailable[whiteKing.getRow()][whiteKing.getCol()] : blackKingAvailable[blackKing.getRow()][blackKing.getCol()];
+        return color == Color.WHITE ? !whiteKingAvailable[whiteKing.getRow()][whiteKing.getCol()] : !blackKingAvailable[blackKing.getRow()][blackKing.getCol()];
     }
     public void updatePossibleMoves(){
         currentBlackMoves = new HashSet<>();
         currentWhiteMoves = new HashSet<>();
+        whiteKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true}
+        };
+        blackKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true}
+        };
+        attackingWhiteKing = new ArrayList<>();
+        attackingBlackKing = new ArrayList<>();
         for (DefaultPiece piece : blackPieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
