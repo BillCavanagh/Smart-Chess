@@ -124,7 +124,8 @@ public class Board {
         for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
-                if (getPiece(move.getRow(),move.getCol()) instanceof King){
+                DefaultPiece attacked = getPiece(move.getRow(),move.getCol());
+                if (attacked instanceof King && attacked.getColor() == color){
                     return false;
                 }
             }
@@ -176,6 +177,9 @@ public class Board {
     public boolean checkAvailableKing(Color color, int row, int col){
         return color == Color.BLACK ? blackKingAvailable[row][col] : whiteKingAvailable[row][col];
     }
+    public boolean kingIsInCheck(Color color){
+        return color == Color.WHITE ? whiteKingAvailable[whiteKing.getRow()][whiteKing.getCol()] : blackKingAvailable[blackKing.getRow()][blackKing.getCol()];
+    }
     public void updatePossibleMoves(){
         currentBlackMoves = new HashSet<>();
         currentWhiteMoves = new HashSet<>();
@@ -220,7 +224,7 @@ public class Board {
             return false;
         }
         if (!move.isCastle()){
-            if (!willPreventCheck(move)){
+            if (kingIsInCheck(color) && !willPreventCheck(move)){
                 return false;
             }
             int oldRow = move.getPiece().getRow();
