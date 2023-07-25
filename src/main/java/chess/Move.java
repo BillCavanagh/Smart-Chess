@@ -46,6 +46,9 @@ public class Move {
     public void setCol(int col){
         this.col = col;
     }
+    public void setPiece(DefaultPiece piece){
+        this.piece = piece;
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Move){

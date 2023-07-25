@@ -17,6 +17,9 @@ public class Queen extends DefaultPiece{
         Bishop bishop = new Bishop(this.color,this.row,this.col);
         possibleMoves.addAll(rook.getPossibleMoves(board));
         possibleMoves.addAll(bishop.getPossibleMoves(board));
+        for (Move move : possibleMoves){
+            move.setPiece(this);
+        }
         return possibleMoves;
     }
     @Override

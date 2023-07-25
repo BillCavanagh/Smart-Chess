@@ -12,28 +12,29 @@ public class King extends DefaultPiece{
         super(color,Piece.KING,row,col);
         this.hasMoved = false;
     }
-    public void checkCastleAvailable(Board board){
-        if (!this.hasMoved){
-            DefaultPiece Piece1 = board.getPiece(this.row,this.col+3);
-            DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
-            if (Piece1 instanceof Rook){
-                Rook Rook1 = (Rook) Piece1;
-                if (Rook1.color == this.color && Rook1.getHasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-                    possibleMoves.add(new Move(this.row,this.col+2,true));
-                    Rook1.addPossibleMove(new Move(this.row,this.col-2,true));
-                }
-            }
-            if (Piece2 instanceof Rook){
-                Rook Rook2 = (Rook) Piece2;
-                if (Rook2.color == this.color && !Rook2.getHasMoved() && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-                    possibleMoves.add(new Move(this.row,this.col-2,true));
-                    Rook2.addPossibleMove(new Move(this.row,this.col+3,true));
-                }
-            }
-        }
-    }
+    // public void checkCastleAvailable(Board board){
+    //     if (!this.hasMoved){
+    //         DefaultPiece Piece1 = board.getPiece(this.row,this.col+3);
+    //         DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
+    //         if (Piece1 instanceof Rook){
+    //             Rook Rook1 = (Rook) Piece1;
+    //             if (Rook1.color == this.color && Rook1.getHasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
+    //                 possibleMoves.add(new Move(this.row,this.col+2,true));
+    //                 Rook1.addPossibleMove(new Move(this.row,this.col-2,true));
+    //             }
+    //         }
+    //         if (Piece2 instanceof Rook){
+    //             Rook Rook2 = (Rook) Piece2;
+    //             if (Rook2.color == this.color && !Rook2.getHasMoved() && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
+    //                 possibleMoves.add(new Move(this.row,this.col-2,true));
+    //                 Rook2.addPossibleMove(new Move(this.row,this.col+3,true));
+    //             }
+    //         }
+    //     }
+    // }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
+        // TODO castling
         possibleMoves = new HashSet<>();
         for (int col = this.col-1; col <= this.col +1; col ++){ // check upper
             if (board.checkAvailable(this.color,this.row-1, col,true)){
@@ -50,7 +51,7 @@ public class King extends DefaultPiece{
                 possibleMoves.add(new Move(this.row+1,col,this));
             }
         }
-        checkCastleAvailable(board);
+        //checkCastleAvailable(board);
         return possibleMoves;
     }
     @Override

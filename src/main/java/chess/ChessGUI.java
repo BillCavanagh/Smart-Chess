@@ -147,15 +147,16 @@ public class ChessGUI extends Application{
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                board.updatePossibleMoves();
                 String text = textField.getText(); // get input
                 Move move = parseInput(text); // parse input
                 if (board.makeMove(move,board.getTurn() ? chess.Color.WHITE : chess.Color.BLACK)){ // make move
                     textField.setText("");
+                    move.getPiece().move();
                 }
                 else{ // invalid move
                     textField.setText("Invalid Move");
                 }
+                board.updatePossibleMoves();
                 turn.setText(board.getTurn() == true ? "White to Move" : "Black to Move");
                 check.setText(board.kingIsInCheck(board.getTurn() == true ? chess.Color.WHITE : chess.Color.BLACK) ? "Check" : "");
                 makeMoveList();

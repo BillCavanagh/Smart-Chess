@@ -15,7 +15,7 @@ public class Rook extends DefaultPiece{
     }
     @Override
     public Set<Move> getPossibleMoves(Board board){
-        // TODO castling case, king discovery check case
+        // TODO castling case
         // top left = 0,0 
         possibleMoves = new HashSet<>();
         int[][] directions = {{-1, 0},{1,0},{0,-1},{0,1}}; // up, down, left, right

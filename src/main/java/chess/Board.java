@@ -71,12 +71,12 @@ public class Board {
     }
     public void init_pieces(){
         for (int row = 0; row < 2; row++){ // black
-            for (int col = 0; col < 8; col++){
+            for (int col = 0; col < COLS; col++){
                 blackPieces.add(board[row][col]);
             }
         } 
-        for (int row = 6; row < 8; row++){ // white
-            for (int col = 0; col < 8; col++){
+        for (int row = 6; row < ROWS; row++){ // white
+            for (int col = 0; col < COLS; col++){
                 whitePieces.add(board[row][col]);
             }
         } 
@@ -94,7 +94,7 @@ public class Board {
         return (file-97);
     }
     public boolean inBounds(int row, int col){
-        return row <= 7 && col <= 7 && row >= 0 && col >= 0;
+        return row < ROWS && col < COLS && row >= 0 && col >= 0;
     }
     public DefaultPiece getPiece(int row, int col){
         return board[row][col];
@@ -129,18 +129,21 @@ public class Board {
         setPiece(captured,newRow,newCol);
         mover.setRow(oldRow);
         mover.setCol(oldCol);
-        if (captured != null){
-            if (mover.getColor() == Color.WHITE){
-                whitePieces.add(captured);
-            } 
-            else{
-                blackPieces.add(captured);
-            }           
-        }
+        // if (captured != null){
+        //     if (mover.getColor() == Color.WHITE){
+        //         whitePieces.add(captured);
+        //     } 
+        //     else{
+        //         blackPieces.add(captured);
+        //     }           
+        // }
     }
-    public boolean noChecks(Color color){
+    public boolean noChecks(Color color, DefaultPiece excluded){
         for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
+            if (piece.equals(excluded)){
+                continue;
+            }
             for (Move move : pieceMoves){
                 DefaultPiece attacked = getPiece(move.getRow(),move.getCol());
                 if (attacked instanceof King && attacked.getColor() == color){
@@ -157,7 +160,7 @@ public class Board {
         int oldCol = piece.getCol();
         DefaultPiece captured = makeTempMove(move); // temporarily make the move
         boolean toReturn = false;
-        if (noChecks(piece.getColor())){ // see if the move results in no checks 
+        if (noChecks(piece.getColor(),captured)){ // see if the move results in no checks 
             toReturn = true;
         }
         undoTempMove(oldRow,oldCol,piece,captured);
@@ -226,20 +229,24 @@ public class Board {
         for (DefaultPiece piece : blackPieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
-                currentBlackMoves.add(move);
-                whiteKingAvailable[move.getRow()][move.getCol()] = false;
-                if (board[move.getRow()][move.getCol()] instanceof King){
+                if (willPreventCheck(move)){
+                    currentBlackMoves.add(move);
+                    whiteKingAvailable[move.getRow()][move.getCol()] = false;
+                    if (board[move.getRow()][move.getCol()] instanceof King){
                     attackingWhiteKing.add(move.getPiece());
+                    }
                 }
             }
         }
         for (DefaultPiece piece : whitePieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
-                currentWhiteMoves.add(move);
-                blackKingAvailable[move.getRow()][move.getCol()] = false;
-                if (board[move.getRow()][move.getCol()] instanceof King){
-                    attackingBlackKing.add(move.getPiece());
+                if (willPreventCheck(move)){
+                    currentWhiteMoves.add(move);
+                    blackKingAvailable[move.getRow()][move.getCol()] = false;
+                    if (board[move.getRow()][move.getCol()] instanceof King){
+                        attackingBlackKing.add(move.getPiece());
+                    }
                 }
             }
         }
@@ -264,9 +271,6 @@ public class Board {
             return false;
         }
         if (!move.isCastle()){
-            if (kingIsInCheck(color) && !willPreventCheck(move)){
-                return false;
-            }
             int oldRow = move.getPiece().getRow();
             int oldCol = move.getPiece().getCol();
             int newRow = move.getRow(); 

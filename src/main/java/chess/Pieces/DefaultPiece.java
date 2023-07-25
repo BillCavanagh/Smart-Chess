@@ -64,8 +64,6 @@ public abstract class DefaultPiece {
     public abstract Set<Move> getPossibleMoves(Board board);
     public abstract String toString();
     public void move(){
-        if (piece.shorthand == 'p' || piece.shorthand == 'k' || piece.shorthand == 'r'){
-            hasMoved = true;
-        }
+        hasMoved = true;
     }
 }   
