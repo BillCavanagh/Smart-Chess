@@ -7,10 +7,8 @@ import chess.Color;
 import chess.Move;
 
 public class Rook extends DefaultPiece{
-    private boolean hasMoved;
     public Rook(Color color, int row, int col){
         super(color,Piece.ROOK,row,col);
-        this.hasMoved = false;
         this.possibleMoves = new HashSet<>();
     }
     @Override

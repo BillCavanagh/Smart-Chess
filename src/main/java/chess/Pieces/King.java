@@ -7,10 +7,8 @@ import chess.Color;
 import chess.Move;
 
 public class King extends DefaultPiece{
-    private boolean hasMoved;
     public King(Color color, int row, int col){
         super(color,Piece.KING,row,col);
-        this.hasMoved = false;
     }
     // public void checkCastleAvailable(Board board){
     //     if (!this.hasMoved){

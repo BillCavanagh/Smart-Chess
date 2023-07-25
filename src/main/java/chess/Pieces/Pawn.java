@@ -7,10 +7,8 @@ import chess.Color;
 import chess.Move;
 
 public class Pawn extends DefaultPiece {
-    private boolean hasMoved;
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);
-        this.hasMoved = false;
     }
     public Move moveMaker(int spacesHorizontal, int spacesVertical){
         if (color == Color.WHITE){

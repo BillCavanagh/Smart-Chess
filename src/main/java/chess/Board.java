@@ -139,14 +139,14 @@ public class Board {
         // }
     }
     public boolean noChecks(Color color, DefaultPiece excluded){
-        for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){
+        for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){ // go through pieces of the opposite color
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
-            if (piece.equals(excluded)){
+            if (piece.equals(excluded)){ // ignore the piece that was just captured
                 continue;
             }
             for (Move move : pieceMoves){
                 DefaultPiece attacked = getPiece(move.getRow(),move.getCol());
-                if (attacked instanceof King && attacked.getColor() == color){
+                if (attacked instanceof King && attacked.getColor() == color){ // if a piece of the opposite color is checking the king, prevent the move
                     return false;
                 }
             }
@@ -160,10 +160,10 @@ public class Board {
         int oldCol = piece.getCol();
         DefaultPiece captured = makeTempMove(move); // temporarily make the move
         boolean toReturn = false;
-        if (noChecks(piece.getColor(),captured)){ // see if the move results in no checks 
+        if (noChecks(piece.getColor(),captured)){ // see if the move results in no checks for the color that moved
             toReturn = true;
         }
-        undoTempMove(oldRow,oldCol,piece,captured);
+        undoTempMove(oldRow,oldCol,piece,captured); 
         return toReturn; 
     }
     public boolean checkAvailable(Color color,int row, int col){
@@ -233,7 +233,7 @@ public class Board {
                     currentBlackMoves.add(move);
                     whiteKingAvailable[move.getRow()][move.getCol()] = false;
                     if (board[move.getRow()][move.getCol()] instanceof King){
-                    attackingWhiteKing.add(move.getPiece());
+                        attackingWhiteKing.add(move.getPiece());
                     }
                 }
             }
@@ -262,6 +262,8 @@ public class Board {
         piece.setCol(newCol); // update piece col
         ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
         ChessGUI.updateChessBoard(newRow,newCol); // update new position
+        piece.move();
+        updatePossibleMoves();
     }
     public boolean makeMove(Move move, Color color){
         if (color == Color.BLACK && !currentBlackMoves.contains(move)){

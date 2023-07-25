@@ -20,6 +20,7 @@ public abstract class DefaultPiece {
         this.row = row;
         this.col = col;
         this.possibleMoves = new HashSet<>();
+        this.hasMoved = false;
     }
     public Color getColor(){
         return color;
