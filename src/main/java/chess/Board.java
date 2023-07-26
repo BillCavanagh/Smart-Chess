@@ -24,22 +24,15 @@ public class Board {
     protected List<DefaultPiece> blackPieces;
     protected Set<Move> currentWhiteMoves;
     protected Set<Move> currentBlackMoves;
-    public boolean white;
+    public Color turn;
     public Board(){
-        this.whitePieces = new ArrayList<>();
-        this.blackPieces = new ArrayList<>();
-        this.currentBlackMoves = new HashSet<>();
-        this.currentWhiteMoves = new HashSet<>();
-        this.whiteKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true}
-        };
+        turn = Color.WHITE;
+        init_available();
+        init_Board();
+        init_pieces();
+        updatePossibleMoves();
+    }
+    public void init_available(){
         this.blackKingAvailable = new boolean[][]{
             {true,true,true,true,true,true,true,true},
             {true,true,true,true,true,true,true,true},
@@ -50,12 +43,16 @@ public class Board {
             {true,true,true,true,true,true,true,true},
             {true,true,true,true,true,true,true,true}
         };
-        this.attackingBlackKing = new ArrayList<>();
-        this.attackingWhiteKing = new ArrayList<>();
-        this.white = true;
-        init_Board();
-        init_pieces();
-        updatePossibleMoves();
+        this.whiteKingAvailable = new boolean[][]{
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true},
+            {true,true,true,true,true,true,true,true}
+        };
     }
     public void init_Board(){
         board = new DefaultPiece[][]{{new Rook(Color.BLACK,0,0),new Knight(Color.BLACK,0,1),new Bishop(Color.BLACK,0,2),new Queen(Color.BLACK,0,3),new King(Color.BLACK,0,4),new Bishop(Color.BLACK,0,5),new Knight(Color.BLACK,0,6),new Rook(Color.BLACK,0,7)},
@@ -69,7 +66,17 @@ public class Board {
         whiteKing = (King)board[7][4];
         blackKing = (King)board[0][4];
     }
+    public void init_moves(){
+        this.currentBlackMoves = new HashSet<>();
+        this.currentWhiteMoves = new HashSet<>();
+    }
+    public void init_checks(){
+        this.attackingBlackKing = new ArrayList<>();
+        this.attackingWhiteKing = new ArrayList<>();
+    }
     public void init_pieces(){
+        this.whitePieces = new ArrayList<>();
+        this.blackPieces = new ArrayList<>();
         for (int row = 0; row < 2; row++){ // black
             for (int col = 0; col < COLS; col++){
                 blackPieces.add(board[row][col]);
@@ -106,8 +113,8 @@ public class Board {
         blackPieces.remove(getPiece(row,col));
         board[row][col] = null;
     }
-    public boolean getTurn(){
-        return white;
+    public Color getTurn(){
+        return turn;
     }
     public DefaultPiece makeTempMove(Move move){ // assumes the move is valid
         DefaultPiece piece = move.getPiece();
@@ -202,30 +209,9 @@ public class Board {
         return color == Color.WHITE ? !whiteKingAvailable[whiteKing.getRow()][whiteKing.getCol()] : !blackKingAvailable[blackKing.getRow()][blackKing.getCol()];
     }
     public void updatePossibleMoves(){
-        currentBlackMoves = new HashSet<>();
-        currentWhiteMoves = new HashSet<>();
-        whiteKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true}
-        };
-        blackKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true}
-        };
-        attackingWhiteKing = new ArrayList<>();
-        attackingBlackKing = new ArrayList<>();
+        init_available();
+        init_moves();
+        init_checks();
         for (DefaultPiece piece : blackPieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
@@ -285,9 +271,8 @@ public class Board {
         else{
         // TODO Castle case
         }
-        white = white ? false : true; // change turn
-        attackingWhiteKing = new ArrayList<>();
-        attackingBlackKing = new ArrayList<>();
+        turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
+        init_available();
         return true;
     }
     public String toString(){

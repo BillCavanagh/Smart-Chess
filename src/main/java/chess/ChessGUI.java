@@ -1,7 +1,8 @@
 package chess;
 
 import java.util.Map;
-
+import java.lang.Thread.*;
+import java.lang.InterruptedException;
 import chess.Pieces.DefaultPiece;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -42,7 +43,7 @@ public class ChessGUI extends Application{
     public static GridPane chessBoard = new GridPane();
     public static TextField textField = new TextField("");
     public static Button submitButton = new Button("Submit move");
-    public static Label turn = new Label(board.getTurn() == true ? "White to Move" : "Black to Move");
+    public static Label turn = new Label(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
     public static Label check = new Label("");
     public static HBox bottomPanel = new HBox(textField,submitButton,turn,check);
     public static VBox game = new VBox(chessBoard,bottomPanel);
@@ -125,7 +126,7 @@ public class ChessGUI extends Application{
     }
     public static void makeMoveList(){
         String newText = "";
-        if (board.getTurn()){
+        if (board.getTurn() == chess.Color.WHITE){
             newText = newText + "White moves: \n";
             for (Move move : board.currentWhiteMoves){
                 newText += move.toString() + "\n";
@@ -149,14 +150,14 @@ public class ChessGUI extends Application{
             public void handle(ActionEvent event) {
                 String text = textField.getText(); // get input
                 Move move = parseInput(text); // parse input
-                if (board.makeMove(move,board.getTurn() ? chess.Color.WHITE : chess.Color.BLACK)){ // make move
+                if (board.makeMove(move,board.getTurn())){ // make move
                     textField.setText("");
                 }
                 else{ // invalid move
                     textField.setText("Invalid Move");
                 }
-                turn.setText(board.getTurn() == true ? "White to Move" : "Black to Move");
-                check.setText(board.kingIsInCheck(board.getTurn() == true ? chess.Color.WHITE : chess.Color.BLACK) ? "Check" : "");
+                turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
+                check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
                 makeMoveList();
             }
         };

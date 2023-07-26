@@ -10,53 +10,26 @@ public class Pawn extends DefaultPiece {
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);
     }
-    public Move moveMaker(int spacesHorizontal, int spacesVertical){
-        if (color == Color.WHITE){
-            if (row-spacesVertical >= 0 && row-spacesVertical < 8 && col+spacesHorizontal >= 0 && col+spacesHorizontal < 8){
-                return new Move(this.row-spacesVertical,this.col+spacesHorizontal,this);
-            }
-            else{
-                return null;
-            }
-        }
-        else{
-            if (row+spacesVertical >= 0 && row+spacesVertical < 8 && col+spacesHorizontal >= 0 && col+spacesHorizontal < 8){
-                return new Move(this.row+spacesVertical,this.col+spacesHorizontal,this);
-            }
-            else{
-                return null;
-            }
-        }
-    }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
         // TODO implement en passant
         // forward for a pawn is adding 1 to the row for black, subtracting 1 for white
         possibleMoves = new HashSet<>();
-        Move forwardOne = moveMaker(0,1);
-        Move forwardTwo = moveMaker(0,2);
-        Move captureLeft = moveMaker(-1,1);
-        Move captureRight = moveMaker(1,1);
-
-        if (forwardOne != null){
-            if(board.checkAvailable(this.color,forwardOne.row,col) && board.getPiece(forwardOne.row,col) == null){ // check if the space ahead of the pawn is free and not a piece
-                possibleMoves.add(forwardOne);
-                if (!hasMoved){ // if the pawn hasnt moved
-                    if(board.checkAvailable(this.color,forwardTwo.row, col) && board.getPiece(forwardTwo.row,col) == null){ // check two spaces ahead
-                        possibleMoves.add(forwardTwo);
-                    }
-                }
+        Move forwardOne = new Move(row + (color == Color.WHITE ? -1 : 1), col,this);
+        Move forwardTwo = new Move(row + (color == Color.WHITE ? -2 : 2),col,this);
+        Move captureLeft = new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this);
+        Move captureRight = new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this);
+        if (board.checkAvailable(color, forwardOne.getRow(), forwardOne.getCol())){ // check space in front
+            possibleMoves.add(forwardOne);
+            if (!hasMoved && board.checkAvailable(color, forwardTwo.getRow(), forwardTwo.getCol())){ // only if space in front is available, check forward two
+                possibleMoves.add(forwardTwo);
             }
         }
-        if (captureLeft != null){
-            if (board.getPiece(captureLeft.row,captureLeft.col) != null && board.getPiece(captureLeft.row, captureLeft.col).getColor() != this.color){ // check for captures
-                possibleMoves.add(captureLeft);
-            }
+        if (board.checkAvailable(color, captureLeft.getRow(), captureLeft.getCol()) && board.getPiece(captureLeft.getRow(),captureLeft.getCol()) != null){
+            possibleMoves.add(captureLeft);
         }
-        if (captureRight != null){
-            if (board.getPiece(captureRight.row,captureRight.col) != null && board.getPiece(captureRight.row, captureRight.col).getColor() != this.color){ // check for captures
-                possibleMoves.add(captureRight);
-            }
+        if (board.checkAvailable(color, captureRight.getRow(), captureRight.getCol()) && board.getPiece(captureRight.getRow(),captureRight.getCol()) != null){
+            possibleMoves.add(captureLeft);
         }
         return possibleMoves;
     }
