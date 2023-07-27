@@ -19,9 +19,9 @@ public class Pawn extends DefaultPiece {
         Move forwardTwo = new Move(row + (color == Color.WHITE ? -2 : 2),col,this);
         Move captureLeft = new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this);
         Move captureRight = new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this);
-        if (board.checkAvailable(color, forwardOne.getRow(), forwardOne.getCol())){ // check space in front
+        if (board.getPiece(forwardOne.getRow(),forwardOne.getCol()) == null && board.checkAvailable(color, forwardOne.getRow(), forwardOne.getCol())){ // check space in front
             possibleMoves.add(forwardOne);
-            if (!hasMoved && board.checkAvailable(color, forwardTwo.getRow(), forwardTwo.getCol())){ // only if space in front is available, check forward two
+            if (board.getPiece(forwardTwo.getRow(),forwardTwo.getCol()) == null && !hasMoved && board.checkAvailable(color, forwardTwo.getRow(), forwardTwo.getCol())){ // only if space in front is available, check forward two
                 possibleMoves.add(forwardTwo);
             }
         }

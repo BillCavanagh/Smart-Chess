@@ -14,8 +14,6 @@ public class Board {
     protected DefaultPiece[][] board;
     public boolean[][] blackKingAvailable;
     public boolean[][] whiteKingAvailable;
-    protected ArrayList<DefaultPiece> attackingBlackKing;
-    protected ArrayList<DefaultPiece> attackingWhiteKing;
     protected King blackKing;
     protected King whiteKing;
     public static final int ROWS = 8;
@@ -69,10 +67,6 @@ public class Board {
     public void init_moves(){
         this.currentBlackMoves = new HashSet<>();
         this.currentWhiteMoves = new HashSet<>();
-    }
-    public void init_checks(){
-        this.attackingBlackKing = new ArrayList<>();
-        this.attackingWhiteKing = new ArrayList<>();
     }
     public void init_pieces(){
         this.whitePieces = new ArrayList<>();
@@ -136,19 +130,11 @@ public class Board {
         setPiece(captured,newRow,newCol);
         mover.setRow(oldRow);
         mover.setCol(oldCol);
-        // if (captured != null){
-        //     if (mover.getColor() == Color.WHITE){
-        //         whitePieces.add(captured);
-        //     } 
-        //     else{
-        //         blackPieces.add(captured);
-        //     }           
-        // }
     }
     public boolean noChecks(Color color, DefaultPiece excluded){
         for (DefaultPiece piece : color == Color.WHITE ? blackPieces : whitePieces){ // go through pieces of the opposite color
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
-            if (piece.equals(excluded)){ // ignore the piece that was just captured
+            if (piece.equals(excluded) || piece instanceof King){ // ignore the piece that was just captured or if its a king
                 continue;
             }
             for (Move move : pieceMoves){
@@ -211,16 +197,12 @@ public class Board {
     public void updatePossibleMoves(){
         init_available();
         init_moves();
-        init_checks();
         for (DefaultPiece piece : blackPieces){
             Set<Move> pieceMoves = piece.getPossibleMoves(this);
             for (Move move : pieceMoves){
                 if (willPreventCheck(move)){
                     currentBlackMoves.add(move);
                     whiteKingAvailable[move.getRow()][move.getCol()] = false;
-                    if (board[move.getRow()][move.getCol()] instanceof King){
-                        attackingWhiteKing.add(move.getPiece());
-                    }
                 }
             }
         }
@@ -230,9 +212,6 @@ public class Board {
                 if (willPreventCheck(move)){
                     currentWhiteMoves.add(move);
                     blackKingAvailable[move.getRow()][move.getCol()] = false;
-                    if (board[move.getRow()][move.getCol()] instanceof King){
-                        attackingBlackKing.add(move.getPiece());
-                    }
                 }
             }
         }
