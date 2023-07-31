@@ -236,6 +236,9 @@ public class Board {
         updatePossibleMoves();
     }
     public boolean makeMove(Move move, Color color){
+        if (move == null){
+            return false;
+        }
         if (color == Color.BLACK && !currentBlackMoves.contains(move)){
             return false;
         }
