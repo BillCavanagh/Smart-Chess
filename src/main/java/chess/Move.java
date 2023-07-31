@@ -11,18 +11,20 @@ public class Move {
     public int col;
     public DefaultPiece piece;
     public boolean isCastle;
+    public DefaultPiece other;
     public Move(int row, int col, DefaultPiece piece){
         this.row = row;
         this.col = col;
         this.piece = piece;
     }
-    public Move(int row, int col,boolean isCastle){
+    public Move(int row, int col,boolean isCastle, DefaultPiece other){
         this.row = row;
         this.col = col;
         this.isCastle = isCastle;
+        this.other = other;
     }
-    public Move(){
-
+    public DefaultPiece getOther(){
+        return other;
     }
     public DefaultPiece getPiece(){
         return piece;
@@ -35,6 +37,9 @@ public class Move {
     }
     public boolean isCastle(){
         return isCastle;
+    }
+    public boolean isLongCastle(){
+        return other != null && this.col > other.getCol(); // long castle in when the rook is to the left of the king 
     }
     public String toString(){
         return "" + piece.getShorthand() + Board.indexToFile(piece.getCol()) + String.valueOf(Board.indexToRank(piece.getRow())) + " " + 

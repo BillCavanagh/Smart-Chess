@@ -104,7 +104,12 @@ public class Board {
         board[row][col] = piece;
     }
     public void removePiece(Color color, int row, int col){
-        blackPieces.remove(getPiece(row,col));
+        if (color == Color.WHITE){
+            whitePieces.remove(getPiece(row,col));
+        }
+        else{
+            blackPieces.remove(getPiece(row,col));
+        }
         board[row][col] = null;
     }
     public Color getTurn(){
@@ -237,9 +242,10 @@ public class Board {
         if (color == Color.WHITE && !currentWhiteMoves.contains(move)){
             return false;
         }
+        DefaultPiece piece = move.getPiece();
         if (!move.isCastle()){
-            int oldRow = move.getPiece().getRow();
-            int oldCol = move.getPiece().getCol();
+            int oldRow = piece.getRow();
+            int oldCol = piece.getCol();
             int newRow = move.getRow(); 
             int newCol = move.getCol();
             if (getPiece(move.getRow(),move.getCol()) != null){ 
@@ -248,7 +254,13 @@ public class Board {
             movePiece(oldRow,oldCol,newRow,newCol);
         } 
         else{
-        // TODO Castle case
+            DefaultPiece rook = move.getOther();
+            int row = piece.getRow();
+            int oldCol = piece.getCol();
+            int newKingCol = move.getCol();
+            int newRookCol = newKingCol > oldCol ? newKingCol-1 : newKingCol + 1; // if the new position is to the right of its previous position, the rook should be one space to the left of the king
+            movePiece(row,oldCol,row,newKingCol); // move the king
+            movePiece(row,rook.getCol(),row,newRookCol); // move the rook
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
         init_available();

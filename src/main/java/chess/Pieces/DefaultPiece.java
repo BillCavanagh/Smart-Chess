@@ -22,6 +22,9 @@ public abstract class DefaultPiece {
         this.possibleMoves = new HashSet<>();
         this.hasMoved = false;
     }
+    public boolean hasMoved(){
+        return hasMoved;
+    }
     public Color getColor(){
         return color;
     }

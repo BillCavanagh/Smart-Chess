@@ -36,9 +36,6 @@ public class Rook extends DefaultPiece{
     public void addPossibleMove(Move move){
         possibleMoves.add(move);
     }
-    public boolean getHasMoved(){
-        return hasMoved;
-    }
     @Override
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);

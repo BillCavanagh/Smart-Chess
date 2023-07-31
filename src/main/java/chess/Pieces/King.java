@@ -10,26 +10,28 @@ public class King extends DefaultPiece{
     public King(Color color, int row, int col){
         super(color,Piece.KING,row,col);
     }
-    // public void checkCastleAvailable(Board board){
-    //     if (!this.hasMoved){
-    //         DefaultPiece Piece1 = board.getPiece(this.row,this.col+3);
-    //         DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
-    //         if (Piece1 instanceof Rook){
-    //             Rook Rook1 = (Rook) Piece1;
-    //             if (Rook1.color == this.color && Rook1.getHasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-    //                 possibleMoves.add(new Move(this.row,this.col+2,true));
-    //                 Rook1.addPossibleMove(new Move(this.row,this.col-2,true));
-    //             }
-    //         }
-    //         if (Piece2 instanceof Rook){
-    //             Rook Rook2 = (Rook) Piece2;
-    //             if (Rook2.color == this.color && !Rook2.getHasMoved() && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-    //                 possibleMoves.add(new Move(this.row,this.col-2,true));
-    //                 Rook2.addPossibleMove(new Move(this.row,this.col+3,true));
-    //             }
-    //         }
-    //     }
-    // }
+    public void checkCastleAvailable(Board board){
+        // castling can either be short or long:
+        // short and long castling has the king move 2 spaces towards whichever side
+        // the rook then moves to the space opposite to the side of the king it was previously on
+        // I.E rook position = king position +- 1 col
+        if (!this.hasMoved){
+            DefaultPiece Piece1 = board.getPiece(this.row,this.col+3);
+            DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
+            if (Piece1 instanceof Rook){
+                Rook Rook1 = (Rook) Piece1;
+                if (Rook1.color == this.color && !Rook1.hasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
+                    possibleMoves.add(new Move(this.row,this.col+2,true,Rook1));
+                }
+            }
+            if (Piece2 instanceof Rook){
+                Rook Rook2 = (Rook) Piece2;
+                if (Rook2.color == this.color && !Rook2.hasMoved()  && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
+                    possibleMoves.add(new Move(this.row,this.col-2,true,Rook2));
+                }
+            }
+        }
+    }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
         // TODO castling
@@ -49,7 +51,7 @@ public class King extends DefaultPiece{
                 possibleMoves.add(new Move(this.row+1,col,this));
             }
         }
-        //checkCastleAvailable(board);
+        checkCastleAvailable(board);
         return possibleMoves;
     }
     @Override
