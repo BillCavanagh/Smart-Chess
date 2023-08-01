@@ -3,24 +3,23 @@ package chess;
 import java.util.HashSet;
 import java.util.Objects;
 
-import chess.Pieces.DefaultPiece;
-import chess.Pieces.Pawn;
+import chess.Pieces.*;
 
 public class Move {
     public int row;
     public int col;
     public DefaultPiece piece;
-    public boolean isCastle;
     public DefaultPiece other;
     public Move(int row, int col, DefaultPiece piece){
         this.row = row;
         this.col = col;
         this.piece = piece;
+        this.other = null;
     }
-    public Move(int row, int col,boolean isCastle, DefaultPiece other){
+    public Move(int row, int col, DefaultPiece piece, DefaultPiece other){ // castle move
         this.row = row;
         this.col = col;
-        this.isCastle = isCastle;
+        this.piece = piece;
         this.other = other;
     }
     public DefaultPiece getOther(){
@@ -36,7 +35,7 @@ public class Move {
         return col;
     }
     public boolean isCastle(){
-        return isCastle;
+        return other != null;
     }
     public boolean isLongCastle(){
         return other != null && this.col > other.getCol(); // long castle in when the rook is to the left of the king 

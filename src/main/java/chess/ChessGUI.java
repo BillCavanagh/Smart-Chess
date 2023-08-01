@@ -4,6 +4,7 @@ import java.util.Map;
 import java.lang.Thread.*;
 import java.lang.InterruptedException;
 import chess.Pieces.DefaultPiece;
+import chess.Pieces.King;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -51,11 +52,38 @@ public class ChessGUI extends Application{
     public static HBox fullGame = new HBox(game,moves);
     public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
         if (input.equals("O-O") || input.equals("0-0")){ // short castle
-            DefaultPiece piece = board.getTurn() == chess.Color.WHITE ? board.whiteKing : board.blackKing;
-
+            chess.Color color = board.getTurn();
+            King king;
+            if (color == chess.Color.WHITE){
+                king = board.whiteKing;
+                if (king.getPossibleMoves(board).contains(board.whiteShort)){
+                    return board.whiteShort;
+                }
+            }
+            else{
+                king = board.blackKing;
+                if (king.getPossibleMoves(board).contains(board.blackShort)){
+                    return board.blackShort;
+                }
+            }
+            return null;
         }
         if (input.equals("O-O-O") || input.equals("0-0-0")){ // long castle
-
+            chess.Color color = board.getTurn();
+            King king;
+            if (color == chess.Color.WHITE){
+                king = board.whiteKing;
+                if (king.getPossibleMoves(board).contains(board.whiteLong)){
+                    return board.whiteShort;
+                }
+            }
+            else{
+                king = board.blackKing;
+                if (king.getPossibleMoves(board).contains(board.blackLong)){
+                    return board.blackShort;
+                }
+            }
+            return null;
         }
         if (input.length() != 6){
             return null;

@@ -20,21 +20,20 @@ public class King extends DefaultPiece{
             DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
             if (Piece1 instanceof Rook){
                 Rook Rook1 = (Rook) Piece1;
-                if (Rook1.color == this.color && !Rook1.hasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-                    possibleMoves.add(new Move(this.row,this.col+2,true,Rook1));
+                if (Rook1.color == this.color && !Rook1.hasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){ // short castle
+                    possibleMoves.add(color == Color.WHITE ? board.whiteShort : board.blackShort);
                 }
             }
             if (Piece2 instanceof Rook){
                 Rook Rook2 = (Rook) Piece2;
-                if (Rook2.color == this.color && !Rook2.hasMoved()  && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){
-                    possibleMoves.add(new Move(this.row,this.col-2,true,Rook2));
+                if (Rook2.color == this.color && !Rook2.hasMoved()  && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col,this))){ // long castle
+                    possibleMoves.add(color == Color.WHITE ? board.whiteLong : board.blackLong);
                 }
             }
         }
     }
     @Override
-    public Set<Move> getPossibleMoves(Board board) {
-        // TODO castling
+    public Set<Move> getPossibleMoves(Board board){
         possibleMoves = new HashSet<>();
         for (int col = this.col-1; col <= this.col +1; col ++){ // check upper
             if (board.checkAvailable(this.color,this.row-1, col,true)){

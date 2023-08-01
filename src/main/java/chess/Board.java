@@ -23,12 +23,23 @@ public class Board {
     protected Set<Move> currentWhiteMoves;
     protected Set<Move> currentBlackMoves;
     public Color turn;
+    public Move whiteShort;
+    public Move whiteLong;
+    public Move blackShort;
+    public Move blackLong;
     public Board(){
         turn = Color.WHITE;
         init_available();
         init_Board();
         init_pieces();
+        init_castles();
         updatePossibleMoves();
+    }
+    public void init_castles(){
+        whiteShort = new Move(whiteKing.getRow(),whiteKing.getCol()+2,whiteKing,getPiece(7,7));
+        whiteLong = new Move(whiteKing.getRow(),whiteKing.getCol()-2,whiteKing,getPiece(7,0));
+        blackShort = new Move(blackKing.getRow(),blackKing.getCol()+2,blackKing,getPiece(0,7));
+        blackLong = new Move(blackKing.getRow(),blackKing.getCol()-2,blackKing,getPiece(0,0));
     }
     public void init_available(){
         this.blackKingAvailable = new boolean[][]{
