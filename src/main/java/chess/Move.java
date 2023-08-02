@@ -35,7 +35,10 @@ public class Move {
         return col;
     }
     public boolean isCastle(){
-        return other != null;
+        return other instanceof Rook;
+    }
+    public boolean isEnPassant(){
+        return other instanceof Pawn;
     }
     public boolean isLongCastle(){
         return other != null && this.col > other.getCol(); // long castle in when the rook is to the left of the king 

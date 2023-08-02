@@ -65,7 +65,9 @@ public abstract class DefaultPiece {
    }
     public abstract Set<Move> getPossibleMoves(Board board);
     public abstract String toString();
-    public void move(){
+    public void move(Move move){
+        setRow(move.getRow()); 
+        setCol(move.getCol());
         hasMoved = true;
     }
 }   

@@ -109,19 +109,21 @@ public class Board {
         return row < ROWS && col < COLS && row >= 0 && col >= 0;
     }
     public DefaultPiece getPiece(int row, int col){
-        return board[row][col];
+        return inBounds(row,col) ? board[row][col] : null;
     }
     public void setPiece(DefaultPiece piece, int row, int col){
-        board[row][col] = piece;
+        if (inBounds(row,col)) board[row][col] = piece;
     }
     public void removePiece(Color color, int row, int col){
-        if (color == Color.WHITE){
-            whitePieces.remove(getPiece(row,col));
+        if (inBounds(row,col)){
+            if (color == Color.WHITE){
+                whitePieces.remove(getPiece(row,col));
+            }
+            else{
+                blackPieces.remove(getPiece(row,col));
+            }
+            board[row][col] = null;
         }
-        else{
-            blackPieces.remove(getPiece(row,col));
-        }
-        board[row][col] = null;
     }
     public Color getTurn(){
         return turn;
@@ -232,18 +234,20 @@ public class Board {
             }
         }
     }
-    public void movePiece(int oldRow, int oldCol, int newRow, int newCol){ 
-        DefaultPiece piece = getPiece(oldRow,oldCol);
+    public void movePiece(Move move){ 
+        DefaultPiece piece = move.getPiece();
+        int oldRow = piece.getRow();
+        int oldCol = piece.getCol();
+        int newRow = move.getRow(); 
+        int newCol = move.getCol();
         if (getPiece(newRow,newCol) != null){ // if the new position has a piece, it must be removed from the appropriate set
             removePiece(piece.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
         }
         setPiece(piece,newRow,newCol); // update new position on board
         setPiece(null,oldRow,oldCol); // update old position on board
-        piece.setRow(newRow); // update piece row
-        piece.setCol(newCol); // update piece col
+        piece.move(move);
         ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
         ChessGUI.updateChessBoard(newRow,newCol); // update new position
-        piece.move();
         updatePossibleMoves();
     }
     public boolean makeMove(Move move, Color color){
@@ -258,14 +262,7 @@ public class Board {
         }
         DefaultPiece piece = move.getPiece();
         if (!move.isCastle()){
-            int oldRow = piece.getRow();
-            int oldCol = piece.getCol();
-            int newRow = move.getRow(); 
-            int newCol = move.getCol();
-            if (getPiece(move.getRow(),move.getCol()) != null){ 
-                removePiece(color == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
-            }
-            movePiece(oldRow,oldCol,newRow,newCol);
+            movePiece(move);
         } 
         else{
             DefaultPiece rook = move.getOther();
@@ -273,8 +270,8 @@ public class Board {
             int oldCol = piece.getCol();
             int newKingCol = move.getCol();
             int newRookCol = newKingCol > oldCol ? newKingCol-1 : newKingCol + 1; // if the new position is to the right of its previous position, the rook should be one space to the left of the king
-            movePiece(row,oldCol,row,newKingCol); // move the king
-            movePiece(row,rook.getCol(),row,newRookCol); // move the rook
+            movePiece(new Move(row,newKingCol,piece)); // move the king
+            movePiece(new Move(row,newRookCol,rook)); // move the rook
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
         init_available();

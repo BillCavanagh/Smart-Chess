@@ -7,8 +7,10 @@ import chess.Color;
 import chess.Move;
 
 public class Pawn extends DefaultPiece {
+    private boolean justMovedTwo;
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);
+        justMovedTwo = false;
     }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
@@ -31,10 +33,41 @@ public class Pawn extends DefaultPiece {
         if (board.checkAvailable(color, captureRight.getRow(), captureRight.getCol()) && board.getPiece(captureRight.getRow(),captureRight.getCol()) != null){
             possibleMoves.add(captureLeft);
         }
+        // check for en passant
+        DefaultPiece piece1 = board.getPiece(this.row,this.col+1); // check the spaces to the left and right of the pawn for other pawns
+        DefaultPiece piece2 = board.getPiece(this.row,this.col-1);
+        if (piece1 instanceof Pawn){
+            Pawn pawn1 = (Pawn) piece1;
+            if (pawn1.justMovedTwo()){ // if the pawn just moved two spaces, the space before it must be available and en passant can occur
+                possibleMoves.add(new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this,pawn1));
+            }
+        }
+        if (piece2 instanceof Pawn){
+            Pawn pawn2 = (Pawn) piece2;
+            if (pawn2.justMovedTwo()){
+                possibleMoves.add(new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this,pawn2));
+            }
+        }
         return possibleMoves;
     }
     @Override
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
+    }
+    public boolean justMovedTwo(){
+        return justMovedTwo;
+    }
+    public void Move(Move move){
+        if (hasMoved){
+            justMovedTwo = false;
+        }
+        else{
+            hasMoved = true;
+            if (Math.abs(move.getRow()-row) == 2){
+                justMovedTwo = true;
+            }
+        }
+        setRow(move.getRow()); 
+        setCol(move.getCol());
     }
 }
