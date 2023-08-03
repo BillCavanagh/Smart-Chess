@@ -51,6 +51,9 @@ public class ChessGUI extends Application{
     public static Label moves = new Label("");
     public static HBox fullGame = new HBox(game,moves);
     public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
+        // if (input.equals("test")){
+        //     board.makeMove(move,board.getTurn())
+        // }
         if (input.equals("O-O") || input.equals("0-0")){ // short castle
             chess.Color color = board.getTurn();
             King king;

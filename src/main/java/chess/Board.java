@@ -243,9 +243,9 @@ public class Board {
         if (getPiece(newRow,newCol) != null){ // if the new position has a piece, it must be removed from the appropriate set
             removePiece(piece.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE,newRow,newCol);
         }
+        piece.move(move);
         setPiece(piece,newRow,newCol); // update new position on board
         setPiece(null,oldRow,oldCol); // update old position on board
-        piece.move(move);
         ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
         ChessGUI.updateChessBoard(newRow,newCol); // update new position
         updatePossibleMoves();
@@ -265,7 +265,7 @@ public class Board {
             movePiece(move);
         } 
         else{
-            DefaultPiece rook = move.getOther();
+            DefaultPiece rook = move.getPiece2();
             int row = piece.getRow();
             int oldCol = piece.getCol();
             int newKingCol = move.getCol();

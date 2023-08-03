@@ -9,21 +9,21 @@ public class Move {
     public int row;
     public int col;
     public DefaultPiece piece;
-    public DefaultPiece other;
+    public DefaultPiece piece2;
     public Move(int row, int col, DefaultPiece piece){
         this.row = row;
         this.col = col;
         this.piece = piece;
-        this.other = null;
+        this.piece2 = null;
     }
     public Move(int row, int col, DefaultPiece piece, DefaultPiece other){ // castle move
         this.row = row;
         this.col = col;
         this.piece = piece;
-        this.other = other;
+        this.piece2 = other;
     }
-    public DefaultPiece getOther(){
-        return other;
+    public DefaultPiece getPiece2(){
+        return piece2;
     }
     public DefaultPiece getPiece(){
         return piece;
@@ -35,15 +35,21 @@ public class Move {
         return col;
     }
     public boolean isCastle(){
-        return other instanceof Rook;
+        return piece2 instanceof Rook;
     }
     public boolean isEnPassant(){
-        return other instanceof Pawn;
+        return piece2 instanceof Pawn;
     }
     public boolean isLongCastle(){
-        return other != null && this.col > other.getCol(); // long castle in when the rook is to the left of the king 
+        return piece2 != null && this.col > piece2.getCol(); // long castle in when the rook is to the left of the king 
     }
     public String toString(){
+        if (isCastle() && !isLongCastle()){
+            return "O-O";
+        }
+        if (isLongCastle()){
+            return "O-O-O";
+        }
         return "" + piece.getShorthand() + Board.indexToFile(piece.getCol()) + String.valueOf(Board.indexToRank(piece.getRow())) + " " + 
         Board.indexToFile(col) + String.valueOf(Board.indexToRank(row));
     }
@@ -61,7 +67,10 @@ public class Move {
         if (obj instanceof Move){
             Move other = (Move) obj;
             if (this.row == other.row && this.col == other.col && this.piece.equals(other.piece)){
-                return true;
+                if (piece2 != null && other.piece2 != null){
+                    return piece2.getRow() == other.piece2.getRow() && piece2.getCol() == other.piece2.getCol();
+                }
+                return piece2 == null && other.piece2 == null;
             }
         }
         return false;
