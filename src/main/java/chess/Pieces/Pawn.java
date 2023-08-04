@@ -14,7 +14,6 @@ public class Pawn extends DefaultPiece {
     }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
-        // TODO implement en passant
         // forward for a pawn is adding 1 to the row for black, subtracting 1 for white
         possibleMoves = new HashSet<>();
         Move forwardOne = new Move(row + (color == Color.WHITE ? -1 : 1), col,this);
@@ -38,14 +37,16 @@ public class Pawn extends DefaultPiece {
         DefaultPiece piece2 = board.getPiece(this.row,this.col-1);
         if (piece1 instanceof Pawn){
             Pawn pawn1 = (Pawn) piece1;
-            if (pawn1.justMovedTwo()){ // if the pawn just moved two spaces, the space before it must be available and en passant can occur
-                possibleMoves.add(new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this,pawn1));
+            int row = this.row + (color == Color.WHITE ? -1 : 1);
+            if (pawn1.justMovedTwo() && board.checkAvailable(color, row, col+1)){ 
+                possibleMoves.add(new Move(row,col+1,this,pawn1));
             }
         }
         if (piece2 instanceof Pawn){
             Pawn pawn2 = (Pawn) piece2;
-            if (pawn2.justMovedTwo()){
-                possibleMoves.add(new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this,pawn2));
+            int row = this.row + (color == Color.WHITE ? -1 : 1);
+            if (pawn2.justMovedTwo() && board.checkAvailable(color, row, col-1)){
+                possibleMoves.add(new Move(row,col-1,this,pawn2));
             }
         }
         return possibleMoves;
@@ -57,7 +58,7 @@ public class Pawn extends DefaultPiece {
     public boolean justMovedTwo(){
         return justMovedTwo;
     }
-    public void Move(Move move){
+    public void move(Move move){
         if (hasMoved){
             justMovedTwo = false;
         }
