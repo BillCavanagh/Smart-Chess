@@ -212,6 +212,22 @@ public class Board {
     public boolean kingIsInCheck(Color color){
         return color == Color.WHITE ? !whiteKingAvailable[whiteKing.getRow()][whiteKing.getCol()] : !blackKingAvailable[blackKing.getRow()][blackKing.getCol()];
     }
+    public boolean isCheckmate(){
+        if (turn == Color.WHITE){
+            return currentWhiteMoves.size() == 0 && kingIsInCheck(turn);
+        }
+        else{
+            return currentBlackMoves.size() == 0 && kingIsInCheck(turn);
+        }
+    }
+    public boolean isStalemate(){
+        if (turn == Color.WHITE){
+            return currentWhiteMoves.size() == 0 && !kingIsInCheck(turn);
+        }
+        else{
+            return currentBlackMoves.size() == 0 && !kingIsInCheck(turn);
+        }
+    }
     public void updatePossibleMoves(){
         init_available();
         init_moves();

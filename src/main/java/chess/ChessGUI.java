@@ -178,6 +178,10 @@ public class ChessGUI extends Application{
         }
         moves.setText(newText);
     }
+    public void reset(){
+        board = new Board();
+        assembleChessBoard();
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         assembleChessBoard();
@@ -197,6 +201,16 @@ public class ChessGUI extends Application{
                 turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
                 check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
                 makeMoveList();
+                if (board.isCheckmate()){
+                    check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+                    try{Thread.sleep(5000);}catch(InterruptedException e){}
+                    reset();
+                }
+                if (board.isStalemate()){
+                    check.setText("Stalemate, " + "neither player wins");
+                    try{Thread.sleep(5000);}catch(InterruptedException e){}
+                    reset();
+                }
             }
         };
         submitButton.setOnAction(event);
