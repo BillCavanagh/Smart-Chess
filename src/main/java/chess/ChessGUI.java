@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.lang.Thread.*;
 import java.lang.InterruptedException;
@@ -166,13 +168,17 @@ public class ChessGUI extends Application{
         String newText = "";
         if (board.getTurn() == chess.Color.WHITE){
             newText = newText + "White moves: \n";
-            for (Move move : board.currentWhiteMoves){
+            ArrayList<Move> temp = new ArrayList<>(board.currentWhiteMoves);
+            Collections.sort(temp); 
+            for (Move move : temp){
                 newText += move.toString() + "\n";
             }
         }
         else{
             newText = newText + "Black moves: \n";
-            for (Move move : board.currentBlackMoves){
+            ArrayList<Move> temp = new ArrayList<>(board.currentBlackMoves);
+            Collections.sort(temp); 
+            for (Move move : temp){
                 newText += move.toString() + "\n";
             }
         }
