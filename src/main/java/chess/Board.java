@@ -10,7 +10,6 @@ import java.util.Set;
 import chess.Pieces.*;
 
 public class Board {
-    
     protected DefaultPiece[][] board;
     public boolean[][] blackKingAvailable;
     public boolean[][] whiteKingAvailable;
