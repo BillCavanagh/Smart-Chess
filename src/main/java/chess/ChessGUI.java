@@ -52,87 +52,20 @@ public class ChessGUI extends Application{
     public static VBox game = new VBox(chessBoard,bottomPanel);
     public static Label moves = new Label("");
     public static HBox fullGame = new HBox(game,moves);
-    public static Move parseInput(String input){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
-        // if (input.equals("test")){
-        //     board.makeMove(move,board.getTurn())
-        // }
-        if (input.equals("O-O") || input.equals("0-0")){ // short castle
-            chess.Color color = board.getTurn();
-            King king;
-            if (color == chess.Color.WHITE){
-                king = board.whiteKing;
-                if (king.getPossibleMoves(board).contains(board.whiteShort)){
-                    return board.whiteShort;
-                }
-            }
-            else{
-                king = board.blackKing;
-                if (king.getPossibleMoves(board).contains(board.blackShort)){
-                    return board.blackShort;
-                }
-            }
-            return null;
-        }
-        if (input.equals("O-O-O") || input.equals("0-0-0")){ // long castle
-            chess.Color color = board.getTurn();
-            King king;
-            if (color == chess.Color.WHITE){
-                king = board.whiteKing;
-                if (king.getPossibleMoves(board).contains(board.whiteLong)){
-                    return board.whiteShort;
-                }
-            }
-            else{
-                king = board.blackKing;
-                if (king.getPossibleMoves(board).contains(board.blackLong)){
-                    return board.blackShort;
-                }
-            }
-            return null;
-        }
-        if (input.length() != 6){
-            return null;
-        }
-        char pieceShorthand = input.charAt(0);
-        int rowFrom = Board.rankToIndex(input.charAt(2)-48);
-        int colFrom = Board.fileToIndex(input.charAt(1));
-        if (board.getPiece(rowFrom,colFrom).getShorthand() != pieceShorthand){
-            return null;
-        }
-        int rowTo = Board.rankToIndex(input.charAt(5)-48); 
-        int colTo = Board.fileToIndex(input.charAt(4));
-        Move move = new Move(rowTo,colTo,board.getPiece(rowFrom,colFrom));
-        return move;
-    }
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
-            if (piece.getColor() == chess.Color.WHITE){
-                return new Image(whiteImages.get(piece.getPiece().getShorthand()),true);
-            }
-            else{
-                return new Image(blackImages.get(piece.getPiece().getShorthand()),true);
-            }
+            return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
         }
         else{
             return new Image(blankImage);
         }
     }
     public static Color getSpaceColor(int row,int col){
-        if (row % 2 == 0){
-            if (col % 2 == 0){ // even row and col = light
-                return LIGHT;
-            }
-            else{ // even row and odd col = dark
-                return DARK;
-            }
+        if (row % 2 == 0){ // even row
+            return col % 2 == 0 ? LIGHT : DARK; // even row and col = light, even row and odd col = dark
         }
-        else{
-            if (col % 2 == 0){ // odd row and even col = dark
-                return DARK;
-            }
-            else{ // odd row and odd col = light
-                return LIGHT;
-            }
+        else{ // odd row
+            return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
         }      
     }
     public static StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
@@ -164,26 +97,6 @@ public class ChessGUI extends Application{
     public static void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
-    public static void makeMoveList(){
-        String newText = "";
-        if (board.getTurn() == chess.Color.WHITE){
-            newText = newText + "White moves: \n";
-            ArrayList<Move> temp = new ArrayList<>(board.currentWhiteMoves);
-            Collections.sort(temp); 
-            for (Move move : temp){
-                newText += move.toString() + "\n";
-            }
-        }
-        else{
-            newText = newText + "Black moves: \n";
-            ArrayList<Move> temp = new ArrayList<>(board.currentBlackMoves);
-            Collections.sort(temp); 
-            for (Move move : temp){
-                newText += move.toString() + "\n";
-            }
-        }
-        moves.setText(newText);
-    }
     public void reset(){
         board = new Board();
         assembleChessBoard();
@@ -197,7 +110,7 @@ public class ChessGUI extends Application{
             @Override
             public void handle(ActionEvent event) {
                 String text = textField.getText(); // get input
-                Move move = parseInput(text); // parse input
+                Move move = MoveUtils.parseMove(text,board); // parse input
                 if (board.makeMove(move,board.getTurn())){ // make move
                     textField.setText("");
                 }
@@ -206,7 +119,7 @@ public class ChessGUI extends Application{
                 }
                 turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
                 check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
-                makeMoveList();
+                moves.setText(MoveUtils.makeMoveList(board));
                 if (board.isCheckmate()){
                     check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
                     try{Thread.sleep(5000);}catch(InterruptedException e){}
@@ -220,7 +133,7 @@ public class ChessGUI extends Application{
             }
         };
         submitButton.setOnAction(event);
-        makeMoveList();
+        moves.setText(MoveUtils.makeMoveList(board));
         primaryStage.setScene(new Scene(fullGame));
         primaryStage.setTitle("Chess");
         primaryStage.show();
