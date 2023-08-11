@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.lang.Comparable;
 import chess.Pieces.*;
@@ -22,11 +21,11 @@ public class Move implements Comparable<Move>{
         this.piece = piece;
         this.piece2 = other;
     }
-    public DefaultPiece getPiece2(){
-        return piece2;
-    }
     public DefaultPiece getPiece(){
         return piece;
+    }
+    public DefaultPiece getPiece2(){
+        return piece2;
     }
     public int getRow(){
         return row;
@@ -62,7 +61,6 @@ public class Move implements Comparable<Move>{
     public void setPiece(DefaultPiece piece){
         this.piece = piece;
     }
-    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Move){
@@ -79,13 +77,6 @@ public class Move implements Comparable<Move>{
     @Override
     public int hashCode() {
         return Objects.hash(row,col,piece);
-    }
-    public static void main(String[] args) {
-        Move move1 = new Move(1,1,new Pawn(Color.WHITE,1,1));
-        Move move2 = new Move(1,1,new Pawn(Color.WHITE,1,1));
-        HashSet<Move> moves = new HashSet<>();
-        moves.add(move1);
-        System.out.println(moves.contains(move2));
     }
     @Override
     public int compareTo(Move o) {
@@ -106,4 +97,11 @@ public class Move implements Comparable<Move>{
         }
         return piece1.getPiece().getValue() <= piece2.getPiece().getValue() ? -1 : 1; // if they arent the same type, check which one is the smallest value
     }
+    // public static void main(String[] args) { old testing main
+    //     Move move1 = new Move(1,1,new Pawn(Color.WHITE,1,1));
+    //     Move move2 = new Move(1,1,new Pawn(Color.WHITE,1,1));
+    //     HashSet<Move> moves = new HashSet<>();
+    //     moves.add(move1);
+    //     System.out.println(moves.contains(move2));
+    // }
 }

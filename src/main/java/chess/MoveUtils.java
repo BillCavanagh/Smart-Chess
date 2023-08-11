@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import chess.GUI.ChessGUI;
 import chess.Pieces.King;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,8 +41,11 @@ public class MoveUtils {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    board.makeMove(move,move.getPiece().getColor());
-                    gui.updateLabels();
+                    if (gui.selectedMove == move){
+                        board.makeMove(move,move.getPiece().getColor());
+                        gui.updateLabels();
+                    }
+                    gui.updateSelectedMove(move);
                 }
             };
             button.setOnAction(event);

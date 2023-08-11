@@ -9,11 +9,10 @@ import chess.Move;
 public class Rook extends DefaultPiece{
     public Rook(Color color, int row, int col){
         super(color,Piece.ROOK,row,col);
-        this.possibleMoves = new HashSet<>();
     }
     @Override
     public Set<Move> getPossibleMoves(Board board){
-        // TODO castling case
+        // castle moves are managed through king 
         // top left = 0,0 
         possibleMoves = new HashSet<>();
         int[][] directions = {{-1, 0},{1,0},{0,-1},{0,1}}; // up, down, left, right

@@ -1,8 +1,7 @@
 package chess.old;
 
-import java.util.Scanner;
-
-import chess.Pieces.*;
+//import java.util.Scanner;
+//import chess.Pieces.*;
 
 public class CLI {
     // public static Board board = new Board();

@@ -1,26 +1,25 @@
 package chess;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
+import chess.GUI.ChessGUI;
 import chess.Pieces.*;
 
 public class Board {
-    protected DefaultPiece[][] board;
+    public DefaultPiece[][] board;
     public boolean[][] blackKingAvailable;
     public boolean[][] whiteKingAvailable;
-    protected King blackKing;
-    protected King whiteKing;
+    public King blackKing;
+    public King whiteKing;
     public static final int ROWS = 8;
     public static final int COLS = 8;
-    protected List<DefaultPiece> whitePieces;
-    protected List<DefaultPiece> blackPieces;
-    protected Set<Move> currentWhiteMoves;
-    protected Set<Move> currentBlackMoves;
+    public List<DefaultPiece> whitePieces;
+    public List<DefaultPiece> blackPieces;
+    public Set<Move> currentWhiteMoves;
+    public Set<Move> currentBlackMoves;
     public Color turn;
     public Move whiteShort;
     public Move whiteLong;
@@ -93,13 +92,13 @@ public class Board {
         } 
     }
     public static int indexToRank(int index){ // index 0 = rank 8, index 1 = rank 7 ect
-        return Math.abs(index - 8);
+        return Math.abs(index - ROWS);
     }
     public static char indexToFile(int index){ // index 0 = file a, index 1 = file b ect
         return (char)(97 + index); 
     }
     public static int rankToIndex(int rank){ // rank = 8 index = 0, rank = 7 index = 1 ect
-        return 8-rank;
+        return ROWS-rank;
     }
     public static int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
         return (file-97);

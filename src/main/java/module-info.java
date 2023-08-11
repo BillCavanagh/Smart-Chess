@@ -5,4 +5,5 @@ module chess {
     opens chess to javafx.fxml;
     exports chess;
     exports chess.Pieces;
+    exports chess.GUI;
 }

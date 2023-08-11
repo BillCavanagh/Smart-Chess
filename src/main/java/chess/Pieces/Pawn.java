@@ -12,6 +12,24 @@ public class Pawn extends DefaultPiece {
         super(color,Piece.PAWN,row,col);
         justMovedTwo = false;
     }
+    public void checkEnPassant(Board board){
+        DefaultPiece piece1 = board.getPiece(this.row,this.col+1); // check the spaces to the left and right of the pawn for other pawns
+        DefaultPiece piece2 = board.getPiece(this.row,this.col-1);
+        if (piece1 instanceof Pawn){
+            Pawn pawn1 = (Pawn) piece1;
+            int row = this.row + (color == Color.WHITE ? -1 : 1);
+            if (pawn1.justMovedTwo() && board.checkAvailable(color, row, col+1)){ 
+                possibleMoves.add(new Move(row,col+1,this,pawn1));
+            }
+        }
+        if (piece2 instanceof Pawn){
+            Pawn pawn2 = (Pawn) piece2;
+            int row = this.row + (color == Color.WHITE ? -1 : 1);
+            if (pawn2.justMovedTwo() && board.checkAvailable(color, row, col-1)){
+                possibleMoves.add(new Move(row,col-1,this,pawn2));
+            }
+        }
+    }
     @Override
     public Set<Move> getPossibleMoves(Board board) {
         // forward for a pawn is adding 1 to the row for black, subtracting 1 for white
@@ -33,22 +51,7 @@ public class Pawn extends DefaultPiece {
             possibleMoves.add(captureLeft);
         }
         // check for en passant
-        DefaultPiece piece1 = board.getPiece(this.row,this.col+1); // check the spaces to the left and right of the pawn for other pawns
-        DefaultPiece piece2 = board.getPiece(this.row,this.col-1);
-        if (piece1 instanceof Pawn){
-            Pawn pawn1 = (Pawn) piece1;
-            int row = this.row + (color == Color.WHITE ? -1 : 1);
-            if (pawn1.justMovedTwo() && board.checkAvailable(color, row, col+1)){ 
-                possibleMoves.add(new Move(row,col+1,this,pawn1));
-            }
-        }
-        if (piece2 instanceof Pawn){
-            Pawn pawn2 = (Pawn) piece2;
-            int row = this.row + (color == Color.WHITE ? -1 : 1);
-            if (pawn2.justMovedTwo() && board.checkAvailable(color, row, col-1)){
-                possibleMoves.add(new Move(row,col-1,this,pawn2));
-            }
-        }
+        checkEnPassant(board);
         return possibleMoves;
     }
     @Override

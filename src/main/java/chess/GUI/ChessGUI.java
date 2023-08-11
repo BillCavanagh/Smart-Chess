@@ -1,11 +1,11 @@
-package chess;
+package chess.GUI;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
-import java.lang.InterruptedException;
+
+import chess.Board;
+import chess.Move;
+import chess.MoveUtils;
 import chess.Pieces.DefaultPiece;
-import chess.Pieces.King;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,6 +38,7 @@ public class ChessGUI extends Application{
     public static String blankImage = "file:images/Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
+    public static Color HIGHLIGHT = new Color(1,0,0,1);
     // model (board)
     public static Board board = new Board();
     // GUI stuff
@@ -53,6 +54,7 @@ public class ChessGUI extends Application{
     //public static Label moves = new Label("");
     public static VBox moves = new VBox();
     public static HBox fullGame = new HBox(game,moves);
+    public Move selectedMove;
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
             return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
@@ -87,8 +89,8 @@ public class ChessGUI extends Application{
         return space;
     }
     public static void assembleChessBoard(){
-        for (int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++){
+        for (int row = 0; row < Board.ROWS; row++){
+            for (int col = 0; col < Board.COLS; col++){
                 chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
             }
         }
@@ -110,6 +112,29 @@ public class ChessGUI extends Application{
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
     }
+    public void updateSelectedMove(Move move){
+        // remove all old highlighted squares if there is a selected move
+            if (selectedMove != null){
+            int row1 = selectedMove.getPiece().getRow();
+            int row2 = selectedMove.getRow();
+            int col1 = selectedMove.getPiece().getCol();
+            int col2 = selectedMove.getCol();
+            chessBoard.add(getSpace(board.getPiece(row1,col1),getSpaceColor(row1, col1),row1,col1),col1,row1);
+            chessBoard.add(getSpace(board.getPiece(row2,col2),getSpaceColor(row2, col2),row2,col2),col2,row2);
+        }
+        if (!move.equals(selectedMove)){ // selected move changed, update highlighted squares
+            int row1 = move.getPiece().getRow();
+            int row2 = move.getRow();
+            int col1 = move.getPiece().getCol();
+            int col2 = move.getCol();
+            chessBoard.add(getSpace(board.getPiece(row1,col1),HIGHLIGHT,row1,col1),col1,row1);
+            chessBoard.add(getSpace(board.getPiece(row2,col2),HIGHLIGHT,row2,col2),col2,row2);
+            selectedMove = move;
+        }
+        else{ // otherwise, there is no selected move as a move has been made
+            selectedMove = null;
+        }
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         assembleChessBoard();
@@ -118,6 +143,7 @@ public class ChessGUI extends Application{
         EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                // note: this manual input code is outdated, still present in program, going to be removed once other input method works 
                 String text = textField.getText(); // get input
                 Move move = MoveUtils.parseMove(text,board); // parse input
                 if (board.makeMove(move,board.getTurn())){ // make move
