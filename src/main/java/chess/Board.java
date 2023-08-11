@@ -263,7 +263,6 @@ public class Board {
         setPiece(null,oldRow,oldCol); // update old position on board
         ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
         ChessGUI.updateChessBoard(newRow,newCol); // update new position
-        updatePossibleMoves();
     }
     public boolean makeMove(Move move, Color color){
         if (move == null){
@@ -290,6 +289,7 @@ public class Board {
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
         init_available();
+        updatePossibleMoves();
         return true;
     }
     public String toString(){

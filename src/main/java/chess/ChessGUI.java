@@ -3,7 +3,6 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.lang.Thread.*;
 import java.lang.InterruptedException;
 import chess.Pieces.DefaultPiece;
 import chess.Pieces.King;
@@ -46,9 +45,10 @@ public class ChessGUI extends Application{
     public static GridPane chessBoard = new GridPane();
     public static TextField textField = new TextField("");
     public static Button submitButton = new Button("Submit move");
+    public static Button resetButton = new Button("Reset");
     public static Label turn = new Label(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
     public static Label check = new Label("");
-    public static HBox bottomPanel = new HBox(textField,submitButton,turn,check);
+    public static HBox bottomPanel = new HBox(textField,submitButton,resetButton,turn,check);
     public static VBox game = new VBox(chessBoard,bottomPanel);
     public static Label moves = new Label("");
     public static HBox fullGame = new HBox(game,moves);
@@ -100,13 +100,16 @@ public class ChessGUI extends Application{
     public void reset(){
         board = new Board();
         assembleChessBoard();
+        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
+        check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
+        moves.setText(MoveUtils.makeMoveList(board));
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
         assembleChessBoard();
         textField.setMaxSize(TILE_SIZE*8,TILE_SIZE*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
-        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String text = textField.getText(); // get input
@@ -122,17 +125,20 @@ public class ChessGUI extends Application{
                 moves.setText(MoveUtils.makeMoveList(board));
                 if (board.isCheckmate()){
                     check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
-                    try{Thread.sleep(5000);}catch(InterruptedException e){}
-                    reset();
                 }
                 if (board.isStalemate()){
                     check.setText("Stalemate, " + "neither player wins");
-                    try{Thread.sleep(5000);}catch(InterruptedException e){}
-                    reset();
                 }
             }
         };
-        submitButton.setOnAction(event);
+        submitButton.setOnAction(event1);
+        EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                reset();
+            }
+        };
+        resetButton.setOnAction(event2);
         moves.setText(MoveUtils.makeMoveList(board));
         primaryStage.setScene(new Scene(fullGame));
         primaryStage.setTitle("Chess");
