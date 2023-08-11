@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import chess.Pieces.King;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
 public class MoveUtils {
     public static String makeMoveList(Board board){
@@ -25,6 +29,25 @@ public class MoveUtils {
             }
         }
         return newText;
+     }
+     public static VBox makeInputMoveList(Board board, ChessGUI gui){
+        VBox box = new VBox();
+        ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
+        Collections.sort(temp); 
+        for (Move move : temp){
+            Button button = new Button(move.toString());
+            button.autosize();
+            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    board.makeMove(move,move.getPiece().getColor());
+                    gui.updateLabels();
+                }
+            };
+            button.setOnAction(event);
+            box.getChildren().add(button);
+        }
+        return box;
      }
      public static Move parseMove(String input, Board board){ // index 0 = piece, index 1 = fromFile, index 2 = fromRank, index 3 = space, index 4 = toFile, index 5 = toRank
         // if (input.equals("test")){

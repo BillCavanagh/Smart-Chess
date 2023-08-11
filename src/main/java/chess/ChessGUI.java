@@ -50,7 +50,8 @@ public class ChessGUI extends Application{
     public static Label check = new Label("");
     public static HBox bottomPanel = new HBox(textField,submitButton,resetButton,turn,check);
     public static VBox game = new VBox(chessBoard,bottomPanel);
-    public static Label moves = new Label("");
+    //public static Label moves = new Label("");
+    public static VBox moves = new VBox();
     public static HBox fullGame = new HBox(game,moves);
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
@@ -100,9 +101,14 @@ public class ChessGUI extends Application{
     public void reset(){
         board = new Board();
         assembleChessBoard();
+        updateLabels();
+    }
+    public void updateLabels(){
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
-        moves.setText(MoveUtils.makeMoveList(board));
+        moves = MoveUtils.makeInputMoveList(board,this);
+        fullGame.getChildren().remove(1);
+        fullGame.getChildren().add(moves);
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -120,9 +126,7 @@ public class ChessGUI extends Application{
                 else{ // invalid move
                     textField.setText("Invalid Move");
                 }
-                turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
-                check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
-                moves.setText(MoveUtils.makeMoveList(board));
+                updateLabels();
                 if (board.isCheckmate()){
                     check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
                 }
@@ -139,7 +143,7 @@ public class ChessGUI extends Application{
             }
         };
         resetButton.setOnAction(event2);
-        moves.setText(MoveUtils.makeMoveList(board));
+        updateLabels();
         primaryStage.setScene(new Scene(fullGame));
         primaryStage.setTitle("Chess");
         primaryStage.show();
