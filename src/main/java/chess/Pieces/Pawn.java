@@ -5,12 +5,33 @@ import java.util.Set;
 import chess.Board;
 import chess.Color;
 import chess.Move;
-
 public class Pawn extends DefaultPiece {
     private boolean justMovedTwo;
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);
         justMovedTwo = false;
+    }
+    public boolean canPromote(){
+        return row == (color == Color.WHITE ? 0 : 7); // end of the board for white pawns is row 0, for black pawns row 7
+    }
+    public void promote(Board board, Piece newPiece){ // return true if pawn replaced with promoted piece, false if not
+        DefaultPiece replacement = null;
+        switch(newPiece){
+            case KNIGHT: replacement = new Knight(color,row,col); break;
+            case BISHOP: replacement = new Bishop(color,row,col); break;
+            case ROOK: replacement = new Rook(color,row,col); replacement.hasMoved = true;break;
+            case QUEEN: replacement = new Queen(color,row,col);
+            default: return; // newPiece is a pawn or king, neither are valid to promote to
+        }
+        board.setPiece(replacement,row,col); // replace the pawn with the new piece
+        if (color == Color.WHITE){
+            board.whitePieces.remove(this);
+            board.whitePieces.add(replacement);
+        }
+        else{
+            board.blackPieces.remove(this);
+            board.blackPieces.add(replacement);
+        }
     }
     public void checkEnPassant(Board board){
         DefaultPiece piece1 = board.getPiece(this.row,this.col+1); // check the spaces to the left and right of the pawn for other pawns
