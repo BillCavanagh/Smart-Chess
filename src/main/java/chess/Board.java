@@ -14,8 +14,6 @@ public class Board {
     public boolean[][] whiteKingAvailable;
     public King blackKing;
     public King whiteKing;
-    public static final int ROWS = 8;
-    public static final int COLS = 8;
     public List<DefaultPiece> whitePieces;
     public List<DefaultPiece> blackPieces;
     public Set<Move> currentWhiteMoves;
@@ -25,6 +23,8 @@ public class Board {
     public Move whiteLong;
     public Move blackShort;
     public Move blackLong;
+    public static final int ROWS = 8;
+    public static final int COLS = 8;
     public Board(){
         turn = Color.WHITE;
         init_available();
@@ -70,8 +70,8 @@ public class Board {
                 {null,null,null,null,null,null,null,null},
                 {new Pawn(Color.WHITE,6,0),new Pawn(Color.WHITE,6,1),new Pawn(Color.WHITE,6,2),new Pawn(Color.WHITE,6,3),new Pawn(Color.WHITE,6,4),new Pawn(Color.WHITE,6,5),new Pawn(Color.WHITE,6,6),new Pawn(Color.WHITE,6,7)},   
                 {new Rook(Color.WHITE,7,0),new Knight(Color.WHITE,7,1),new Bishop(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Bishop(Color.WHITE,7,5),new Knight(Color.WHITE,7,6),new Rook(Color.WHITE,7,7)}};
-        whiteKing = (King)board[7][4];
-        blackKing = (King)board[0][4];
+        whiteKing = (King)getPiece(7,4);
+        blackKing = (King)getPiece(0,4);
     }
     public void init_moves(){
         this.currentBlackMoves = new HashSet<>();
@@ -80,14 +80,17 @@ public class Board {
     public void init_pieces(){
         this.whitePieces = new ArrayList<>();
         this.blackPieces = new ArrayList<>();
-        for (int row = 0; row < 2; row++){ // black
+        for (int row = 0; row < ROWS; row++){ // 
             for (int col = 0; col < COLS; col++){
-                blackPieces.add(board[row][col]);
-            }
-        } 
-        for (int row = 6; row < ROWS; row++){ // white
-            for (int col = 0; col < COLS; col++){
-                whitePieces.add(board[row][col]);
+                DefaultPiece piece = getPiece(row,col);
+                if (piece != null){
+                    if (piece.getColor() == Color.WHITE){
+                        whitePieces.add(piece);
+                    }
+                    else {
+                        blackPieces.add(piece);
+                    }
+                }
             }
         } 
     }
@@ -104,7 +107,7 @@ public class Board {
         return (file-97);
     }
     public boolean inBounds(int row, int col){
-        return row < ROWS && col < COLS && row >= 0 && col >= 0;
+        return (row >= 0 && row < ROWS) && (col >= 0 && col < COLS); // inBounds = row is in between 0 and rows-1, col is in between 0 and cols-1 
     }
     public DefaultPiece getPiece(int row, int col){
         return inBounds(row,col) ? board[row][col] : null;
@@ -293,8 +296,8 @@ public class Board {
     }
     public String toString(){
         String string = "";
-        for (int rank = 0; rank < board.length; rank++){
-            for (int file = 0; file < board[0].length; file++){
+        for (int rank = 0; rank < ROWS; rank++){
+            for (int file = 0; file < COLS; file++){
                 if (board[rank][file] != null){
                     string += board[rank][file].toString()+ " " +indexToFile(file) + indexToRank(rank) + " ";
                 }

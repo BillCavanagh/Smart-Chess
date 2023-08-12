@@ -22,7 +22,7 @@ public class Bishop extends DefaultPiece{
                 if (board.checkAvailable(this.color, row, col)){
                     possibleMoves.add(new Move(row,col,this));
                 }
-                else{
+                if (!board.checkAvailable(this.color, row, col) || board.getPiece(row,col) != null){
                     break;
                 }
                 row += direction[0];
