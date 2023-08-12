@@ -20,13 +20,13 @@ public class King extends DefaultPiece{
             DefaultPiece Piece2 = board.getPiece(this.row,this.col-4);
             if (Piece1 instanceof Rook){
                 Rook Rook1 = (Rook) Piece1;
-                if (Rook1.color == this.color && !Rook1.hasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col+1,this))){ // short castle
+                if (Rook1.color == this.color && !Rook1.hasMoved() && Rook1.getPossibleMoves(board).contains(new Move(this.row,this.col+1,Rook1))){ // short castle
                     possibleMoves.add(color == Color.WHITE ? board.whiteShort : board.blackShort);
                 }
             }
             if (Piece2 instanceof Rook){
                 Rook Rook2 = (Rook) Piece2;
-                if (Rook2.color == this.color && !Rook2.hasMoved()  && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col-1,this))){ // long castle
+                if (Rook2.color == this.color && !Rook2.hasMoved()  && Rook2.getPossibleMoves(board).contains(new Move(this.row,this.col-1,Rook2))){ // long castle
                     possibleMoves.add(color == Color.WHITE ? board.whiteLong : board.blackLong);
                 }
             }

@@ -234,7 +234,7 @@ public class Board {
             for (Move move : pieceMoves){
                 if (willPreventCheck(move)){
                     currentBlackMoves.add(move);
-                    whiteKingAvailable[move.getRow()][move.getCol()] = false;
+                    if (!(move.getPiece() instanceof King)) whiteKingAvailable[move.getRow()][move.getCol()] = false;
                 }
             }
         }
@@ -243,7 +243,7 @@ public class Board {
             for (Move move : pieceMoves){
                 if (willPreventCheck(move)){
                     currentWhiteMoves.add(move);
-                    blackKingAvailable[move.getRow()][move.getCol()] = false;
+                    if (!(move.getPiece() instanceof King)) blackKingAvailable[move.getRow()][move.getCol()] = false;
                 }
             }
         }
