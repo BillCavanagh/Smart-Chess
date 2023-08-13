@@ -9,17 +9,20 @@ public class Move implements Comparable<Move>{
     public int col;
     public DefaultPiece piece;
     public DefaultPiece piece2;
-    public Move(int row, int col, DefaultPiece piece){
+    public Board board;
+    public Move(int row, int col, DefaultPiece piece, Board board){
         this.row = row;
         this.col = col;
         this.piece = piece;
         this.piece2 = null;
+        this.board = board;
     }
-    public Move(int row, int col, DefaultPiece piece, DefaultPiece other){ // castle move
+    public Move(int row, int col, DefaultPiece piece, DefaultPiece other, Board board){ // castle move
         this.row = row;
         this.col = col;
         this.piece = piece;
         this.piece2 = other;
+        this.board = board;
     }
     public DefaultPiece getPiece(){
         return piece;
@@ -49,8 +52,8 @@ public class Move implements Comparable<Move>{
         if (isLongCastle()){
             return "O-O-O";
         }
-        return "" + piece.getShorthand() + Board.indexToFile(piece.getCol()) + String.valueOf(Board.indexToRank(piece.getRow())) + " " + 
-        Board.indexToFile(col) + String.valueOf(Board.indexToRank(row));
+        return "" + piece.getShorthand() + board.indexToFile(piece.getCol()) + String.valueOf(board.indexToRank(piece.getRow())) + " " + 
+        board.indexToFile(col) + String.valueOf(board.indexToRank(row));
     }
     public void setRow(int row){
         this.row = row;

@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import chess.GUI.ChessGUI;
+import chess.GUI.ChessGame;
 import chess.Pieces.King;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,7 +31,7 @@ public class MoveUtils {
         }
         return newText;
      }
-     public static VBox makeInputMoveList(Board board, ChessGUI gui){
+     public static VBox makeInputMoveList(Board board, ChessGame gui){
         VBox box = new VBox();
         ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
@@ -95,14 +95,14 @@ public class MoveUtils {
             return null;
         }
         char pieceShorthand = input.charAt(0);
-        int rowFrom = Board.rankToIndex(input.charAt(2)-48);
-        int colFrom = Board.fileToIndex(input.charAt(1));
+        int rowFrom = board.rankToIndex(input.charAt(2)-48);
+        int colFrom = board.fileToIndex(input.charAt(1));
         if (board.getPiece(rowFrom,colFrom).getShorthand() != pieceShorthand){
             return null;
         }
-        int rowTo = Board.rankToIndex(input.charAt(5)-48); 
-        int colTo = Board.fileToIndex(input.charAt(4));
-        Move move = new Move(rowTo,colTo,board.getPiece(rowFrom,colFrom));
+        int rowTo = board.rankToIndex(input.charAt(5)-48); 
+        int colTo = board.fileToIndex(input.charAt(4));
+        Move move = new Move(rowTo,colTo,board.getPiece(rowFrom,colFrom),board);
         return move;
     }
 }

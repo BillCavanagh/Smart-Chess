@@ -19,7 +19,7 @@ public class Knight extends DefaultPiece{
             int row = this.row + pos[0];
             int col = this.col + pos[1];
             if (board.checkAvailable(this.color, row, col)){
-                possibleMoves.add(new Move(row,col,this));
+                possibleMoves.add(new Move(row,col,this,board));
             }
         }
         return possibleMoves;

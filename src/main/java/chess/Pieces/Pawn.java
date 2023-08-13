@@ -40,14 +40,14 @@ public class Pawn extends DefaultPiece {
             Pawn pawn1 = (Pawn) piece1;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
             if (pawn1.justMovedTwo() && board.checkAvailable(color, row, col+1)){ 
-                possibleMoves.add(new Move(row,col+1,this,pawn1));
+                possibleMoves.add(new Move(row,col+1,this,pawn1,board));
             }
         }
         if (piece2 instanceof Pawn){
             Pawn pawn2 = (Pawn) piece2;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
             if (pawn2.justMovedTwo() && board.checkAvailable(color, row, col-1)){
-                possibleMoves.add(new Move(row,col-1,this,pawn2));
+                possibleMoves.add(new Move(row,col-1,this,pawn2,board));
             }
         }
     }
@@ -55,10 +55,10 @@ public class Pawn extends DefaultPiece {
     public Set<Move> getPossibleMoves(Board board) {
         // forward for a pawn is adding 1 to the row for black, subtracting 1 for white
         possibleMoves = new HashSet<>();
-        Move forwardOne = new Move(row + (color == Color.WHITE ? -1 : 1), col,this);
-        Move forwardTwo = new Move(row + (color == Color.WHITE ? -2 : 2),col,this);
-        Move captureLeft = new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this);
-        Move captureRight = new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this);
+        Move forwardOne = new Move(row + (color == Color.WHITE ? -1 : 1), col,this,board);
+        Move forwardTwo = new Move(row + (color == Color.WHITE ? -2 : 2),col,this,board);
+        Move captureLeft = new Move(row + (color == Color.WHITE ? -1 : 1),col+1,this,board);
+        Move captureRight = new Move(row + (color == Color.WHITE ? -1 : 1),col-1,this,board);
         if (board.getPiece(forwardOne.getRow(),forwardOne.getCol()) == null && board.checkAvailable(color, forwardOne.getRow(), forwardOne.getCol())){ // check space in front
             possibleMoves.add(forwardOne);
             if (board.getPiece(forwardTwo.getRow(),forwardTwo.getCol()) == null && !hasMoved && board.checkAvailable(color, forwardTwo.getRow(), forwardTwo.getCol())){ // only if space in front is available, check forward two

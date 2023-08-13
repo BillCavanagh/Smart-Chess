@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import chess.GUI.ChessGUI;
+import chess.GUI.ChessGame;
 import chess.Pieces.*;
 
 public class Board {
@@ -23,9 +23,21 @@ public class Board {
     public Move whiteLong;
     public Move blackShort;
     public Move blackLong;
-    public static final int ROWS = 8;
-    public static final int COLS = 8;
+    public int rows;
+    public int cols;
     public Board(){
+        rows = 8; 
+        cols = 8;
+        turn = Color.WHITE;
+        init_available();
+        init_Board();
+        init_pieces();
+        init_castles();
+        updatePossibleMoves();
+    }
+    public Board(GameType gameType){
+        this.rows = gameType.getRows();
+        this.cols = gameType.getCols();
         turn = Color.WHITE;
         init_available();
         init_Board();
@@ -34,10 +46,10 @@ public class Board {
         updatePossibleMoves();
     }
     public void init_castles(){
-        whiteShort = new Move(whiteKing.getRow(),whiteKing.getCol()+2,whiteKing,getPiece(7,7));
-        whiteLong = new Move(whiteKing.getRow(),whiteKing.getCol()-2,whiteKing,getPiece(7,0));
-        blackShort = new Move(blackKing.getRow(),blackKing.getCol()+2,blackKing,getPiece(0,7));
-        blackLong = new Move(blackKing.getRow(),blackKing.getCol()-2,blackKing,getPiece(0,0));
+        whiteShort = new Move(whiteKing.getRow(),whiteKing.getCol()+2,whiteKing,getPiece(rows-1,cols-1),this);
+        whiteLong = new Move(whiteKing.getRow(),whiteKing.getCol()-2,whiteKing,getPiece(rows-1,0),this);
+        blackShort = new Move(blackKing.getRow(),blackKing.getCol()+2,blackKing,getPiece(0,cols-1),this);
+        blackLong = new Move(blackKing.getRow(),blackKing.getCol()-2,blackKing,getPiece(0,0),this);
     }
     public void init_available(){
         this.blackKingAvailable = new boolean[][]{
@@ -80,8 +92,8 @@ public class Board {
     public void init_pieces(){
         this.whitePieces = new ArrayList<>();
         this.blackPieces = new ArrayList<>();
-        for (int row = 0; row < ROWS; row++){ // 
-            for (int col = 0; col < COLS; col++){
+        for (int row = 0; row < rows; row++){ // 
+            for (int col = 0; col < cols; col++){
                 DefaultPiece piece = getPiece(row,col);
                 if (piece != null){
                     if (piece.getColor() == Color.WHITE){
@@ -94,20 +106,20 @@ public class Board {
             }
         } 
     }
-    public static int indexToRank(int index){ // index 0 = rank 8, index 1 = rank 7 ect
-        return Math.abs(index - ROWS);
+    public int indexToRank(int index){ // index 0 = rank 8, index 1 = rank 7 ect
+        return Math.abs(index - rows);
     }
-    public static char indexToFile(int index){ // index 0 = file a, index 1 = file b ect
+    public char indexToFile(int index){ // index 0 = file a, index 1 = file b ect
         return (char)(97 + index); 
     }
-    public static int rankToIndex(int rank){ // rank = 8 index = 0, rank = 7 index = 1 ect
-        return ROWS-rank;
+    public int rankToIndex(int rank){ // rank = 8 index = 0, rank = 7 index = 1 ect
+        return rows-rank;
     }
-    public static int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
+    public int fileToIndex(char file){ // file = a index = 0, file = b index = 1 ect
         return (file-97);
     }
     public boolean inBounds(int row, int col){
-        return (row >= 0 && row < ROWS) && (col >= 0 && col < COLS); // inBounds = row is in between 0 and rows-1, col is in between 0 and cols-1 
+        return (row >= 0 && row < rows) && (col >= 0 && col < cols); // inBounds = row is in between 0 and rows-1, col is in between 0 and cols-1 
     }
     public DefaultPiece getPiece(int row, int col){
         return inBounds(row,col) ? board[row][col] : null;
@@ -263,8 +275,8 @@ public class Board {
         piece.move(move);
         setPiece(piece,newRow,newCol); // update new position on board
         setPiece(null,oldRow,oldCol); // update old position on board
-        ChessGUI.updateChessBoard(oldRow,oldCol); // update old position
-        ChessGUI.updateChessBoard(newRow,newCol); // update new position
+        ChessGame.updateChessBoard(oldRow,oldCol); // update old position
+        ChessGame.updateChessBoard(newRow,newCol); // update new position
     }
     public boolean makeMove(Move move, Color color){
         if (move == null){
@@ -286,8 +298,8 @@ public class Board {
             int oldCol = piece.getCol();
             int newKingCol = move.getCol();
             int newRookCol = newKingCol > oldCol ? newKingCol-1 : newKingCol + 1; // if the new position is to the right of its previous position, the rook should be one space to the left of the king
-            movePiece(new Move(row,newKingCol,piece)); // move the king
-            movePiece(new Move(row,newRookCol,rook)); // move the rook
+            movePiece(new Move(row,newKingCol,piece,this)); // move the king
+            movePiece(new Move(row,newRookCol,rook,this)); // move the rook
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
         init_available();
@@ -296,8 +308,8 @@ public class Board {
     }
     public String toString(){
         String string = "";
-        for (int rank = 0; rank < ROWS; rank++){
-            for (int file = 0; file < COLS; file++){
+        for (int rank = 0; rank < rows; rank++){
+            for (int file = 0; file < cols; file++){
                 if (board[rank][file] != null){
                     string += board[rank][file].toString()+ " " +indexToFile(file) + indexToRank(rank) + " ";
                 }

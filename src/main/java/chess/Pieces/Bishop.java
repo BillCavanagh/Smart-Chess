@@ -20,7 +20,7 @@ public class Bishop extends DefaultPiece{
             int col = this.col + direction[1];
             while (board.inBounds(row, col)){
                 if (board.checkAvailable(this.color, row, col)){
-                    possibleMoves.add(new Move(row,col,this));
+                    possibleMoves.add(new Move(row,col,this,board));
                 }
                 if (!board.checkAvailable(this.color, row, col) || board.getPiece(row,col) != null){
                     break;

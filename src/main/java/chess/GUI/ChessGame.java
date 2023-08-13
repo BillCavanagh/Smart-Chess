@@ -1,16 +1,12 @@
 package chess.GUI;
 
 import java.util.Map;
-
-import chess.Board;
-import chess.Move;
-import chess.MoveUtils;
+import chess.*;
 import chess.Pieces.DefaultPiece;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -28,8 +24,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
 
-public class ChessGUI extends Application{
+public class ChessGame extends Application{
     // images/color stuff
     public static Map<Character,String> whiteImages = Map.of('b',"file:images/White_Bishop.png",'k',"file:images/White_King.png",
     'n',"file:images/White_Knight.png",'p',"file:images/White_Pawn.png",'q',"file:images/White_Queen.png",'r',"file:images/White_Rook.png");
@@ -73,8 +70,8 @@ public class ChessGUI extends Application{
     }
     public static StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
-        int rank = Board.indexToRank(row);
-        char file = Board.indexToFile(col);
+        int rank = board.indexToRank(row);
+        char file = board.indexToFile(col);
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(TILE_SIZE);
         imageView.setFitWidth(TILE_SIZE);
@@ -89,8 +86,8 @@ public class ChessGUI extends Application{
         return space;
     }
     public static void assembleChessBoard(){
-        for (int row = 0; row < Board.ROWS; row++){
-            for (int col = 0; col < Board.COLS; col++){
+        for (int row = 0; row < board.rows; row++){
+            for (int col = 0; col < board.cols; col++){
                 chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
             }
         }
@@ -161,11 +158,11 @@ public class ChessGUI extends Application{
                 }
             }
         };
-        submitButton.setOnAction(event1);
         EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 reset();
+                primaryStage.setScene(new Scene(new Label("test")));
             }
         };
         resetButton.setOnAction(event2);
@@ -175,6 +172,7 @@ public class ChessGUI extends Application{
         primaryStage.show();
     }
     public static void main(String[] args) {
+        // make menus and whatnot, allow customizable board positions/sizes
         launch(args);
     }
 }
