@@ -39,14 +39,14 @@ public class Pawn extends DefaultPiece {
         if (piece1 instanceof Pawn){
             Pawn pawn1 = (Pawn) piece1;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
-            if (pawn1.justMovedTwo() && board.checkAvailable(color, row, col+1)){ 
+            if (board.getLastMove() != null && board.getLastMove().getPiece().equals(pawn1) && board.checkAvailable(color, row, col+1)){ 
                 possibleMoves.add(new Move(row,col+1,this,pawn1,board));
             }
         }
         if (piece2 instanceof Pawn){
             Pawn pawn2 = (Pawn) piece2;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
-            if (pawn2.justMovedTwo() && board.checkAvailable(color, row, col-1)){
+            if (board.getLastMove() != null && board.getLastMove().getPiece().equals(pawn2) && board.checkAvailable(color, row, col-1)){
                 possibleMoves.add(new Move(row,col-1,this,pawn2,board));
             }
         }
@@ -79,20 +79,20 @@ public class Pawn extends DefaultPiece {
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
     }
-    public boolean justMovedTwo(){
-        return justMovedTwo;
-    }
-    public void move(Move move){
-        if (hasMoved){
-            justMovedTwo = false;
-        }
-        else{
-            hasMoved = true;
-            if (Math.abs(move.getRow()-row) == 2){
-                justMovedTwo = true;
-            }
-        }
-        setRow(move.getRow()); 
-        setCol(move.getCol());
-    }
+    // public boolean justMovedTwo(){
+    //     return justMovedTwo;
+    // }
+    // public void move(Move move){
+    //     if (hasMoved){
+    //         justMovedTwo = false;
+    //     }
+    //     else{
+    //         hasMoved = true;
+    //         if (Math.abs(move.getRow()-row) == 2){
+    //             justMovedTwo = true;
+    //         }
+    //     }
+    //     setRow(move.getRow()); 
+    //     setCol(move.getCol());
+    // }
 }

@@ -19,6 +19,7 @@ public class Board {
     public Set<Move> currentWhiteMoves;
     public Set<Move> currentBlackMoves;
     public Color turn;
+    public Move lastMove;
     public Move whiteShort;
     public Move whiteLong;
     public Move blackShort;
@@ -140,6 +141,9 @@ public class Board {
     }
     public Color getTurn(){
         return turn;
+    }
+    public Move getLastMove(){
+        return lastMove;
     }
     public DefaultPiece makeTempMove(Move move){ // assumes the move is valid
         DefaultPiece piece = move.getPiece();
@@ -289,10 +293,15 @@ public class Board {
             return false;
         }
         DefaultPiece piece = move.getPiece();
-        if (!move.isCastle()){
+        if (!move.isCastle()){ // normal move or en passant
             movePiece(move);
+            DefaultPiece piece2 = move.getPiece2();
+            if (piece2 != null){
+                removePiece(piece2.getColor(), piece2.getRow(),piece2.getCol()); 
+                ChessGame.updateChessBoard(piece2.getRow(),piece2.getCol());
+            }
         } 
-        else{
+        else{ // castle move
             DefaultPiece rook = move.getPiece2();
             int row = piece.getRow();
             int oldCol = piece.getCol();
@@ -302,6 +311,7 @@ public class Board {
             movePiece(new Move(row,newRookCol,rook,this)); // move the rook
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
+        lastMove = move;
         init_available();
         updatePossibleMoves();
         return true;

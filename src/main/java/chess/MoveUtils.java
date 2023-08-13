@@ -46,6 +46,12 @@ public class MoveUtils {
                         gui.updateLabels();
                     }
                     gui.updateSelectedMove(move);
+                    if (board.isCheckmate()){
+                        ChessGame.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+                    }
+                    if (board.isStalemate()){
+                        ChessGame.check.setText("Stalemate, " + "neither player wins");
+                    }
                 }
             };
             button.setOnAction(event);

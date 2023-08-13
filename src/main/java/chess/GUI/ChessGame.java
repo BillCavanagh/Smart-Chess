@@ -172,7 +172,6 @@ public class ChessGame extends Application{
         primaryStage.show();
     }
     public static void main(String[] args) {
-        // make menus and whatnot, allow customizable board positions/sizes
         launch(args);
     }
 }
