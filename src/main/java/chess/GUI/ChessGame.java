@@ -26,7 +26,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
-public class ChessGame extends Application{
+public class ChessGame {
     // images/color stuff
     public static Map<Character,String> whiteImages = Map.of('b',"file:images/White_Bishop.png",'k',"file:images/White_King.png",
     'n',"file:images/White_Knight.png",'p',"file:images/White_Pawn.png",'q',"file:images/White_Queen.png",'r',"file:images/White_Rook.png");
@@ -97,11 +97,6 @@ public class ChessGame extends Application{
     public static void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
-    public void reset(){
-        board = new Board();
-        assembleChessBoard();
-        updateLabels();
-    }
     public void updateLabels(){
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
@@ -132,8 +127,8 @@ public class ChessGame extends Application{
             selectedMove = null;
         }
     }
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public HBox getBoard(GameType gameType) throws Exception {
+        board = new Board(gameType);
         assembleChessBoard();
         textField.setMaxSize(TILE_SIZE*8,TILE_SIZE*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
@@ -151,9 +146,11 @@ public class ChessGame extends Application{
                 }
                 updateLabels();
                 if (board.isCheckmate()){
+                    turn.setText("");
                     check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
                 }
                 if (board.isStalemate()){
+                    turn.setText("");
                     check.setText("Stalemate, " + "neither player wins");
                 }
             }
@@ -161,17 +158,11 @@ public class ChessGame extends Application{
         EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                reset();
-                primaryStage.setScene(new Scene(new Label("test")));
+                ChessMenu.reset();
             }
         };
         resetButton.setOnAction(event2);
         updateLabels();
-        primaryStage.setScene(new Scene(fullGame));
-        primaryStage.setTitle("Chess");
-        primaryStage.show();
-    }
-    public static void main(String[] args) {
-        launch(args);
+        return fullGame;
     }
 }
