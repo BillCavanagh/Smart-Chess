@@ -28,13 +28,25 @@ import javafx.scene.Scene;
 public class ChessMenu extends Application{
     public static Stage stage;
     public static Button classic = new Button("Classic");
-    public static VBox menu = new VBox(classic);
+    public static Button mini = new Button("Mini");
+    public static Button horde = new Button("Horde");
+    public static VBox menu = new VBox(classic,mini,horde);
     public ChessGame game = new ChessGame();
     public static Scene menuScene = new Scene(menu);
     public void start(Stage primaryStage) throws Exception {
         classic.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent event) {
                 try {stage.setScene(new Scene(game.getBoard(GameType.CLASSIC)));} catch (Exception e){}
+            }
+        });
+        mini.setOnAction(new EventHandler<ActionEvent>(){
+            public void handle(ActionEvent event) {
+                try {stage.setScene(new Scene(game.getBoard(GameType.MINI)));} catch (Exception e){}
+            }
+        });
+        horde.setOnAction(new EventHandler<ActionEvent>(){
+            public void handle(ActionEvent event) {
+                try {stage.setScene(new Scene(game.getBoard(GameType.HORDE)));} catch (Exception e){}
             }
         });
         stage = primaryStage;

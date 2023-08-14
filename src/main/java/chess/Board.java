@@ -76,8 +76,6 @@ public class Board {
     }
     public void init_Board(GameType gameType){
         board = gameType.getLayout();
-        whiteKing = (King)getPiece(7,4);
-        blackKing = (King)getPiece(0,4);
     }
     public void init_moves(){
         this.currentBlackMoves = new HashSet<>();
@@ -91,9 +89,15 @@ public class Board {
                 DefaultPiece piece = getPiece(row,col);
                 if (piece != null){
                     if (piece.getColor() == Color.WHITE){
+                        if (piece instanceof King){
+                            whiteKing = (King)piece;
+                        }
                         whitePieces.add(piece);
                     }
                     else {
+                        if (piece instanceof King){
+                            blackKing = (King)piece;
+                        }
                         blackPieces.add(piece);
                     }
                 }
