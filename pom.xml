@@ -4,11 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>chess</groupId>
-  <artifactId>chess</artifactId>
+  <groupId>Smart Chess</groupId>
+  <artifactId>Smart Chess</artifactId>
   <version>1</version>
 
-  <name>chess</name>
+  <name>Smart Chess</name>
   <url>http://www.example.com</url>
 
   <properties>
