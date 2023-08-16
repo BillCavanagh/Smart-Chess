@@ -28,11 +28,11 @@ import javafx.scene.Scene;
 
 public class ChessGame {
     // images/color stuff
-    public static Map<Character,String> whiteImages = Map.of('b',"file:images/White_Bishop.png",'k',"file:images/White_King.png",
-    'n',"file:images/White_Knight.png",'p',"file:images/White_Pawn.png",'q',"file:images/White_Queen.png",'r',"file:images/White_Rook.png");
-    public static Map<Character,String> blackImages = Map.of('b',"file:images/Black_Bishop.png",'k',"file:images/Black_King.png",
-    'n',"file:images/Black_Knight.png",'p',"file:images/Black_Pawn.png",'q',"file:images/Black_Queen.png",'r',"file:images/Black_Rook.png");
-    public static String blankImage = "file:images/Blank.png";
+    public static Map<Character,String> whiteImages = Map.of('b',"file:src/main/java/chess/images/White_Bishop.png",'k',"file:src/main/java/chess/images/White_King.png",
+    'n',"file:src/main/java/chess/images/White_Knight.png",'p',"file:src/main/java/chess/images/White_Pawn.png",'q',"file:src/main/java/chess/images/White_Queen.png",'r',"file:src/main/java/chess/images/White_Rook.png");
+    public static Map<Character,String> blackImages = Map.of('b',"file:src/main/java/chess/images//Black_Bishop.png",'k',"file:src/main/java/chess/images/Black_King.png",
+    'n',"file:src/main/java/chess/images/Black_Knight.png",'p',"file:src/main/java/chess/images/Black_Pawn.png",'q',"file:src/main/java/chess/images/Black_Queen.png",'r',"file:src/main/java/chess/images/Black_Rook.png");
+    public static String blankImage = "file:src/main/java/chess/images/Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = new Color(1,0,0,1);
