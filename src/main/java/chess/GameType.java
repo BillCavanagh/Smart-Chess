@@ -40,6 +40,30 @@ public enum GameType {
         return cols;
     }
     public DefaultPiece[][] getLayout(){
-        return layout;
+        DefaultPiece[][] copy = new DefaultPiece[layout.length][layout[0].length];
+        for (int row = 0; row < rows; row++){
+            for (int col = 0; col < cols; col++){
+                DefaultPiece piece = layout[row][col];
+                if (piece == null){
+                    copy[row][col] = null;
+                }
+                else{
+                    int pRow = piece.getRow();
+                    int pCol = piece.getCol();
+                    Piece p = piece.getPiece();
+                    Color pColor = piece.getColor();
+                    switch (p){
+                        case PAWN: copy[row][col] = new Pawn(pColor,pRow,pCol); break; 
+                        case BISHOP: copy[row][col] = new Bishop(pColor,pRow,pCol); break; 
+                        case KNIGHT: copy[row][col] = new Knight(pColor,pRow,pCol); break; 
+                        case ROOK: copy[row][col] = new Rook(pColor,pRow,pCol); break; 
+                        case QUEEN: copy[row][col] = new Queen(pColor,pRow,pCol); break; 
+                        case KING: copy[row][col] = new King(pColor,pRow,pCol); break; 
+                        default: break;
+                    }
+                }
+            }
+        }
+        return copy;
     }
 }
