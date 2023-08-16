@@ -37,21 +37,21 @@ public class ChessGame {
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = new Color(1,0,0,1);
     // model (board)
-    public static Board board = new Board();
+    public static Board board;
     // GUI stuff
     public static int TILE_SIZE = 100;
-    public static GridPane chessBoard = new GridPane();
-    public static TextField textField = new TextField("");
-    public static Button submitButton = new Button("Submit move");
-    public static Button resetButton = new Button("Reset");
-    public static Label turn = new Label(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
-    public static Label check = new Label("");
-    public static HBox bottomPanel = new HBox(textField,submitButton,resetButton,turn,check);
-    public static VBox game = new VBox(chessBoard,bottomPanel);
+    public static GridPane chessBoard;
+    public static TextField textField;
+    public static Button submitButton;
+    public static Button resetButton;
+    public static Label turn;
+    public static Label check;
+    public static HBox bottomPanel;
+    public static VBox game;
     //public static Label moves = new Label("");
-    public static VBox moves = new VBox();
-    public static HBox fullGame = new HBox(game,moves);
-    public Move selectedMove;
+    public static VBox moves;
+    public static HBox fullGame;
+    public static Move selectedMove;
     public static Image getPieceImage(DefaultPiece piece){
         if (piece != null){
             return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
@@ -97,14 +97,14 @@ public class ChessGame {
     public static void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
-    public void updateLabels(){
+    public static void updateLabels(){
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
-        moves = MoveUtils.makeInputMoveList(board,this);
+        moves = MoveUtils.makeInputMoveList(board);
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
     }
-    public void updateSelectedMove(Move move){
+    public static void updateSelectedMove(Move move){
         // remove all old highlighted squares if there is a selected move
             if (selectedMove != null){
             int row1 = selectedMove.getPiece().getRow();
@@ -127,8 +127,23 @@ public class ChessGame {
             selectedMove = null;
         }
     }
-    public HBox getBoard(GameType gameType) throws Exception {
+    public static void reset(){
+        chessBoard = new GridPane();
+        textField = new TextField("");
+        submitButton = new Button("Submit move");
+        resetButton = new Button("Reset");
+        turn = new Label();
+        check = new Label("");
+        bottomPanel = new HBox(textField,submitButton,resetButton,turn,check);
+        game = new VBox(chessBoard,bottomPanel);
+        moves = new VBox();
+        fullGame = new HBox(game,moves);
+        selectedMove = null;
+    }
+    public static HBox getBoard(GameType gameType) throws Exception {
+        reset();
         board = new Board(gameType);
+        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         assembleChessBoard();
         textField.setMaxSize(TILE_SIZE*8,TILE_SIZE*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));

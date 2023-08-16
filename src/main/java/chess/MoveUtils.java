@@ -31,7 +31,7 @@ public class MoveUtils {
         }
         return newText;
      }
-     public static VBox makeInputMoveList(Board board, ChessGame gui){
+     public static VBox makeInputMoveList(Board board){
         VBox box = new VBox();
         ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
@@ -41,11 +41,11 @@ public class MoveUtils {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    if (gui.selectedMove == move){
+                    if (ChessGame.selectedMove == move){
                         board.makeMove(move,move.getPiece().getColor());
-                        gui.updateLabels();
+                        ChessGame.updateLabels();
                     }
-                    gui.updateSelectedMove(move);
+                    ChessGame.updateSelectedMove(move);
                     if (board.isCheckmate()){
                         ChessGame.turn.setText("");
                         ChessGame.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");

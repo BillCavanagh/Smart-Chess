@@ -34,10 +34,8 @@ public class ChessMenu extends Application{
     public static Stage stage;
     public static Label title;
     public static final String titleName = "Smart Chess";
-    public static VBox menu = new VBox();
-    public ChessGame game = new ChessGame();
-    public static Scene menuScene = new Scene(menu);
-    public Label createTitle(){
+    public static VBox menu;
+    public static Label createTitle(){
         Label title = new Label(titleName);
         title.setFont(new Font("Georgia",50));
         title.autosize();
@@ -45,11 +43,11 @@ public class ChessMenu extends Application{
         title.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         return title;
     }
-    public Button createGameTypeButton(String text, GameType gameType){
+    public static Button createGameTypeButton(String text, GameType gameType){
         Button button = new Button(text);
         button.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent event) {
-                try {stage.setScene(new Scene(game.getBoard(gameType)));} catch (Exception e){}
+                try {stage.setScene(new Scene(ChessGame.getBoard(gameType)));} catch (Exception e){System.out.println(e);}
             }
         });
         button.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,new Insets(20))));
@@ -58,18 +56,21 @@ public class ChessMenu extends Application{
         return button;
     }
     public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
+        reset();
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        stage.setTitle(titleName);
+        stage.show();
+    }
+    public static void reset(){
+        menu = new VBox();
         Label title = createTitle();
         menu.getChildren().add(title);
         for (GameType gameType : GameType.values()){
             menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
         }
-        stage = primaryStage;
-        stage.setScene(menuScene);
-        stage.setTitle(titleName);
-        stage.show();
-    }
-    public static void reset(){
-        stage.setScene(menuScene);
+        stage.setScene(new Scene(menu));
     }
     public static void main(String[] args) {
         launch(args);
