@@ -31,7 +31,7 @@ public class MoveUtils {
         }
         return newText;
      }
-     public static VBox makeInputMoveList(Board board){
+     public static VBox makeInputMoveList(Board board) throws Exception{
         VBox box = new VBox();
         ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
@@ -41,11 +41,12 @@ public class MoveUtils {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    try{
                     if (ChessGame.selectedMove == move){
-                        board.makeMove(move,move.getPiece().getColor());
+                        try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
                         ChessGame.updateLabels();
                     }
-                    ChessGame.updateSelectedMove(move);
+                    try{ChessGame.updateSelectedMove(move);} catch (Exception e){}
                     if (board.isCheckmate()){
                         ChessGame.turn.setText("");
                         ChessGame.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
@@ -54,6 +55,7 @@ public class MoveUtils {
                         ChessGame.turn.setText("");
                         ChessGame.check.setText("Stalemate, " + "neither player wins");
                     }
+                    } catch (Exception e){}
                 }
             };
             button.setOnAction(event);

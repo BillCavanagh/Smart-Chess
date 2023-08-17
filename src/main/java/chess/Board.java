@@ -264,7 +264,7 @@ public class Board {
             }
         }
     }
-    public void movePiece(Move move){ 
+    public void movePiece(Move move) throws Exception{ 
         DefaultPiece piece = move.getPiece();
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();
@@ -279,7 +279,7 @@ public class Board {
         ChessGame.updateChessBoard(oldRow,oldCol); // update old position
         ChessGame.updateChessBoard(newRow,newCol); // update new position
     }
-    public boolean makeMove(Move move, Color color){
+    public boolean makeMove(Move move, Color color) throws Exception{
         if (move == null){
             return false;
         }
