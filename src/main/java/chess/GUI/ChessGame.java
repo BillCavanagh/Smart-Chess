@@ -33,20 +33,20 @@ import javafx.scene.Scene;
 public class ChessGame {
     // images/color stuff
     public static Map<Character,String> whiteImages = Map.of(
-        'b',"images/White_Bishop.png",
-        'k',"images/White_King.png",
-        'n',"images/White_Knight.png",
-        'p',"images/White_Pawn.png",
-        'q',"images/White_Queen.png",
-        'r',"images/White_Rook.png");
+        'b',"file:images/White_Bishop.png",
+        'k',"file:images/White_King.png",
+        'n',"file:images/White_Knight.png",
+        'p',"file:images/White_Pawn.png",
+        'q',"file:images/White_Queen.png",
+        'r',"file:images/White_Rook.png");
     public static Map<Character,String> blackImages = Map.of(
-        'b',"images/Black_Bishop.png",
-        'k',"images/Black_King.png",
-        'n',"images/Black_Knight.png",
-        'p',"images/Black_Pawn.png",
-        'q',"images/Black_Queen.png",
-        'r',"images/Black_Rook.png");
-    public static String blankImage = "images/Blank.png";
+        'b',"file:images/Black_Bishop.png",
+        'k',"file:images/Black_King.png",
+        'n',"file:images/Black_Knight.png",
+        'p',"file:images/Black_Pawn.png",
+        'q',"file:images/Black_Queen.png",
+        'r',"file:images/Black_Rook.png");
+    public static String blankImage = "file:/images/Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = new Color(1,0,0,1);
@@ -66,20 +66,14 @@ public class ChessGame {
     public static VBox moves;
     public static HBox fullGame;
     public static Move selectedMove;
-    public static Image getPieceImage(DefaultPiece piece) throws Exception{
-        String path;
+    public static Image getPieceImage(DefaultPiece piece){
+        // TODO allow files to work inside JAR files
         if (piece != null){
-            if (piece.getColor() == chess.Color.WHITE){
-                path = whiteImages.get(piece.getPiece().getShorthand());
-            } 
-            else{
-                path = blackImages.get(piece.getPiece().getShorthand());
-            }
-        }
+            return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
+        } 
         else{
-            path = blankImage;
+            return new Image(blankImage,true);
         }
-        return new Image(new File(path).toURI().toURL().toString(),true);
     }
     public static Color getSpaceColor(int row,int col){
         if (row % 2 == 0){ // even row
@@ -89,7 +83,7 @@ public class ChessGame {
             return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
         }      
     }
-    public static StackPane getSpace(DefaultPiece piece, Color color,int row, int col) throws Exception{
+    public static StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
         int rank = board.indexToRank(row);
         char file = board.indexToFile(col);
@@ -106,7 +100,7 @@ public class ChessGame {
         space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;
     }
-    public static void assembleChessBoard() throws Exception{
+    public static void assembleChessBoard(){
         for (int row = 0; row < board.rows; row++){
             for (int col = 0; col < board.cols; col++){
                 chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
@@ -115,17 +109,17 @@ public class ChessGame {
         chessBoard.setAlignment(Pos.CENTER);
         chessBoard.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
     }
-    public static void updateChessBoard(int row, int col) throws Exception{
+    public static void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
-    public static void updateLabels() throws Exception{
+    public static void updateLabels(){
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
         moves = MoveUtils.makeInputMoveList(board);
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
     }
-    public static void updateSelectedMove(Move move) throws Exception{
+    public static void updateSelectedMove(Move move) {
         // remove all old highlighted squares if there is a selected move
             if (selectedMove != null){
             int row1 = selectedMove.getPiece().getRow();
@@ -161,7 +155,7 @@ public class ChessGame {
         fullGame = new HBox(game,moves);
         selectedMove = null;
     }
-    public static HBox getBoard(GameType gameType) throws Exception {
+    public static HBox getBoard(GameType gameType) {
         reset();
         board = new Board(gameType);
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
@@ -174,17 +168,13 @@ public class ChessGame {
                 // note: this manual input code is outdated, still present in program, going to be removed once other input method works 
                 String text = textField.getText(); // get input
                 Move move = MoveUtils.parseMove(text,board); // parse input
-                try{
                 if (board.makeMove(move,board.getTurn())){ // make move
                     textField.setText("");
                 }
-                
                 else{ // invalid move
                     textField.setText("Invalid Move");
                 }
                 updateLabels();
-                }
-                catch (Exception e){}
                 if (board.isCheckmate()){
                     turn.setText("");
                     check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");

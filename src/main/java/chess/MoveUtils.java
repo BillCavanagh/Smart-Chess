@@ -31,7 +31,7 @@ public class MoveUtils {
         }
         return newText;
      }
-     public static VBox makeInputMoveList(Board board) throws Exception{
+     public static VBox makeInputMoveList(Board board){
         VBox box = new VBox();
         ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
