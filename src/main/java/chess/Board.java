@@ -26,6 +26,7 @@ public class Board {
     public Move blackLong;
     public int rows;
     public int cols;
+    public ChessGame game;
     public Board(){
         rows = 8; 
         cols = 8;
@@ -35,8 +36,9 @@ public class Board {
         init_pieces();
         init_castles();
         updatePossibleMoves();
+        this.game = new ChessGame(GameType.CLASSIC);
     }
-    public Board(GameType gameType){
+    public Board(GameType gameType, ChessGame game){
         this.rows = gameType.getRows();
         this.cols = gameType.getCols();
         turn = Color.WHITE;
@@ -45,6 +47,7 @@ public class Board {
         init_pieces();
         init_castles();
         updatePossibleMoves();
+        this.game = game;
     }
     public void init_castles(){
         whiteShort = new Move(whiteKing.getRow(),whiteKing.getCol()+2,whiteKing,getPiece(rows-1,cols-1),this);
@@ -276,8 +279,8 @@ public class Board {
         piece.move(move);
         setPiece(piece,newRow,newCol); // update new position on board
         setPiece(null,oldRow,oldCol); // update old position on board
-        ChessGame.updateChessBoard(oldRow,oldCol); // update old position
-        ChessGame.updateChessBoard(newRow,newCol); // update new position
+        game.updateChessBoard(oldRow,oldCol); // update old position
+        game.updateChessBoard(newRow,newCol); // update new position
     }
     public boolean makeMove(Move move, Color color) {
         if (move == null){
@@ -295,7 +298,7 @@ public class Board {
             DefaultPiece piece2 = move.getPiece2();
             if (piece2 != null){
                 removePiece(piece2.getColor(), piece2.getRow(),piece2.getCol()); 
-                ChessGame.updateChessBoard(piece2.getRow(),piece2.getCol());
+                game.updateChessBoard(piece2.getRow(),piece2.getCol());
             }
         } 
         else{ // castle move

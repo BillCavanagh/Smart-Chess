@@ -53,96 +53,22 @@ public class ChessGame {
     // model (board)
     public static Board board;
     // GUI stuff
-    public static int TILE_SIZE = 100;
-    public static GridPane chessBoard;
-    public static TextField textField;
-    public static Button submitButton;
-    public static Button resetButton;
-    public static Label turn;
-    public static Label check;
-    public static HBox bottomPanel;
-    public static VBox game;
+    public static final int BOARD_SIZE = 500;
+    public int tileSize;
+    public GridPane chessBoard;
+    public TextField textField;
+    public Button submitButton;
+    public Button resetButton;
+    public Label turn;
+    public Label check;
+    public HBox bottomPanel;
+    public VBox game;
     //public static Label moves = new Label("");
-    public static VBox moves;
-    public static HBox fullGame;
-    public static Move selectedMove;
-    public static Image getPieceImage(DefaultPiece piece){
-        // TODO allow files to work inside JAR files
-        if (piece != null){
-            return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
-        } 
-        else{
-            return new Image(blankImage,true);
-        }
-    }
-    public static Color getSpaceColor(int row,int col){
-        if (row % 2 == 0){ // even row
-            return col % 2 == 0 ? LIGHT : DARK; // even row and col = light, even row and odd col = dark
-        }
-        else{ // odd row
-            return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
-        }      
-    }
-    public static StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
-        Image image = getPieceImage(piece);
-        int rank = board.indexToRank(row);
-        char file = board.indexToFile(col);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(TILE_SIZE);
-        imageView.setFitWidth(TILE_SIZE);
-        imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
-        Label text = new Label(file + "" + rank);
-        text.setFont(new Font("Times New Roman",20));
-        text.setMinSize(TILE_SIZE, TILE_SIZE);
-        text.setAlignment(Pos.BOTTOM_LEFT);
-        StackPane space = new StackPane(imageView,text);
-        space.setBackground(Background.fill(color));
-        space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
-        return space;
-    }
-    public static void assembleChessBoard(){
-        for (int row = 0; row < board.rows; row++){
-            for (int col = 0; col < board.cols; col++){
-                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
-            }
-        }
-        chessBoard.setAlignment(Pos.CENTER);
-        chessBoard.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
-    }
-    public static void updateChessBoard(int row, int col){
-        chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
-    }
-    public static void updateLabels(){
-        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
-        check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
-        moves = MoveUtils.makeInputMoveList(board);
-        fullGame.getChildren().remove(1);
-        fullGame.getChildren().add(moves);
-    }
-    public static void updateSelectedMove(Move move) {
-        // remove all old highlighted squares if there is a selected move
-            if (selectedMove != null){
-            int row1 = selectedMove.getPiece().getRow();
-            int row2 = selectedMove.getRow();
-            int col1 = selectedMove.getPiece().getCol();
-            int col2 = selectedMove.getCol();
-            chessBoard.add(getSpace(board.getPiece(row1,col1),getSpaceColor(row1, col1),row1,col1),col1,row1);
-            chessBoard.add(getSpace(board.getPiece(row2,col2),getSpaceColor(row2, col2),row2,col2),col2,row2);
-        }
-        if (!move.equals(selectedMove)){ // selected move changed, update highlighted squares
-            int row1 = move.getPiece().getRow();
-            int row2 = move.getRow();
-            int col1 = move.getPiece().getCol();
-            int col2 = move.getCol();
-            chessBoard.add(getSpace(board.getPiece(row1,col1),HIGHLIGHT,row1,col1),col1,row1);
-            chessBoard.add(getSpace(board.getPiece(row2,col2),HIGHLIGHT,row2,col2),col2,row2);
-            selectedMove = move;
-        }
-        else{ // otherwise, there is no selected move as a move has been made
-            selectedMove = null;
-        }
-    }
-    public static void reset(){
+    public VBox moves;
+    public HBox fullGame;
+    public Move selectedMove;
+    public ChessGame(GameType gameType){
+        board = new Board(gameType,this);
         chessBoard = new GridPane();
         textField = new TextField("");
         submitButton = new Button("Submit move");
@@ -154,15 +80,11 @@ public class ChessGame {
         moves = new VBox();
         fullGame = new HBox(game,moves);
         selectedMove = null;
-    }
-    public static HBox getBoard(GameType gameType) {
-        reset();
-        board = new Board(gameType);
-        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
-        assembleChessBoard();
-        textField.setMaxSize(TILE_SIZE*8,TILE_SIZE*8);
+        tileSize = BOARD_SIZE/board.rows;
+        textField.setMaxSize(tileSize*8,tileSize*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
-        EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() {
+        assembleChessBoard();
+        EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() { // old code for manual input 
             @Override
             public void handle(ActionEvent event) {
                 // note: this manual input code is outdated, still present in program, going to be removed once other input method works 
@@ -193,6 +115,84 @@ public class ChessGame {
         };
         resetButton.setOnAction(event2);
         updateLabels();
+    }
+    public Image getPieceImage(DefaultPiece piece){
+        // TODO allow files to work inside JAR files
+        if (piece != null){
+            return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
+        } 
+        else{
+            return new Image(blankImage,true);
+        }
+    }
+    public Color getSpaceColor(int row,int col){
+        if (row % 2 == 0){ // even row
+            return col % 2 == 0 ? LIGHT : DARK; // even row and col = light, even row and odd col = dark
+        }
+        else{ // odd row
+            return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
+        }      
+    }
+    public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
+        Image image = getPieceImage(piece);
+        int rank = board.indexToRank(row);
+        char file = board.indexToFile(col);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(tileSize);
+        imageView.setFitWidth(tileSize);
+        imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
+        Label text = new Label(file + "" + rank);
+        text.setFont(new Font("Times New Roman",20));
+        text.setMinSize(tileSize, tileSize);
+        text.setAlignment(Pos.BOTTOM_LEFT);
+        StackPane space = new StackPane(imageView,text);
+        space.setBackground(Background.fill(color));
+        space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
+        return space;
+    }
+    public void assembleChessBoard(){
+        for (int row = 0; row < board.rows; row++){
+            for (int col = 0; col < board.cols; col++){
+                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
+            }
+        }
+        chessBoard.setAlignment(Pos.CENTER);
+        chessBoard.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
+    }
+    public void updateChessBoard(int row, int col){
+        chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
+    }
+    public void updateLabels(){
+        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
+        check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
+        moves = MoveUtils.makeInputMoveList(board,this);
+        fullGame.getChildren().remove(1);
+        fullGame.getChildren().add(moves);
+    }
+    public void updateSelectedMove(Move move) {
+        // remove all old highlighted squares if there is a selected move
+            if (selectedMove != null){
+            int row1 = selectedMove.getPiece().getRow();
+            int row2 = selectedMove.getRow();
+            int col1 = selectedMove.getPiece().getCol();
+            int col2 = selectedMove.getCol();
+            chessBoard.add(getSpace(board.getPiece(row1,col1),getSpaceColor(row1, col1),row1,col1),col1,row1);
+            chessBoard.add(getSpace(board.getPiece(row2,col2),getSpaceColor(row2, col2),row2,col2),col2,row2);
+        }
+        if (!move.equals(selectedMove)){ // selected move changed, update highlighted squares
+            int row1 = move.getPiece().getRow();
+            int row2 = move.getRow();
+            int col1 = move.getPiece().getCol();
+            int col2 = move.getCol();
+            chessBoard.add(getSpace(board.getPiece(row1,col1),HIGHLIGHT,row1,col1),col1,row1);
+            chessBoard.add(getSpace(board.getPiece(row2,col2),HIGHLIGHT,row2,col2),col2,row2);
+            selectedMove = move;
+        }
+        else{ // otherwise, there is no selected move as a move has been made
+            selectedMove = null;
+        }
+    }
+    public HBox getBoard() {
         return fullGame;
     }
 }

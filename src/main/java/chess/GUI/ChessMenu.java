@@ -35,6 +35,7 @@ public class ChessMenu extends Application{
     public static Label title;
     public static final String titleName = "Smart Chess";
     public static VBox menu;
+    public static ChessGame currentGame;
     public static Label createTitle(){
         Label title = new Label(titleName);
         title.setFont(new Font("Georgia",50));
@@ -47,7 +48,11 @@ public class ChessMenu extends Application{
         Button button = new Button(text);
         button.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent event) {
-                try {stage.setScene(new Scene(ChessGame.getBoard(gameType)));} catch (Exception e){System.out.println(e);}
+                try {
+                    currentGame = new ChessGame(gameType);
+                    stage.setScene(new Scene(currentGame.getBoard()));
+                } 
+                catch (Exception e){System.out.println(e);}
             }
         });
         button.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,new Insets(20))));
