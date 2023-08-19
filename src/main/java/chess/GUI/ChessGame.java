@@ -53,8 +53,9 @@ public class ChessGame {
     // model (board)
     public static Board board;
     // GUI stuff
-    public static final int BOARD_SIZE = 500;
+    public static final int BOARD_SIZE = 600;
     public int tileSize;
+    public int fontSize;
     public GridPane chessBoard;
     public TextField textField;
     public Button submitButton;
@@ -81,6 +82,7 @@ public class ChessGame {
         fullGame = new HBox(game,moves);
         selectedMove = null;
         tileSize = BOARD_SIZE/board.rows;
+        fontSize = BOARD_SIZE/board.rows/3;
         textField.setMaxSize(tileSize*8,tileSize*8);
         textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
         assembleChessBoard();
@@ -141,10 +143,21 @@ public class ChessGame {
         imageView.setFitHeight(tileSize);
         imageView.setFitWidth(tileSize);
         imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
-        Label text = new Label(file + "" + rank);
-        text.setFont(new Font("Times New Roman",20));
+        Label text = new Label("");
+        if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
+            text.setText(file + "" + rank);
+            text.setAlignment(Pos.BOTTOM_LEFT);
+        }
+        else if (row == board.rows-1){ // bottom of the board, include the file
+            text.setText(file + "");
+            text.setAlignment(Pos.BOTTOM_CENTER);
+        }
+        else if (col == 0){ // left of the baord, include the rank
+            text.setText(rank + "");
+            text.setAlignment(Pos.BASELINE_LEFT);
+        }
+        text.setFont(new Font("Impact",fontSize));
         text.setMinSize(tileSize, tileSize);
-        text.setAlignment(Pos.BOTTOM_LEFT);
         StackPane space = new StackPane(imageView,text);
         space.setBackground(Background.fill(color));
         space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
