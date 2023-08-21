@@ -31,6 +31,21 @@ public class MoveUtils {
         }
         return newText;
      }
+     public static void processMove(Board board, ChessGame game, Move move){
+        if (game.selectedMove == move){
+            try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
+            game.updateLabels();
+        }
+        game.updateSelectedMove(move);
+        if (board.isCheckmate()){
+            game.turn.setText("");
+            game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+        }
+        if (board.isStalemate()){
+            game.turn.setText("");
+            game.check.setText("Stalemate, " + "neither player wins");
+        }
+     }
      public static VBox makeInputMoveList(Board board, ChessGame game){
         VBox box = new VBox();
         ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
@@ -41,19 +56,7 @@ public class MoveUtils {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    if (game.selectedMove == move){
-                        try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
-                        game.updateLabels();
-                    }
-                    game.updateSelectedMove(move);
-                    if (board.isCheckmate()){
-                        game.turn.setText("");
-                        game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
-                    }
-                    if (board.isStalemate()){
-                        game.turn.setText("");
-                        game.check.setText("Stalemate, " + "neither player wins");
-                    }
+                    processMove(board, game, move);
                 }
             };
             button.setOnAction(event);

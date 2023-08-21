@@ -57,8 +57,9 @@ public class ChessGame {
     public int tileSize;
     public int fontSize;
     public GridPane chessBoard;
-    public TextField textField;
-    public Button submitButton;
+    //public TextField textField;
+    //public Button submitButton;
+    public Label error;
     public Button resetButton;
     public Label turn;
     public Label check;
@@ -68,47 +69,49 @@ public class ChessGame {
     public VBox moves;
     public HBox fullGame;
     public Move selectedMove;
+    public Move other;
     public ChessGame(GameType gameType){
         board = new Board(gameType,this);
         chessBoard = new GridPane();
-        textField = new TextField("");
-        submitButton = new Button("Submit move");
+        //textField = new TextField("");
+        //submitButton = new Button("Submit move");
+        error = new Label("");
         resetButton = new Button("Reset");
         turn = new Label();
         check = new Label("");
-        bottomPanel = new HBox(textField,submitButton,resetButton,turn,check);
+        bottomPanel = new HBox(resetButton,turn,check);
         game = new VBox(chessBoard,bottomPanel);
         moves = new VBox();
         fullGame = new HBox(game,moves);
         selectedMove = null;
         tileSize = BOARD_SIZE/board.rows;
         fontSize = BOARD_SIZE/board.rows/3;
-        textField.setMaxSize(tileSize*8,tileSize*8);
-        textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
         assembleChessBoard();
-        EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() { // old code for manual input 
-            @Override
-            public void handle(ActionEvent event) {
-                // note: this manual input code is outdated, still present in program, going to be removed once other input method works 
-                String text = textField.getText(); // get input
-                Move move = MoveUtils.parseMove(text,board); // parse input
-                if (board.makeMove(move,board.getTurn())){ // make move
-                    textField.setText("");
-                }
-                else{ // invalid move
-                    textField.setText("Invalid Move");
-                }
-                updateLabels();
-                if (board.isCheckmate()){
-                    turn.setText("");
-                    check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
-                }
-                if (board.isStalemate()){
-                    turn.setText("");
-                    check.setText("Stalemate, " + "neither player wins");
-                }
-            }
-        };
+        //textField.setMaxSize(tileSize*8,tileSize*8);
+        //textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
+        // EventHandler<ActionEvent> event1 = new EventHandler<ActionEvent>() { // old code for manual input 
+        //     @Override
+        //     public void handle(ActionEvent event) {
+        //         // note: this manual input code is outdated, going to be removed once other input method works 
+        //         String text = textField.getText(); // get input
+        //         Move move = MoveUtils.parseMove(text,board); // parse input
+        //         if (board.makeMove(move,board.getTurn())){ // make move
+        //             textField.setText("");
+        //         }
+        //         else{ // invalid move
+        //             textField.setText("Invalid Move");
+        //         }
+        //         updateLabels();
+        //         if (board.isCheckmate()){
+        //             turn.setText("");
+        //             check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+        //         }
+        //         if (board.isStalemate()){
+        //             turn.setText("");
+        //             check.setText("Stalemate, " + "neither player wins");
+        //         }
+        //     }
+        // };
         EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -143,6 +146,7 @@ public class ChessGame {
         imageView.setFitHeight(tileSize);
         imageView.setFitWidth(tileSize);
         imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
+        // text for edges of the board: label files/ranks
         Label text = new Label("");
         if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
             text.setText(file + "" + rank);
@@ -158,9 +162,41 @@ public class ChessGame {
         }
         text.setFont(new Font("Impact",fontSize));
         text.setMinSize(tileSize, tileSize);
-        StackPane space = new StackPane(imageView,text);
-        space.setBackground(Background.fill(color));
-        space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
+        text.setMaxSize(tileSize, tileSize);
+        // button for making moves
+        ChessGame game = this;
+        Button button = new Button("",imageView);
+        button.setMinSize(tileSize, tileSize);
+        button.setMaxSize(tileSize, tileSize);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            public Boolean isSelected = false;
+            @Override
+            public void handle(ActionEvent event) {
+                if (selectedMove != null){
+                    if (selectedMove.getRow() == row && selectedMove.getCol() == col){
+                        MoveUtils.processMove(board, game, selectedMove);
+                        isSelected = false;
+                    }
+                }
+                else{
+                    if (other != null){ // if another button was selected
+                        DefaultPiece piece = other.getPiece();
+                        selectedMove = new Move(row,col,piece,board);
+                    }
+                    else{ // if it wasnt, make this the selected button
+                        DefaultPiece piece = board.getPiece(row, col);
+                        if (piece != null){ // only if the button has a piece make it selected
+                            other = new Move(-1,-1,piece,board);
+                        }
+                    }
+                }
+            }
+        });
+        button.setBackground(Background.fill(color));
+        button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
+        StackPane space = new StackPane(button,text);
+        // space.setBackground(Background.fill(color));
+        // space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;
     }
     public void assembleChessBoard(){
@@ -184,7 +220,7 @@ public class ChessGame {
     }
     public void updateSelectedMove(Move move) {
         // remove all old highlighted squares if there is a selected move
-            if (selectedMove != null){
+        if (selectedMove != null){
             int row1 = selectedMove.getPiece().getRow();
             int row2 = selectedMove.getRow();
             int col1 = selectedMove.getPiece().getCol();
