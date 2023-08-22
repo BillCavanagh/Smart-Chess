@@ -68,8 +68,8 @@ public class ChessGame {
     //public static Label moves = new Label("");
     public VBox moves;
     public HBox fullGame;
+    public DefaultPiece selectedPiece;
     public Move selectedMove;
-    public Move other;
     public ChessGame(GameType gameType){
         board = new Board(gameType,this);
         chessBoard = new GridPane();
@@ -172,23 +172,35 @@ public class ChessGame {
             public Boolean isSelected = false;
             @Override
             public void handle(ActionEvent event) {
-                if (selectedMove != null){
-                    if (selectedMove.getRow() == row && selectedMove.getCol() == col){
-                        MoveUtils.processMove(board, game, selectedMove);
-                        isSelected = false;
-                    }
+                // logic: 
+                // if no space was previously selected, make this the first selected space if it has a piece and is the right color
+                // if a space was previously selected, make this the second selected space
+                // construct a move using the piece from the first space, and the row and col position from the second space
+                // check if the move is a castle/en passant and construct accordingly
+                // check if the move is valid, if so highlight the two spaces, if not unselect both spaces and display "invalid move"
+                // wait for a press of a "submit" button or a second click on the second space to make the move
+                if (selectedMove != null && selectedMove.getRow() == row && selectedMove.getCol() == col){ // if a move has been selected and the space is clicked again process the move
+                    MoveUtils.processMove(board, game, selectedMove);
+                    selectedPiece = null;
+                    selectedMove = null;
                 }
-                else{
-                    if (other != null){ // if another button was selected
-                        DefaultPiece piece = other.getPiece();
-                        selectedMove = new Move(row,col,piece,board);
-                    }
-                    else{ // if it wasnt, make this the selected button
+                else if (selectedMove == null){
+                    if (selectedPiece != null){  // check if a space was already clicked, if so, attempt to construct a move
+                        Move move = new Move(row,col,selectedPiece,null,board);
+                        if 
+                    } 
+                    else{ // no space previously clicked
                         DefaultPiece piece = board.getPiece(row, col);
-                        if (piece != null){ // only if the button has a piece make it selected
-                            other = new Move(-1,-1,piece,board);
+                        if (piece != null && piece.getColor() == board.getTurn()){ // check if the space being clicked in a piece of the correct color, if not ignore
+                            selectedPiece = piece;
+                        } 
+                        else{
+                            error.setText("Invalid piece");
                         }
                     }
+                }
+                else{ // when move selected and wrong space chosen display to the user
+                    error.setText("Click the new space to confirm move");
                 }
             }
         });
