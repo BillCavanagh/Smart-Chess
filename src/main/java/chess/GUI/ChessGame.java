@@ -79,13 +79,15 @@ public class ChessGame {
         resetButton = new Button("Reset");
         turn = new Label();
         check = new Label("");
-        bottomPanel = new HBox(resetButton,turn,check);
+        bottomPanel = new HBox(resetButton,turn,check,error);
         game = new VBox(chessBoard,bottomPanel);
         moves = new VBox();
         fullGame = new HBox(game,moves);
         selectedMove = null;
         tileSize = BOARD_SIZE/board.rows;
         fontSize = BOARD_SIZE/board.rows/3;
+        selectedMove = null;
+        selectedPiece = null;
         assembleChessBoard();
         //textField.setMaxSize(tileSize*8,tileSize*8);
         //textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
@@ -145,6 +147,9 @@ public class ChessGame {
                 MoveUtils.processMove(board, game, selectedMove);
                 selectedPiece = null;
                 selectedMove = null;
+                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
+                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
+                error.setText("");
             }
             else{ // when move selected and wrong space chosen display to the user
                 error.setText("Click the new space to confirm move");
@@ -166,9 +171,11 @@ public class ChessGame {
                     
                 }
                 else{
-                    move = new Move(row,col,selectedPiece,board);}
+                    move = new Move(row,col,selectedPiece,board);
+                }
                 if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){
                     selectedMove = move;
+                    chessBoard.add(getSpace(board.getPiece(row, col),HIGHLIGHT,row,col),col,row);
                 }
                 else {
                     error.setText("Invalid Move");
@@ -178,6 +185,7 @@ public class ChessGame {
                 DefaultPiece piece = board.getPiece(row, col);
                 if (piece != null && piece.getColor() == board.getTurn()){ // check if the space being clicked in a piece of the correct color, if not tell the user its invalid
                     selectedPiece = piece;
+                    chessBoard.add(getSpace(selectedPiece,HIGHLIGHT,row,col),col,row);
                 } 
                 else {
                     error.setText("Invalid piece");
@@ -215,7 +223,6 @@ public class ChessGame {
         button.setMinSize(tileSize, tileSize);
         button.setMaxSize(tileSize, tileSize);
         button.setOnAction(new EventHandler<ActionEvent>() {
-            public Boolean isSelected = false;
             @Override
             public void handle(ActionEvent event) {
                 // logic: 
@@ -230,7 +237,7 @@ public class ChessGame {
         });
         button.setBackground(Background.fill(color));
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
-        StackPane space = new StackPane(button,text);
+        StackPane space = new StackPane(button);
         // space.setBackground(Background.fill(color));
         // space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;
@@ -253,29 +260,6 @@ public class ChessGame {
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
-    }
-    public void updateSelectedMove(Move move) {
-        // remove all old highlighted squares if there is a selected move
-        if (selectedMove != null){
-            int row1 = selectedMove.getPiece().getRow();
-            int row2 = selectedMove.getRow();
-            int col1 = selectedMove.getPiece().getCol();
-            int col2 = selectedMove.getCol();
-            chessBoard.add(getSpace(board.getPiece(row1,col1),getSpaceColor(row1, col1),row1,col1),col1,row1);
-            chessBoard.add(getSpace(board.getPiece(row2,col2),getSpaceColor(row2, col2),row2,col2),col2,row2);
-        }
-        if (!move.equals(selectedMove)){ // selected move changed, update highlighted squares
-            int row1 = move.getPiece().getRow();
-            int row2 = move.getRow();
-            int col1 = move.getPiece().getCol();
-            int col2 = move.getCol();
-            chessBoard.add(getSpace(board.getPiece(row1,col1),HIGHLIGHT,row1,col1),col1,row1);
-            chessBoard.add(getSpace(board.getPiece(row2,col2),HIGHLIGHT,row2,col2),col2,row2);
-            selectedMove = move;
-        }
-        else{ // otherwise, there is no selected move as a move has been made
-            selectedMove = null;
-        }
     }
     public HBox getBoard() {
         return fullGame;

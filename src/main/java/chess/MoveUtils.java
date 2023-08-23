@@ -36,7 +36,6 @@ public class MoveUtils {
             try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
             game.updateLabels();
         }
-        game.updateSelectedMove(move);
         if (board.isCheckmate()){
             game.turn.setText("");
             game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
