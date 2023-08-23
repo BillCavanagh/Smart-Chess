@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import chess.*;
-import chess.Pieces.DefaultPiece;
+import chess.Pieces.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -138,6 +138,53 @@ public class ChessGame {
             return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
         }      
     }
+    public void processClick(int row, int col){
+        ChessGame game = this;
+        if (selectedMove != null){ // if a move has been selected and the space is clicked again process the move
+            if (selectedMove.getRow() == row && selectedMove.getCol() == col){
+                MoveUtils.processMove(board, game, selectedMove);
+                selectedPiece = null;
+                selectedMove = null;
+            }
+            else{ // when move selected and wrong space chosen display to the user
+                error.setText("Click the new space to confirm move");
+            }
+        }
+        else {
+            if (selectedPiece != null){  // check if a space was already clicked, if so, attempt to construct a move
+                Move move = new Move(-1,-1,null,null);
+                if (selectedPiece instanceof King){
+                    DefaultPiece other = board.getPiece(row,col);
+                    if (other instanceof Rook && other.getColor() == selectedPiece.getColor()){
+                        move = new Move(row,col,other,board);
+                    }
+                    else{
+                        move = new Move(row,col,selectedPiece,board);
+                    }
+                }
+                else if (selectedPiece instanceof Pawn){
+                    
+                }
+                else{
+                    move = new Move(row,col,selectedPiece,board);}
+                if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){
+                    selectedMove = move;
+                }
+                else {
+                    error.setText("Invalid Move");
+                }
+            }
+            else{ // no space previously clicked
+                DefaultPiece piece = board.getPiece(row, col);
+                if (piece != null && piece.getColor() == board.getTurn()){ // check if the space being clicked in a piece of the correct color, if not tell the user its invalid
+                    selectedPiece = piece;
+                } 
+                else {
+                    error.setText("Invalid piece");
+                }
+            }
+        }
+    }
     public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
         int rank = board.indexToRank(row);
@@ -164,7 +211,6 @@ public class ChessGame {
         text.setMinSize(tileSize, tileSize);
         text.setMaxSize(tileSize, tileSize);
         // button for making moves
-        ChessGame game = this;
         Button button = new Button("",imageView);
         button.setMinSize(tileSize, tileSize);
         button.setMaxSize(tileSize, tileSize);
@@ -179,29 +225,7 @@ public class ChessGame {
                 // check if the move is a castle/en passant and construct accordingly
                 // check if the move is valid, if so highlight the two spaces, if not unselect both spaces and display "invalid move"
                 // wait for a press of a "submit" button or a second click on the second space to make the move
-                if (selectedMove != null && selectedMove.getRow() == row && selectedMove.getCol() == col){ // if a move has been selected and the space is clicked again process the move
-                    MoveUtils.processMove(board, game, selectedMove);
-                    selectedPiece = null;
-                    selectedMove = null;
-                }
-                else if (selectedMove == null){
-                    if (selectedPiece != null){  // check if a space was already clicked, if so, attempt to construct a move
-                        Move move = new Move(row,col,selectedPiece,null,board);
-                        if 
-                    } 
-                    else{ // no space previously clicked
-                        DefaultPiece piece = board.getPiece(row, col);
-                        if (piece != null && piece.getColor() == board.getTurn()){ // check if the space being clicked in a piece of the correct color, if not ignore
-                            selectedPiece = piece;
-                        } 
-                        else{
-                            error.setText("Invalid piece");
-                        }
-                    }
-                }
-                else{ // when move selected and wrong space chosen display to the user
-                    error.setText("Click the new space to confirm move");
-                }
+                processClick(row, col);
             }
         });
         button.setBackground(Background.fill(color));
