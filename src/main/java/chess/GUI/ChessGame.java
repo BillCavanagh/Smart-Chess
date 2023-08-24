@@ -141,6 +141,13 @@ public class ChessGame {
         }      
     }
     public void processClick(int row, int col){
+        // logic: 
+        // if no space was previously selected, make this the first selected space if it has a piece and is the right color
+        // if a space was previously selected, make this the second selected space
+        // construct a move using the piece from the first space, and the row and col position from the second space
+        // check if the move is a castle/en passant and construct accordingly
+        // check if the move is valid, if so highlight the two spaces, if not unselect both spaces and display "invalid move"
+        // wait for a press of a "submit" button or a second click on the second space to make the move
         ChessGame game = this;
         if (selectedMove != null){ // if a move has been selected and the space is clicked again process the move
             if (selectedMove.getRow() == row && selectedMove.getCol() == col){
@@ -168,7 +175,12 @@ public class ChessGame {
                     }
                 }
                 else if (selectedPiece instanceof Pawn){
-                    
+                    for (Move temp : selectedPiece.getPossibleMoves(board)){
+                        if (temp.getRow() == row && temp.getCol() == col){
+                            move = temp;
+                            break;
+                        }
+                    }
                 }
                 else{
                     move = new Move(row,col,selectedPiece,board);
@@ -192,6 +204,15 @@ public class ChessGame {
                 }
             }
         }
+        if (board.isCheckmate()){
+            game.turn.setText("");
+            game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+        }
+        if (board.isStalemate()){
+            game.turn.setText("");
+            game.check.setText("Stalemate, " + "neither player wins");
+        }
+        game.updateLabels();
     }
     public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
@@ -225,13 +246,6 @@ public class ChessGame {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // logic: 
-                // if no space was previously selected, make this the first selected space if it has a piece and is the right color
-                // if a space was previously selected, make this the second selected space
-                // construct a move using the piece from the first space, and the row and col position from the second space
-                // check if the move is a castle/en passant and construct accordingly
-                // check if the move is valid, if so highlight the two spaces, if not unselect both spaces and display "invalid move"
-                // wait for a press of a "submit" button or a second click on the second space to make the move
                 processClick(row, col);
             }
         });

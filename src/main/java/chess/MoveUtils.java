@@ -32,9 +32,23 @@ public class MoveUtils {
         return newText;
      }
      public static void processMove(Board board, ChessGame game, Move move){
+        int row1 = move.getPiece().getRow();
+        int col1 = move.getPiece().getCol();
+        int row2 = move.getRow();
+        int col2 = move.getCol();
         if (game.selectedMove == move){
             try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
+            game.selectedMove = null;
+            game.selectedPiece = null;
+            game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
+            game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
             game.updateLabels();
+        }
+        else{
+            game.selectedMove = move;
+            game.selectedPiece = move.getPiece();
+            game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),ChessGame.HIGHLIGHT,row1,col1),col1,row1);
+            game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),ChessGame.HIGHLIGHT,row2,col2),col2,row2);
         }
         if (board.isCheckmate()){
             game.turn.setText("");
