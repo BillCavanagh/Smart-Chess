@@ -140,6 +140,12 @@ public class ChessGame {
             return col % 2 == 0 ? DARK : LIGHT; // odd row and even col = dark, odd row and odd col = light
         }      
     }
+    public void highlightSpace(int row, int col){
+        chessBoard.add(getSpace(board.getPiece(row, col),HIGHLIGHT,row,col),col,row);
+    }
+    public void unhighlightSpace(int row, int col){
+        chessBoard.add(getSpace(board.getPiece(row, col),getSpaceColor(row, col),row,col),col,row);
+    }
     public void processClick(int row, int col){
         // logic: 
         // if no space was previously selected, make this the first selected space if it has a piece and is the right color
@@ -156,14 +162,14 @@ public class ChessGame {
                 selectedMove = null;
                 error.setText("");
             }
-            else{ // when move selected and wrong space chosen display to the user
+            else{ // when move selected and wrong space chosen display to the user and reset move
                 error.setText("Invalid move confirmation");
                 int rmRow1 = game.selectedMove.getRow();
                 int rmCol1 = selectedMove.getCol();
                 int rmRow2 = selectedPiece.getRow();
                 int rmCol2 = selectedPiece.getCol();
-                game.chessBoard.add(game.getSpace(board.getPiece(rmRow1, rmCol1),game.getSpaceColor(rmRow1, rmCol1),rmRow1,rmCol1),rmCol1,rmRow1);
-                game.chessBoard.add(game.getSpace(board.getPiece(rmRow2, rmCol2),game.getSpaceColor(rmRow2, rmCol2),rmRow2,rmCol2),rmCol2,rmRow2);
+                unhighlightSpace(rmRow1, rmCol1);
+                unhighlightSpace(rmRow2, rmCol2);
                 selectedPiece = null;
                 selectedMove = null;
             }
@@ -191,23 +197,23 @@ public class ChessGame {
                 else{
                     move = new Move(row,col,selectedPiece,board);
                 }
-                if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){
+                if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){ // select the move if valid move
                     selectedMove = move;
-                    chessBoard.add(getSpace(board.getPiece(row, col),HIGHLIGHT,row,col),col,row);
+                    highlightSpace(row, col);
                 }
-                else {
+                else { // inform the user if an invalid move 
                     error.setText("Invalid Move");
                     int rmRow1 = selectedPiece.getRow();
                     int rmCol1 = selectedPiece.getCol();
                     selectedPiece = null;
-                    game.chessBoard.add(game.getSpace(board.getPiece(rmRow1, rmCol1),game.getSpaceColor(rmRow1, rmCol1),rmRow1,rmCol1),rmCol1,rmRow1);
+                    unhighlightSpace(rmRow1, rmCol1);
                 }
             }
             else{ // no space previously clicked
                 DefaultPiece piece = board.getPiece(row, col);
                 if (piece != null && piece.getColor() == board.getTurn()){ // check if the space being clicked in a piece of the correct color, if not tell the user its invalid
                     selectedPiece = piece;
-                    chessBoard.add(getSpace(selectedPiece,HIGHLIGHT,row,col),col,row);
+                    highlightSpace(row, col);
                 } 
                 else {
                     error.setText("Invalid piece");
