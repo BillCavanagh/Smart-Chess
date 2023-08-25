@@ -37,14 +37,22 @@ public class MoveUtils {
         int row2 = move.getRow();
         int col2 = move.getCol();
         if (game.selectedMove == move){
-            try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
             game.selectedMove = null;
             game.selectedPiece = null;
+            try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
             game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
             game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
             game.updateLabels();
         }
         else{
+            if (game.selectedMove != null){ // other move was selected previously, update highlights
+                int rmRow1 = game.selectedMove.getRow();
+                int rmCol1 = game.selectedMove.getCol();
+                int rmRow2 = game.selectedPiece.getRow();
+                int rmCol2 = game.selectedPiece.getCol();
+                game.chessBoard.add(game.getSpace(board.getPiece(rmRow1, rmCol1),game.getSpaceColor(rmRow1, rmCol1),rmRow1,rmCol1),rmCol1,rmRow1);
+                game.chessBoard.add(game.getSpace(board.getPiece(rmRow2, rmCol2),game.getSpaceColor(rmRow2, rmCol2),rmRow2,rmCol2),rmCol2,rmRow2);
+            }
             game.selectedMove = move;
             game.selectedPiece = move.getPiece();
             game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),ChessGame.HIGHLIGHT,row1,col1),col1,row1);

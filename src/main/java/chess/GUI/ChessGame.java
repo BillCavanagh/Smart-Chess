@@ -154,18 +154,24 @@ public class ChessGame {
                 MoveUtils.processMove(board, game, selectedMove);
                 selectedPiece = null;
                 selectedMove = null;
-                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
-                chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
                 error.setText("");
             }
             else{ // when move selected and wrong space chosen display to the user
-                error.setText("Click the new space to confirm move");
+                error.setText("Invalid move confirmation");
+                int rmRow1 = game.selectedMove.getRow();
+                int rmCol1 = selectedMove.getCol();
+                int rmRow2 = selectedPiece.getRow();
+                int rmCol2 = selectedPiece.getCol();
+                game.chessBoard.add(game.getSpace(board.getPiece(rmRow1, rmCol1),game.getSpaceColor(rmRow1, rmCol1),rmRow1,rmCol1),rmCol1,rmRow1);
+                game.chessBoard.add(game.getSpace(board.getPiece(rmRow2, rmCol2),game.getSpaceColor(rmRow2, rmCol2),rmRow2,rmCol2),rmCol2,rmRow2);
+                selectedPiece = null;
+                selectedMove = null;
             }
         }
         else {
             if (selectedPiece != null){  // check if a space was already clicked, if so, attempt to construct a move
                 Move move = new Move(-1,-1,null,null);
-                if (selectedPiece instanceof King){
+                if (selectedPiece instanceof King){ // find the move if castle
                     DefaultPiece other = board.getPiece(row,col);
                     if (other instanceof Rook && other.getColor() == selectedPiece.getColor()){
                         move = new Move(row,col,other,board);
@@ -174,7 +180,7 @@ public class ChessGame {
                         move = new Move(row,col,selectedPiece,board);
                     }
                 }
-                else if (selectedPiece instanceof Pawn){
+                else if (selectedPiece instanceof Pawn){ // find the move if en passant
                     for (Move temp : selectedPiece.getPossibleMoves(board)){
                         if (temp.getRow() == row && temp.getCol() == col){
                             move = temp;
@@ -191,6 +197,10 @@ public class ChessGame {
                 }
                 else {
                     error.setText("Invalid Move");
+                    int rmRow1 = selectedPiece.getRow();
+                    int rmCol1 = selectedPiece.getCol();
+                    selectedPiece = null;
+                    game.chessBoard.add(game.getSpace(board.getPiece(rmRow1, rmCol1),game.getSpaceColor(rmRow1, rmCol1),rmRow1,rmCol1),rmCol1,rmRow1);
                 }
             }
             else{ // no space previously clicked
