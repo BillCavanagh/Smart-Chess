@@ -279,6 +279,12 @@ public class Board {
         piece.move(move);
         setPiece(piece,newRow,newCol); // update new position on board
         setPiece(null,oldRow,oldCol); // update old position on board
+        if (piece instanceof Pawn){ // potential promotion
+            Pawn pawn = (Pawn)(piece);
+            if (pawn.canPromote(this)){
+                pawn.promote(this, Piece.QUEEN);
+            }
+        }
         game.updateChessBoard(oldRow,oldCol); // update old position
         game.updateChessBoard(newRow,newCol); // update new position
     }
