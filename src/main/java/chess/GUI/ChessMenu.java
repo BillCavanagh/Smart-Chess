@@ -39,9 +39,12 @@ public class ChessMenu extends Application{
     public static Label createTitle(){
         Label title = new Label(titleName);
         title.setFont(new Font("Georgia",50));
-        title.autosize();
-        title.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,new Insets(20))));
+        title.setPadding(new Insets(25, 150, 25,150));
+        title.setPrefWidth(ChessGame.BOARD_SIZE);
+        title.setPrefHeight(100);
+        title.setBackground(new Background(new BackgroundFill(ChessGame.DARK,CornerRadii.EMPTY,null)));
         title.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        title.setTextFill(ChessGame.LIGHT);
         return title;
     }
     public static Button createGameTypeButton(String text, GameType gameType){
@@ -55,9 +58,10 @@ public class ChessMenu extends Application{
                 catch (Exception e){System.out.println(e);}
             }
         });
-        button.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,new Insets(20))));
+        button.setBackground(new Background(new BackgroundFill(ChessGame.LIGHT,CornerRadii.EMPTY,null)));
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
-        button.autosize();
+        button.setPrefSize(ChessGame.BOARD_SIZE,100);
+        button.setTextFill(ChessGame.DARK);
         return button;
     }
     public void start(Stage primaryStage) throws Exception {
@@ -75,6 +79,7 @@ public class ChessMenu extends Application{
         for (GameType gameType : GameType.values()){
             menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
         }
+        menu.setPrefSize(ChessGame.BOARD_SIZE,ChessGame.BOARD_SIZE);
         stage.setScene(new Scene(menu));
     }
     public static void main(String[] args) {

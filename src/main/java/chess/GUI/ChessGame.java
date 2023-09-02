@@ -47,8 +47,8 @@ public class ChessGame {
         'q',"file:images/Black_Queen.png",
         'r',"file:images/Black_Rook.png");
     public static String blankImage = "file:/images/Blank.png";
-    public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
-    public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
+    public static Color DARK = Color.CHOCOLATE; //new Color((double)209/255,(double)139/255,(double)71/255,1);
+    public static Color LIGHT = Color.BISQUE; //new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = new Color(1,0,0,1);
     // model (board)
     public static Board board;
