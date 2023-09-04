@@ -8,8 +8,15 @@ import chess.Pieces.King;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.paint.Color;
 public class MoveUtils {
     public static String makeMoveList(Board board){
         String newText = "";
@@ -69,8 +76,10 @@ public class MoveUtils {
      }
      public static VBox makeInputMoveList(Board board, ChessGame game){
         VBox box = new VBox();
-        ArrayList<Move> temp = new ArrayList<>(board.getTurn() == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
+        ArrayList<Move> temp = new ArrayList<>(board.getTurn() == chess.Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
+        Color background = (board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK);
+        Color text = (board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
         for (Move move : temp){
             Button button = new Button(move.toString());
             button.autosize();
@@ -81,6 +90,10 @@ public class MoveUtils {
                 }
             };
             button.setOnAction(event);
+            button.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
+            button.setTextFill(text);
+            button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+            button.setPrefSize(100, 10);
             box.getChildren().add(button);
         }
         return box;

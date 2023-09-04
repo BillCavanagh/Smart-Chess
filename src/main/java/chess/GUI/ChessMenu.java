@@ -77,7 +77,12 @@ public class ChessMenu extends Application{
         Label title = createTitle();
         menu.getChildren().add(title);
         for (GameType gameType : GameType.values()){
-            menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
+            if (gameType != GameType.BIG){
+                menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
+            }
+            else{
+                menu.getChildren().add(createGameTypeButton(gameType.name() + " (WIP)", gameType));
+            }
         }
         menu.setPrefSize(ChessGame.BOARD_SIZE,ChessGame.BOARD_SIZE);
         stage.setScene(new Scene(menu));

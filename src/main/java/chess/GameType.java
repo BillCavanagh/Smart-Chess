@@ -36,10 +36,10 @@ public enum GameType {
     {null,null,null,null,null,null,null,null},
     {null,null,null,null,null,null,null,null},
     {new Pawn(Color.WHITE,6,0),new Pawn(Color.WHITE,6,1),new Pawn(Color.WHITE,6,2),new Pawn(Color.WHITE,6,3),new Pawn(Color.WHITE,6,4),new Pawn(Color.WHITE,6,5),new Pawn(Color.WHITE,6,6),new Pawn(Color.WHITE,6,7)},   
-    {new Queen(Color.WHITE,7,0),new Queen(Color.WHITE,7,1),new Queen(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Queen(Color.WHITE,7,5),new Queen(Color.WHITE,7,6),new Queen(Color.WHITE,7,7)}});
+    {new Queen(Color.WHITE,7,0),new Queen(Color.WHITE,7,1),new Queen(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Queen(Color.WHITE,7,5),new Queen(Color.WHITE,7,6),new Queen(Color.WHITE,7,7)}}),
     
-    // chess but on a 16x16 board
-    //BIG(16,16, new DefaultPiece{{}}
+    //chess but on a 12x12 board
+    BIG(16,16, new DefaultPiece[16][16]);
     private int rows;
     private int cols;
     private DefaultPiece[][] layout;
