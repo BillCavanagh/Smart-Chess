@@ -7,6 +7,8 @@ import chess.GUI.ChessGame;
 import chess.Pieces.King;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -17,6 +19,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 public class MoveUtils {
     public static String makeMoveList(Board board){
         String newText = "";
@@ -92,8 +95,9 @@ public class MoveUtils {
             button.setOnAction(event);
             button.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
             button.setTextFill(text);
+            button.setFont(new Font("Century",game.fontSize/2));
             button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
-            button.setPrefSize(100, 10);
+            button.setPrefSize(ChessGame.BOARD_SIZE/6, 100/(temp.size()/4));
             box.getChildren().add(button);
         }
         return box;

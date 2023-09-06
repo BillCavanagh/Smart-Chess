@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -88,6 +89,7 @@ public class ChessGame {
         fontSize = BOARD_SIZE/board.rows/3;
         selectedMove = null;
         selectedPiece = null;
+        fullGame.setBackground(Background.fill(Color.SADDLEBROWN));
         assembleChessBoard();
         //textField.setMaxSize(tileSize*8,tileSize*8);
         //textField.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,null,BorderWidths.FULL)));
@@ -252,7 +254,7 @@ public class ChessGame {
             text.setText(rank + "");
             text.setAlignment(Pos.BASELINE_LEFT);
         }
-        text.setFont(new Font("Impact",fontSize));
+        text.setFont(new Font("Century",fontSize));
         text.setMinSize(tileSize, tileSize);
         text.setMaxSize(tileSize, tileSize);
         // button for making moves
@@ -267,7 +269,7 @@ public class ChessGame {
         });
         button.setBackground(Background.fill(color));
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
-        StackPane space = new StackPane(button);
+        StackPane space = new StackPane(button,text);
         // space.setBackground(Background.fill(color));
         // space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;

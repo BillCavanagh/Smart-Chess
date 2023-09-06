@@ -53,7 +53,8 @@ public class ChessMenu extends Application{
             public void handle(ActionEvent event) {
                 try {
                     currentGame = new ChessGame(gameType);
-                    stage.setScene(new Scene(currentGame.getBoard()));
+                    Scene scene = new Scene(currentGame.getBoard());
+                    stage.setScene(scene);
                 } 
                 catch (Exception e){System.out.println(e);}
             }

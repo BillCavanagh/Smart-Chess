@@ -39,7 +39,7 @@ public enum GameType {
     {new Queen(Color.WHITE,7,0),new Queen(Color.WHITE,7,1),new Queen(Color.WHITE,7,2),new Queen(Color.WHITE,7,3),new King(Color.WHITE,7,4),new Queen(Color.WHITE,7,5),new Queen(Color.WHITE,7,6),new Queen(Color.WHITE,7,7)}}),
     
     //chess but on a 12x12 board
-    BIG(16,16, new DefaultPiece[16][16]);
+    BIG(16,16, new DefaultPiece[12][12]);
     private int rows;
     private int cols;
     private DefaultPiece[][] layout;
