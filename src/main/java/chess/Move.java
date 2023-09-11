@@ -55,6 +55,16 @@ public class Move implements Comparable<Move>{
         return "" + piece.getShorthand() + board.indexToFile(piece.getCol()) + String.valueOf(board.indexToRank(piece.getRow())) + " " + 
         board.indexToFile(col) + String.valueOf(board.indexToRank(row));
     }
+    public String toUserFriendlyString(){
+        if (isCastle() && !isLongCastle()){
+            return "Short Castle";
+        }
+        if (isLongCastle()){
+            return "Long Castle";
+        }
+        return "" + piece.getPiece().name() + board.indexToFile(piece.getCol()) + String.valueOf(board.indexToRank(piece.getRow())) + " " + 
+        board.indexToFile(col) + String.valueOf(board.indexToRank(row));
+    }
     public void setRow(int row){
         this.row = row;
     }
