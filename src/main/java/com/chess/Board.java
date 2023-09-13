@@ -285,8 +285,10 @@ public class Board {
                 pawn.promote(this, Piece.QUEEN);
             }
         }
-        game.updateChessBoard(oldRow,oldCol); // update old position
-        game.updateChessBoard(newRow,newCol); // update new position
+        if (game != null){
+            game.updateChessBoard(oldRow,oldCol); // update old position
+            game.updateChessBoard(newRow,newCol); // update new position
+        }
     }
     public boolean makeMove(Move move, Color color) {
         if (move == null){
@@ -304,7 +306,9 @@ public class Board {
             DefaultPiece piece2 = move.getPiece2();
             if (piece2 != null){
                 removePiece(piece2.getColor(), piece2.getRow(),piece2.getCol()); 
-                game.updateChessBoard(piece2.getRow(),piece2.getCol());
+                if (game != null){
+                    game.updateChessBoard(piece2.getRow(),piece2.getCol());
+                }
             }
         } 
         else{ // castle move

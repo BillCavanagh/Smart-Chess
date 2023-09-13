@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import com.chess.*;
 import com.chess.GUI.ChessGame;
 import com.chess.Pieces.*;
-
+import javafx.*;
 public class MoveTest {
-    public Board board = new Board(GameType.CLASSIC,new ChessGame(GameType.CLASSIC));
+    public Board board = new Board(GameType.CLASSIC,null);
     @Test
     public void testEquality() {
         DefaultPiece piece1 = new Pawn(Color.WHITE, 2, 3);
@@ -25,7 +25,7 @@ public class MoveTest {
         assertTrue(move1.equals(move4));  // Test same piece
         assertFalse(move1.equals(move2)); // Test diffent colors
         assertFalse(move1.equals(move3)); // Test different pieces
-        assertFalse(move1.equals(null));  // Test piece with
+        assertFalse(move1.equals(null));  // Test piece with null
         assertFalse(move1.equals(move5)); // Different coordinates
     }
 

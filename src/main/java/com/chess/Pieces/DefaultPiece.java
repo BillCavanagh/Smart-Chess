@@ -54,7 +54,7 @@ public abstract class DefaultPiece {
    public boolean equals(Object obj) {
         if (obj instanceof DefaultPiece){
             DefaultPiece other = (DefaultPiece) obj;
-            if (this.row == other.row && this.col == other.col && this.color.equals(other.color)){
+            if (this.row == other.row && this.col == other.col && this.color.equals(other.color) && this.piece.equals(other.piece)){
                 return true;
             }
         }       
