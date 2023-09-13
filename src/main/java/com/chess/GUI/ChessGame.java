@@ -1,12 +1,13 @@
-package chess.GUI;
+package com.chess.GUI;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
-import chess.*;
-import chess.Pieces.*;
+import com.chess.*;
+import com.chess.Pieces.*;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -128,7 +129,7 @@ public class ChessGame {
     public Image getPieceImage(DefaultPiece piece){
         // TODO allow files to work inside JAR files
         if (piece != null){
-            return piece.getColor() == chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
+            return piece.getColor() == com.chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
         } 
         else{
             return new Image(blankImage,true);
@@ -199,7 +200,7 @@ public class ChessGame {
                 else{
                     move = new Move(row,col,selectedPiece,board);
                 }
-                if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){ // select the move if valid move
+                if (selectedPiece.getColor() == com.chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){ // select the move if valid move
                     selectedMove = move;
                     highlightSpace(row, col);
                 }
@@ -224,7 +225,7 @@ public class ChessGame {
         }
         if (board.isCheckmate()){
             game.turn.setText("");
-            game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+            game.check.setText("Checkmate, " + (board.getTurn() == com.chess.Color.WHITE ? "Black" : "White") + " wins!");
         }
         if (board.isStalemate()){
             game.turn.setText("");
@@ -287,7 +288,7 @@ public class ChessGame {
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
     public void updateLabels(){
-        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
+        turn.setText(board.getTurn() == com.chess.Color.WHITE ? "White to Move" : "Black to Move");
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);

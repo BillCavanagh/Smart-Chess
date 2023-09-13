@@ -1,10 +1,11 @@
-package chess.Pieces;
+package com.chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
-import chess.Board;
-import chess.Color;
-import chess.Move;
+
+import com.chess.Board;
+import com.chess.Color;
+import com.chess.Move;
 public class Pawn extends DefaultPiece {
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);

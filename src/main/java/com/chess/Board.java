@@ -1,12 +1,12 @@
-package chess;
+package com.chess;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import chess.GUI.ChessGame;
-import chess.Pieces.*;
+import com.chess.GUI.ChessGame;
+import com.chess.Pieces.*;
 
 public class Board {
     public DefaultPiece[][] board;

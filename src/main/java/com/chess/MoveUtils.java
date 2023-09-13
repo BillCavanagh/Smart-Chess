@@ -1,10 +1,11 @@
-package chess;
+package com.chess;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import chess.GUI.ChessGame;
-import chess.Pieces.King;
+import com.chess.GUI.ChessGame;
+import com.chess.Pieces.King;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,7 +24,7 @@ import javafx.scene.text.Font;
 public class MoveUtils {
     public static String makeMoveList(Board board){
         String newText = "";
-        if (board.getTurn() == chess.Color.WHITE){
+        if (board.getTurn() == com.chess.Color.WHITE){
             newText = newText + "White moves: \n";
             ArrayList<Move> temp = new ArrayList<>(board.currentWhiteMoves);
             Collections.sort(temp); 
@@ -70,7 +71,7 @@ public class MoveUtils {
         }
         if (board.isCheckmate()){
             game.turn.setText("");
-            game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
+            game.check.setText("Checkmate, " + (board.getTurn() == com.chess.Color.WHITE ? "Black" : "White") + " wins!");
         }
         if (board.isStalemate()){
             game.turn.setText("");
@@ -79,10 +80,10 @@ public class MoveUtils {
      }
      public static VBox makeInputMoveList(Board board, ChessGame game){
         VBox box = new VBox();
-        ArrayList<Move> temp = new ArrayList<>(board.getTurn() == chess.Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
+        ArrayList<Move> temp = new ArrayList<>(board.getTurn() == com.chess.Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves);
         Collections.sort(temp); 
-        Color background = (board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK);
-        Color text = (board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        Color background = (board.getTurn() == com.chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK);
+        Color text = (board.getTurn() == com.chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
         for (Move move : temp){
             Button button = new Button(move.toString());
             button.autosize();
@@ -107,9 +108,9 @@ public class MoveUtils {
         //     board.makeMove(move,board.getTurn())
         // }
         if (input.equals("O-O") || input.equals("0-0")){ // short castle
-            chess.Color color = board.getTurn();
+            com.chess.Color color = board.getTurn();
             King king;
-            if (color == chess.Color.WHITE){
+            if (color == com.chess.Color.WHITE){
                 king = board.whiteKing;
                 if (king.getPossibleMoves(board).contains(board.whiteShort)){
                     return board.whiteShort;
@@ -124,9 +125,9 @@ public class MoveUtils {
             return null;
         }
         if (input.equals("O-O-O") || input.equals("0-0-0")){ // long castle
-            chess.Color color = board.getTurn();
+            com.chess.Color color = board.getTurn();
             King king;
-            if (color == chess.Color.WHITE){
+            if (color == com.chess.Color.WHITE){
                 king = board.whiteKing;
                 if (king.getPossibleMoves(board).contains(board.whiteLong)){
                     return board.whiteShort;

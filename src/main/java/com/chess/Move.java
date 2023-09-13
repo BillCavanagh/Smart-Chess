@@ -1,8 +1,10 @@
-package chess;
+package com.chess;
 
 import java.util.Objects;
+
+import com.chess.Pieces.*;
+
 import java.lang.Comparable;
-import chess.Pieces.*;
 
 public class Move implements Comparable<Move>{
     public int row;

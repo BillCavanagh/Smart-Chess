@@ -1,6 +1,6 @@
-package chess;
+package com.chess;
 
-import chess.GUI.ChessMenu;
+import com.chess.GUI.ChessMenu;
 
 public class Main {
     public static void main(String[] args){

@@ -1,10 +1,11 @@
-package chess.Pieces;
+package com.chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
-import chess.Board;
-import chess.Color;
-import chess.Move;
+
+import com.chess.Board;
+import com.chess.Color;
+import com.chess.Move;
 
 public class King extends DefaultPiece{
     public King(Color color, int row, int col){

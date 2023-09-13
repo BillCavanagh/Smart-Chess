@@ -1,7 +1,9 @@
-package chess.GUI;
+package com.chess.GUI;
 import java.util.Map;
-import chess.*;
-import chess.Pieces.DefaultPiece;
+
+import com.chess.*;
+import com.chess.Pieces.DefaultPiece;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

@@ -1,14 +1,15 @@
-package tests;
+package com;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import chess.Board;
-import chess.Color;
-import chess.*;
-import chess.Pieces.*;
+import com.chess.*;
+import com.chess.GUI.ChessGame;
+import com.chess.Pieces.*;
 
 public class MoveTest {
+    public Board board = new Board(GameType.CLASSIC,new ChessGame(GameType.CLASSIC));
     @Test
     public void testEquality() {
         DefaultPiece piece1 = new Pawn(Color.WHITE, 2, 3);
@@ -16,7 +17,6 @@ public class MoveTest {
         DefaultPiece piece3 = new Rook(Color.WHITE, 2, 3);
         DefaultPiece piece4 = new Pawn(Color.WHITE, 2, 3);
         DefaultPiece piece5 = new Pawn(Color.WHITE, 2, 4);
-        Board board = new Board();
         Move move1 = new Move(2, 3, piece1, board);
         Move move2 = new Move(2, 3, piece2, board);
         Move move3 = new Move(2, 3, piece3, board);
@@ -33,7 +33,6 @@ public class MoveTest {
     public void testHash() {
         DefaultPiece piece1 = new Pawn(Color.WHITE, 2, 3);
         DefaultPiece piece2 = new Pawn(Color.WHITE, 3, 3);
-        Board board = new Board();
         Move move1 = new Move(2, 3, piece1, board);
         Move move2 = new Move(2, 3, piece1, board);
         Move move3 = new Move(2, 3, piece2, board);
@@ -48,14 +47,12 @@ public class MoveTest {
         DefaultPiece rook = new Rook(Color.WHITE, 1, 3);
         DefaultPiece queen = new Queen(Color.WHITE, 2, 3);
         DefaultPiece king = new King(Color.WHITE, 3, 3);
-        Board board = new Board();
         Move move1 = new Move(2, 2, pawn, board);
         Move move2 = new Move(2, 2, knight, board);
         Move move3 = new Move(2, 2, bishop, board);
         Move move4 = new Move(2, 2, rook, board);
         Move move5 = new Move(2, 2, queen, board);
         Move move6 = new Move(2, 2, king, board);
-
         assertTrue(move1.compareTo(move2) < 0); // Pawn < Knight
         assertTrue(move2.compareTo(move3) < 0); // Knight < Bishop
         assertTrue(move3.compareTo(move4) < 0); // Bishop < Rook

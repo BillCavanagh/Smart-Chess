@@ -1,4 +1,4 @@
-package chess.old;
+package com.chess.old;
 
 //import java.util.Scanner;
 //import chess.Pieces.*;
