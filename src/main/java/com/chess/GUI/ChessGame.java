@@ -23,6 +23,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -124,6 +125,18 @@ public class ChessGame {
             }
         };
         resetButton.setOnAction(event2);
+        Color background = (ChessGame.LIGHT);
+        Color text = (ChessGame.DARK);
+        resetButton.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
+        resetButton.setTextFill(text);
+        resetButton.setFont(new Font("Century",fontSize/2));
+        resetButton.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        resetButton.setPrefSize(BOARD_SIZE/4,50);
+        turn.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
+        turn.setTextFill(text);
+        turn.setFont(new Font("Century",fontSize/2));
+        turn.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        turn.setPrefSize(BOARD_SIZE/4,50);
         updateLabels();
     }
     public Image getPieceImage(DefaultPiece piece){
@@ -288,7 +301,10 @@ public class ChessGame {
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
     public void updateLabels(){
+        
         turn.setText(board.getTurn() == com.chess.Color.WHITE ? "White to Move" : "Black to Move");
+        turn.setBackground(new Background(new BackgroundFill(board.getTurn() == com.chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        turn.setTextFill(board.getTurn() == com.chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);

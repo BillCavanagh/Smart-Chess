@@ -56,26 +56,14 @@ public class Board {
         blackLong = new Move(blackKing.getRow(),blackKing.getCol()-2,blackKing,getPiece(0,0),this);
     }
     public void init_available(){
-        this.blackKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true}
-        };
-        this.whiteKingAvailable = new boolean[][]{
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true},
-            {true,true,true,true,true,true,true,true}
-        };
+        this.blackKingAvailable = new boolean[rows][cols];
+        this.whiteKingAvailable = new boolean[rows][cols];
+        for (int row = 0; row < rows; row++){
+            for (int col = 0; col < cols; col++){
+                blackKingAvailable[row][col] = true;
+                whiteKingAvailable[row][col] = true;
+            }
+        }
     }
     public void init_Board(GameType gameType){
         board = gameType.getLayout();

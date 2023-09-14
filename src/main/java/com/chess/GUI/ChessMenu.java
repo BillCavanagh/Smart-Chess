@@ -53,12 +53,9 @@ public class ChessMenu extends Application{
         Button button = new Button(text);
         button.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent event) {
-                try {
-                    currentGame = new ChessGame(gameType);
-                    Scene scene = new Scene(currentGame.getBoard());
-                    stage.setScene(scene);
-                } 
-                catch (Exception e){System.out.println(e);}
+                currentGame = new ChessGame(gameType);
+                Scene scene = new Scene(currentGame.getBoard());
+                stage.setScene(scene);
             }
         });
         button.setBackground(new Background(new BackgroundFill(ChessGame.LIGHT,CornerRadii.EMPTY,null)));
@@ -80,12 +77,7 @@ public class ChessMenu extends Application{
         Label title = createTitle();
         menu.getChildren().add(title);
         for (GameType gameType : GameType.values()){
-            if (gameType != GameType.BIG){
-                menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
-            }
-            else{
-                menu.getChildren().add(createGameTypeButton(gameType.name() + " (WIP)", gameType));
-            }
+            menu.getChildren().add(createGameTypeButton(gameType.name(), gameType));
         }
         menu.setPrefSize(ChessGame.BOARD_SIZE,ChessGame.BOARD_SIZE);
         stage.setScene(new Scene(menu));

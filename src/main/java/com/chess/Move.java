@@ -101,7 +101,7 @@ public class Move implements Comparable<Move>{
         // if the pieces are different, priority should be given to the piece in the lowest column, then the lowest row (closer to 0,0)
         DefaultPiece piece1 = this.piece;
         DefaultPiece piece2 = o.piece;
-        if (piece1.equals(piece2)){ // if they equal return 0
+        if (piece1.equals(piece2) && this.equals(o)){ // if they equal return 0
             return 0;
         }
         if (piece1.getPiece().getShorthand() == piece2.getPiece().getShorthand()){ // if the pieces are the same type

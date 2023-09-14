@@ -11,53 +11,63 @@ import javafx.*;
 public class MoveTest {
     public Board board = new Board(GameType.CLASSIC,null);
     @Test
-    public void testEquality() {
-        DefaultPiece piece1 = new Pawn(Color.WHITE, 2, 3); 
-        DefaultPiece piece2 = new Pawn(Color.BLACK, 2, 3); // different color
-        DefaultPiece piece3 = new Rook(Color.WHITE, 2, 3); // different piece
-        DefaultPiece piece4 = new Pawn(Color.WHITE, 2, 3); // same
-        DefaultPiece piece5 = new Pawn(Color.WHITE, 2, 4); // different coordinates
-        Move move1 = new Move(2, 4, piece1, board);
-        Move move2 = new Move(2, 4, piece2, board);
-        Move move3 = new Move(2, 4, piece3, board);
-        Move move4 = new Move(2, 4, piece4, board);
-        Move move5 = new Move(2, 4, piece5, board);
-        Move move6 = new Move(2, 2, piece1, board);
-        assertTrue(move1.equals(move4));  // same piece
-        assertFalse(move1.equals(move2)); // diffent colors
-        assertFalse(move1.equals(move3)); // different pieces
-        assertFalse(move1.equals(null));  // piece with null
-        assertFalse(move1.equals(move5)); // different coordinates
-        assertFalse(move1.equals(move6)); // same piece, different coordinates
+    public void testEquality(){
+        DefaultPiece pawn = new Pawn(Color.WHITE, 2, 3); 
+        DefaultPiece pawnDifferentColor = new Pawn(Color.BLACK, 2, 3); // different color
+        DefaultPiece rook = new Rook(Color.WHITE, 2, 3); // different piece
+        DefaultPiece pawnSame = new Pawn(Color.WHITE, 2, 3); // same
+        DefaultPiece pawnDifferentCol = new Pawn(Color.WHITE, 2, 4); // different coordinates
+        Move pawnMove = new Move(2, 4, pawn, board);
+        Move pawnMoveDifferentColor = new Move(2, 4, pawnDifferentColor, board);
+        Move pawnMoveDifferentPieceType = new Move(2, 4, rook, board);
+        Move pawnMoveSame = new Move(2, 4, pawnSame, board);
+        Move pawnMoveDifferentPieceCol = new Move(2, 4, pawnDifferentCol, board);
+        Move pawnMoveDifferentMove = new Move(2, 2, pawn, board);
+        assertTrue(pawnMove.equals(pawnMoveSame));  // same piece
+        assertFalse(pawnMove.equals(pawnMoveDifferentColor)); // diffent colors
+        assertFalse(pawnMove.equals(pawnMoveDifferentPieceType)); // different pieces
+        assertFalse(pawnMove.equals(null));  // piece with null
+        assertFalse(pawnMove.equals(pawnMoveDifferentPieceCol)); // different coordinates
+        assertFalse(pawnMove.equals(pawnMoveDifferentMove)); // same piece, different coordinates
     }
     @Test
-    public void testHash() {
-        DefaultPiece piece1 = new Pawn(Color.WHITE, 2, 3);
-        DefaultPiece piece2 = new Pawn(Color.WHITE, 3, 3);
-        Move move1 = new Move(2, 3, piece1, board);
-        Move move2 = new Move(2, 3, piece1, board);
-        Move move3 = new Move(3, 3, piece2, board);
-        assertTrue(move1.hashCode() == move2.hashCode());
-        assertFalse(move1.hashCode() == move3.hashCode());
+    public void testHash(){
+        DefaultPiece pawn = new Pawn(Color.WHITE, 2, 3);
+        Move pawnMove = new Move(2, 3, pawn, board);
+        Move pawnMoveSame = new Move(2, 3, pawn, board);
+        Move pawnMoveDifferent = new Move(3, 3, pawn, board);
+        assertTrue(pawnMove.hashCode() == pawnMoveSame.hashCode());
+        assertFalse(pawnMove.hashCode() == pawnMoveDifferent.hashCode());
     }
     @Test
-    public void testCompareTo() {
+    public void testCompareTo(){
         DefaultPiece pawn = new Pawn(Color.WHITE, 1, 2);
         DefaultPiece knight = new Knight(Color.WHITE, 1, 2);
         DefaultPiece bishop = new Bishop(Color.WHITE, 1, 2);
         DefaultPiece rook = new Rook(Color.WHITE, 1, 2);
         DefaultPiece queen = new Queen(Color.WHITE, 1, 2);
         DefaultPiece king = new King(Color.WHITE, 1, 2);
-        Move move1 = new Move(2, 2, pawn, board);
-        Move move2 = new Move(2, 2, knight, board);
-        Move move3 = new Move(2, 2, bishop, board);
-        Move move4 = new Move(2, 2, rook, board);
-        Move move5 = new Move(2, 2, queen, board);
-        Move move6 = new Move(2, 2, king, board);
-        assertTrue(move1.compareTo(move2) < 0); // Pawn < Knight
-        assertTrue(move2.compareTo(move3) < 0); // Knight < Bishop
-        assertTrue(move3.compareTo(move4) < 0); // Bishop < Rook
-        assertTrue(move4.compareTo(move5) < 0); // Rook < Queen
-        assertTrue(move5.compareTo(move6) < 0); // Queen < King
+        Move pawnMove = new Move(2, 2, pawn, board);
+        Move knightMove = new Move(2, 2, knight, board);
+        Move bishopMove = new Move(2, 2, bishop, board);
+        Move rookMove = new Move(2, 2, rook, board);
+        Move queenMove = new Move(2, 2, queen, board);
+        Move kingMove = new Move(2, 2, king, board);
+        Move pawnMoveGreaterCol = new Move(3, 3, pawn, board);
+        Move pawnMoveGreaterRow = new Move(3, 2, pawn, board);
+        assertTrue(pawnMove.compareTo(knightMove) < 0); // Pawn < Knight
+        assertTrue(knightMove.compareTo(bishopMove) < 0); // Knight < Bishop
+        assertTrue(bishopMove.compareTo(rookMove) < 0); // Bishop < Rook
+        assertTrue(rookMove.compareTo(queenMove) < 0); // Rook < Queen
+        assertTrue(queenMove.compareTo(kingMove) < 0); // Queen < King
+        assertTrue(pawnMove.compareTo(pawnMoveGreaterCol) > 0); // if same piece, lowest col priority
+        assertTrue(pawnMove.compareTo(pawnMoveGreaterRow) > 0); // if same piece and same col, lowest row priority
+    }
+    @Test
+    public void testCastle(){
+        // TODO test castle
+        DefaultPiece whiteKing = new King(Color.WHITE,7,4);
+        DefaultPiece blackKing = new King(Color.BLACK,0,4);
+        
     }
 }
