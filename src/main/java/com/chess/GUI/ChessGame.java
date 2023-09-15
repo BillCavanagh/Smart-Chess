@@ -36,20 +36,20 @@ import javafx.scene.Scene;
 public class ChessGame {
     // images/color stuff
     public static Map<Character,String> whiteImages = Map.of(
-        'b',"file:images/White_Bishop.png",
-        'k',"file:images/White_King.png",
-        'n',"file:images/White_Knight.png",
-        'p',"file:images/White_Pawn.png",
-        'q',"file:images/White_Queen.png",
-        'r',"file:images/White_Rook.png");
+        'b',"file:src/main/resources/White_Bishop.png",
+        'k',"file:src/main/resources/White_King.png",
+        'n',"file:src/main/resources/White_Knight.png",
+        'p',"file:src/main/resources/White_Pawn.png",
+        'q',"file:src/main/resources/White_Queen.png",
+        'r',"file:src/main/resources/White_Rook.png");
     public static Map<Character,String> blackImages = Map.of(
-        'b',"file:images/Black_Bishop.png",
-        'k',"file:images/Black_King.png",
-        'n',"file:images/Black_Knight.png",
-        'p',"file:images/Black_Pawn.png",
-        'q',"file:images/Black_Queen.png",
-        'r',"file:images/Black_Rook.png");
-    public static String blankImage = "file:/images/Blank.png";
+        'b',"file:src/main/resources/Black_Bishop.png",
+        'k',"file:src/main/resources/Black_King.png",
+        'n',"file:src/main/resources/Black_Knight.png",
+        'p',"file:src/main/resources/Black_Pawn.png",
+        'q',"file:src/main/resources/Black_Queen.png",
+        'r',"file:src/main/resources/Black_Rook.png");
+    public static String blankImage = "file:src/main/resources/Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = Color.RED;
@@ -255,22 +255,22 @@ public class ChessGame {
         imageView.setFitWidth(tileSize);
         imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
         // text for edges of the board: label files/ranks
-        Label text = new Label("");
-        if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
-            text.setText(file + "" + rank);
-            text.setAlignment(Pos.BOTTOM_LEFT);
-        }
-        else if (row == board.rows-1){ // bottom of the board, include the file
-            text.setText(file + "");
-            text.setAlignment(Pos.BOTTOM_CENTER);
-        }
-        else if (col == 0){ // left of the baord, include the rank
-            text.setText(rank + "");
-            text.setAlignment(Pos.BASELINE_LEFT);
-        }
-        text.setFont(new Font("Century",fontSize));
-        text.setMinSize(tileSize, tileSize);
-        text.setMaxSize(tileSize, tileSize);
+        // Label text = new Label("");
+        // if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
+        //     text.setText(file + "" + rank);
+        //     text.setAlignment(Pos.BOTTOM_LEFT);
+        // }
+        // else if (row == board.rows-1){ // bottom of the board, include the file
+        //     text.setText(file + "");
+        //     text.setAlignment(Pos.BOTTOM_CENTER);
+        // }
+        // else if (col == 0){ // left of the baord, include the rank
+        //     text.setText(rank + "");
+        //     text.setAlignment(Pos.BASELINE_LEFT);
+        // }
+        // text.setFont(new Font("Century",fontSize));
+        // text.setMinSize(tileSize, tileSize);
+        // text.setMaxSize(tileSize, tileSize);
         // button for making moves
         Button button = new Button("",imageView);
         button.setMinSize(tileSize, tileSize);
@@ -283,7 +283,7 @@ public class ChessGame {
         });
         button.setBackground(Background.fill(color));
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
-        StackPane space = new StackPane(button,text);
+        StackPane space = new StackPane(button);
         // space.setBackground(Background.fill(color));
         // space.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
         return space;

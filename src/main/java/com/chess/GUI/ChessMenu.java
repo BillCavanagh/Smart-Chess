@@ -64,6 +64,7 @@ public class ChessMenu extends Application{
         button.setTextFill(ChessGame.DARK);
         return button;
     }
+    @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         reset();

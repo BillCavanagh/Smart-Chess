@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import com.chess.*;
 import com.chess.GUI.ChessGame;
 import com.chess.Pieces.*;
-import javafx.*;
 public class PiecesTest {
     @Test
     public void testPieceEquality(){
