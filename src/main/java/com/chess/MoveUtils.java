@@ -98,7 +98,12 @@ public class MoveUtils {
             button.setTextFill(text);
             button.setFont(new Font("Century",game.fontSize/2));
             button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
-            button.setPrefSize(ChessGame.BOARD_SIZE/6, 100/(temp.size()/4));
+            if (temp.size() != 0){
+                button.setPrefSize(ChessGame.BOARD_SIZE/6, 100/(temp.size()/4));
+            }
+            else{
+                button.setPrefSize(ChessGame.BOARD_SIZE/6, 100);
+            }
             box.getChildren().add(button);
         }
         return box;

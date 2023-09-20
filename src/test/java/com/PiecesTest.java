@@ -106,5 +106,6 @@ public class PiecesTest {
         board.makeMove(new Move(3,2,pawnCapture,board), Color.BLACK);
         movedPawnMoves = movedPawn.getPossibleMoves(board);
         assertTrue(movedPawnMoves.size() == 1);
+        // TODO test promotion
     }
 }
