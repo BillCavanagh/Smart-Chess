@@ -14,7 +14,7 @@ public abstract class DefaultPiece {
     protected int row;
     protected int col;
     protected Set<Move> possibleMoves;
-    protected boolean hasMoved;
+    public boolean hasMoved;
     public DefaultPiece(Color color, Piece piece, int row, int col){
         this.color = color;
         this.piece = piece;

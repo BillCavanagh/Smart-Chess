@@ -7,8 +7,10 @@ import com.chess.Board;
 import com.chess.Color;
 import com.chess.Move;
 public class Pawn extends DefaultPiece {
+    public boolean justMovedTwo;
     public Pawn(Color color, int row, int col){
         super(color,Piece.PAWN,row,col);
+        justMovedTwo = false;
     }
     public boolean canPromote(Board board){
         return row == (color == Color.WHITE ? 0 : board.rows); // end of the board for white pawns is row 0, for black pawns row 7
@@ -39,14 +41,18 @@ public class Pawn extends DefaultPiece {
             Pawn pawn1 = (Pawn) piece1;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
             if (board.getLastMove() != null && board.getLastMove().getPiece().equals(pawn1) && board.checkAvailable(color, row, col+1)){ 
-                possibleMoves.add(new Move(row,col+1,this,pawn1,board));
+                if (pawn1.justMovedTwo()){
+                    possibleMoves.add(new Move(row,col+1,this,pawn1,board));
+                }
             }
         }
         if (piece2 instanceof Pawn){
             Pawn pawn2 = (Pawn) piece2;
             int row = this.row + (color == Color.WHITE ? -1 : 1);
             if (board.getLastMove() != null && board.getLastMove().getPiece().equals(pawn2) && board.checkAvailable(color, row, col-1)){
-                possibleMoves.add(new Move(row,col-1,this,pawn2,board));
+                if (pawn2.justMovedTwo()){
+                    possibleMoves.add(new Move(row,col-1,this,pawn2,board));
+                }
             }
         }
     }
@@ -78,20 +84,20 @@ public class Pawn extends DefaultPiece {
     public String toString() {
         return String.valueOf(piece.shorthand) + color.name().charAt(0);
     }
-    // public boolean justMovedTwo(){
-    //     return justMovedTwo;
-    // }
-    // public void move(Move move){
-    //     if (hasMoved){
-    //         justMovedTwo = false;
-    //     }
-    //     else{
-    //         hasMoved = true;
-    //         if (Math.abs(move.getRow()-row) == 2){
-    //             justMovedTwo = true;
-    //         }
-    //     }
-    //     setRow(move.getRow()); 
-    //     setCol(move.getCol());
-    // }
+    public boolean justMovedTwo(){
+        return justMovedTwo;
+    }
+    public void move(Move move){
+        if (hasMoved){
+            justMovedTwo = false;
+        }
+        else{
+            hasMoved = true;
+            if (Math.abs(move.getRow()-row) == 2){
+                justMovedTwo = true;
+            }
+        }
+        setRow(move.getRow()); 
+        setCol(move.getCol());
+    }
 }

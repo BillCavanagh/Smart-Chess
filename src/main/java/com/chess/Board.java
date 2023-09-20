@@ -113,6 +113,23 @@ public class Board {
     public DefaultPiece getPiece(int row, int col){
         return inBounds(row,col) ? board[row][col] : null;
     }
+    public void addPiece(DefaultPiece piece){
+        int row = piece.getRow();
+        int col = piece.getCol();
+        if (inBounds(row,col)){
+            DefaultPiece replaced = getPiece(row,col);
+            if (replaced != null){
+                removePiece(replaced.getColor(),row,col);
+            }
+            board[row][col] = piece;
+            if (piece.getColor() == Color.WHITE){
+                whitePieces.add(piece);
+            }
+            else{
+                blackPieces.add(piece);
+            }
+        }
+    }
     public void setPiece(DefaultPiece piece, int row, int col){
         if (inBounds(row,col)) board[row][col] = piece;
     }
