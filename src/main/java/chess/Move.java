@@ -1,8 +1,8 @@
-package com.chess;
+package chess;
 
 import java.util.Objects;
 
-import com.chess.Pieces.*;
+import chess.Pieces.*;
 
 import java.lang.Comparable;
 

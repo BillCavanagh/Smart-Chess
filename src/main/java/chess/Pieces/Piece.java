@@ -1,4 +1,4 @@
-package com.chess.Pieces;
+package chess.Pieces;
 
 public enum Piece {
     PAWN(1,'p'),BISHOP(4,'b'),KNIGHT(3,'n'),ROOK(5,'r'),QUEEN(9,'q'),KING(Integer.MAX_VALUE,'k');

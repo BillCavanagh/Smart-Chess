@@ -1,11 +1,11 @@
-package com.chess.Pieces;
+package chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.chess.Board;
-import com.chess.Color;
-import com.chess.Move;
+import chess.Board;
+import chess.Color;
+import chess.Move;
 
 public class Queen extends DefaultPiece{
     public Queen(Color color, int row, int col){

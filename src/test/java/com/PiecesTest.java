@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.chess.*;
-import com.chess.Pieces.*;
+import chess.*;
+import chess.Pieces.*;
 public class PiecesTest {
     @Test
     public void testPieceEquality(){

@@ -4,9 +4,9 @@ package com;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.chess.*;
-import com.chess.GUI.ChessGame;
-import com.chess.Pieces.*;
+import chess.*;
+import chess.GUI.ChessGame;
+import chess.Pieces.*;
 public class MoveTest {
     public Board board = new Board(GameType.CLASSIC,null);
     @Test

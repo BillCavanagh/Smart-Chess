@@ -1,5 +1,5 @@
-package com.chess;
-import com.chess.Pieces.*;
+package chess;
+import chess.Pieces.*;
 public enum GameType {
     // normal chess 
     CLASSIC(8,8,new DefaultPiece[][]{

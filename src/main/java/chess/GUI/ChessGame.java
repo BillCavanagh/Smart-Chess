@@ -1,13 +1,12 @@
-package com.chess.GUI;
+package chess.GUI;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
-import com.chess.*;
-import com.chess.Pieces.*;
-
+import chess.*;
+import chess.Pieces.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,21 +34,22 @@ import javafx.scene.Scene;
 
 public class ChessGame {
     // images/color stuff
+    public static String directory = "/src/main/resources/";
     public static Map<Character,String> whiteImages = Map.of(
-        'b',"file:src/main/resources/White_Bishop.png",
-        'k',"file:src/main/resources/White_King.png",
-        'n',"file:src/main/resources/White_Knight.png",
-        'p',"file:src/main/resources/White_Pawn.png",
-        'q',"file:src/main/resources/White_Queen.png",
-        'r',"file:src/main/resources/White_Rook.png");
+        'b',directory + "White_Bishop.png",
+        'k',directory + "White_King.png",
+        'n',directory + "White_Knight.png",
+        'p',directory + "White_Pawn.png",
+        'q',directory + "White_Queen.png",
+        'r',directory + "White_Rook.png");
     public static Map<Character,String> blackImages = Map.of(
-        'b',"file:src/main/resources/Black_Bishop.png",
-        'k',"file:src/main/resources/Black_King.png",
-        'n',"file:src/main/resources/Black_Knight.png",
-        'p',"file:src/main/resources/Black_Pawn.png",
-        'q',"file:src/main/resources/Black_Queen.png",
-        'r',"file:src/main/resources/Black_Rook.png");
-    public static String blankImage = "file:src/main/resources/Blank.png";
+        'b',directory + "Black_Bishop.png",
+        'k',directory + "Black_King.png",
+        'n',directory + "Black_Knight.png",
+        'p',directory + "Black_Pawn.png",
+        'q',directory + "Black_Queen.png",
+        'r',directory + "Black_Rook.png");
+    public static String blankImage = directory + "Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = Color.RED;
@@ -141,12 +141,16 @@ public class ChessGame {
     }
     public Image getPieceImage(DefaultPiece piece){
         // TODO allow files to work inside JAR files
+        String path;
         if (piece != null){
-            return piece.getColor() == com.chess.Color.WHITE ? new Image(whiteImages.get(piece.getPiece().getShorthand()),true) : new Image(blackImages.get(piece.getPiece().getShorthand()),true);
+            path = piece.getColor() == chess.Color.WHITE ? whiteImages.get(piece.getPiece().getShorthand()) : blackImages.get(piece.getPiece().getShorthand());
         } 
         else{
-            return new Image(blankImage,true);
+            path = blankImage;
         }
+        String workingDir = System.getProperty("user.dir");
+        InputStream inputStream = getClass().getResourceAsStream(path);
+        return new Image(inputStream);
     }
     public Color getSpaceColor(int row,int col){
         if (row % 2 == 0){ // even row
@@ -213,7 +217,7 @@ public class ChessGame {
                 else{
                     move = new Move(row,col,selectedPiece,board);
                 }
-                if (selectedPiece.getColor() == com.chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){ // select the move if valid move
+                if (selectedPiece.getColor() == chess.Color.WHITE ? board.currentWhiteMoves.contains(move) : board.currentBlackMoves.contains(move)){ // select the move if valid move
                     selectedMove = move;
                     highlightSpace(row, col);
                 }
@@ -238,7 +242,7 @@ public class ChessGame {
         }
         if (board.isCheckmate()){
             game.turn.setText("");
-            game.check.setText("Checkmate, " + (board.getTurn() == com.chess.Color.WHITE ? "Black" : "White") + " wins!");
+            game.check.setText("Checkmate, " + (board.getTurn() == chess.Color.WHITE ? "Black" : "White") + " wins!");
         }
         if (board.isStalemate()){
             game.turn.setText("");
@@ -251,9 +255,9 @@ public class ChessGame {
         int rank = board.indexToRank(row);
         char file = board.indexToFile(col);
         ImageView imageView = new ImageView(image);
+        imageView.setVisible(image.equals(new Image(blankImage)) ? false : true);
         imageView.setFitHeight(tileSize);
         imageView.setFitWidth(tileSize);
-        imageView.setVisible(image.getUrl().equals(new Image(blankImage).getUrl()) ? false : true);
         // text for edges of the board: label files/ranks
         // Label text = new Label("");
         // if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
@@ -302,9 +306,9 @@ public class ChessGame {
     }
     public void updateLabels(){
         
-        turn.setText(board.getTurn() == com.chess.Color.WHITE ? "White to Move" : "Black to Move");
-        turn.setBackground(new Background(new BackgroundFill(board.getTurn() == com.chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
-        turn.setTextFill(board.getTurn() == com.chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
+        turn.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        turn.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);

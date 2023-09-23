@@ -1,12 +1,12 @@
-package com.chess.Pieces;
+package chess.Pieces;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.chess.Board;
-import com.chess.Color;
-import com.chess.Move;
+import chess.Board;
+import chess.Color;
+import chess.Move;
 
 public abstract class DefaultPiece {
     protected Color color;
