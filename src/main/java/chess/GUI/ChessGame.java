@@ -34,22 +34,21 @@ import javafx.scene.Scene;
 
 public class ChessGame {
     // images/color stuff
-    public static String directory = "/src/main/resources/";
     public static Map<Character,String> whiteImages = Map.of(
-        'b',directory + "White_Bishop.png",
-        'k',directory + "White_King.png",
-        'n',directory + "White_Knight.png",
-        'p',directory + "White_Pawn.png",
-        'q',directory + "White_Queen.png",
-        'r',directory + "White_Rook.png");
+        'b',"White_Bishop.png",
+        'k',"White_King.png",
+        'n',"White_Knight.png",
+        'p',"White_Pawn.png",
+        'q',"White_Queen.png",
+        'r',"White_Rook.png");
     public static Map<Character,String> blackImages = Map.of(
-        'b',directory + "Black_Bishop.png",
-        'k',directory + "Black_King.png",
-        'n',directory + "Black_Knight.png",
-        'p',directory + "Black_Pawn.png",
-        'q',directory + "Black_Queen.png",
-        'r',directory + "Black_Rook.png");
-    public static String blankImage = directory + "Blank.png";
+        'b',"Black_Bishop.png",
+        'k',"Black_King.png",
+        'n',"Black_Knight.png",
+        'p',"Black_Pawn.png",
+        'q',"Black_Queen.png",
+        'r',"Black_Rook.png");
+    public static String blankImage = "Blank.png";
     public static Color DARK = new Color((double)209/255,(double)139/255,(double)71/255,1);
     public static Color LIGHT = new Color((double)255/255,(double)206/255,(double)158/255,1);
     public static Color HIGHLIGHT = Color.RED;
@@ -140,17 +139,15 @@ public class ChessGame {
         updateLabels();
     }
     public Image getPieceImage(DefaultPiece piece){
-        // TODO allow files to work inside JAR files
-        String path;
-        if (piece != null){
-            path = piece.getColor() == chess.Color.WHITE ? whiteImages.get(piece.getPiece().getShorthand()) : blackImages.get(piece.getPiece().getShorthand());
-        } 
-        else{
+        String path = "";
+        if (piece == null){
             path = blankImage;
         }
-        String workingDir = System.getProperty("user.dir");
-        InputStream inputStream = getClass().getResourceAsStream(path);
-        return new Image(inputStream);
+        else{
+            path = piece.getColor() == chess.Color.WHITE ? whiteImages.get(piece.getShorthand()) : blackImages.get(piece.getShorthand());
+        }
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(path); 
+        return new Image(stream);
     }
     public Color getSpaceColor(int row,int col){
         if (row % 2 == 0){ // even row
@@ -252,12 +249,12 @@ public class ChessGame {
     }
     public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
-        int rank = board.indexToRank(row);
-        char file = board.indexToFile(col);
         ImageView imageView = new ImageView(image);
-        imageView.setVisible(image.equals(new Image(blankImage)) ? false : true);
         imageView.setFitHeight(tileSize);
         imageView.setFitWidth(tileSize);
+        imageView.setVisible(piece == null ? false : true);
+        //int rank = board.indexToRank(row);
+        //char file = board.indexToFile(col);
         // text for edges of the board: label files/ranks
         // Label text = new Label("");
         // if (row == board.rows-1 && col == 0){ // bottom left, should have both file and rank
