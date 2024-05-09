@@ -5,12 +5,29 @@ import java.util.Objects;
 import chess.Pieces.*;
 
 import java.lang.Comparable;
-
+/**
+ * Class that represents any one move 
+ */
 public class Move implements Comparable<Move>{
+    /**
+     * The row position the move goes to
+     */
     public int row;
+    /**
+     * The col position the move goes to
+     */
     public int col;
+    /**
+    * The piece that will be moved
+    */
     public DefaultPiece piece;
+    /**
+     * Additional pieced used for castling moves
+     */
     public DefaultPiece piece2;
+    /**
+     * The corresponding board that this move is made on
+     */
     public Board board;
     public Move(int row, int col, DefaultPiece piece, Board board){
         this.row = row;
@@ -19,7 +36,7 @@ public class Move implements Comparable<Move>{
         this.piece2 = null;
         this.board = board;
     }
-    public Move(int row, int col, DefaultPiece piece, DefaultPiece other, Board board){ // castle move
+    public Move(int row, int col, DefaultPiece piece, DefaultPiece other, Board board){ // castle move constructor
         this.row = row;
         this.col = col;
         this.piece = piece;

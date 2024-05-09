@@ -9,23 +9,77 @@ import chess.GUI.ChessGame;
 import chess.Pieces.*;
 
 public class Board {
+    /**
+     * The 2d Array of pieces that represents the board
+     */
     public DefaultPiece[][] board;
+    /**
+     * The 2d array that represents spaces the black king can move to legally
+     */
     public boolean[][] blackKingAvailable;
+    /**
+     * The 2d array that represents spaces the white king can move to legally
+     */
     public boolean[][] whiteKingAvailable;
+    /**
+     * The black king piece
+     */
     public King blackKing;
+    /**
+     * The white king piece
+     */
     public King whiteKing;
+    /**
+     * A list of all white pieces not captured
+     */
     public List<DefaultPiece> whitePieces;
+    /**
+     * A list of all black pieces not captured
+     */
     public List<DefaultPiece> blackPieces;
+    /**
+     * The set of all available white moves
+     */
     public Set<Move> currentWhiteMoves;
+    /**
+     * The set of all available black moves
+     */
     public Set<Move> currentBlackMoves;
+    /**
+     * The current color's turn
+     */
     public Color turn;
+    /**
+     * The last move made on the board
+     */
     public Move lastMove;
+    /**
+     * The move representing a short castle for white
+     */
     public Move whiteShort;
+    /**
+     * The move representing a long castle for white
+     */
     public Move whiteLong;
+    /**
+     * The move representing a short castle for black
+     */
     public Move blackShort;
+    /**
+     * The move representing a long castle for black
+     */
     public Move blackLong;
+    /**
+     * The number of rows on the board
+     */
     public int rows;
+    /**
+     * The number of columns on the board
+     */
     public int cols;
+    /**
+     * The corresponding javaFX GUI for the board
+     */
     public ChessGame game;
     public Board(){
         rows = 8; 
