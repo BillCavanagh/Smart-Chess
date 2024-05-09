@@ -7,13 +7,37 @@ import java.util.Set;
 import chess.Board;
 import chess.Color;
 import chess.Move;
-
+/**
+ * Parent class for all pieces
+ */
 public abstract class DefaultPiece {
+    /**
+     * The color of the piece (WHITE or BLACK)
+     */
     protected Color color;
+    /**
+     * The type of piece (PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING)
+     */
     protected Piece piece;
+    /**
+     * The row position of the piece (index in 2D array, not chess notation)
+     */
     protected int row;
+    /**
+     * The column position of the piece (index in 2D array, not chess notation)
+     */
     protected int col;
+    /**
+     * The set of possible moves the piece can make in its current position 
+     * <p>
+     * Contains only legal moves
+     * <p>
+     * The set being empty implies the piece cannot move
+     */
     protected Set<Move> possibleMoves;
+    /**
+     * Whether the piece has moved or not
+     */
     public boolean hasMoved;
     public DefaultPiece(Color color, Piece piece, int row, int col){
         this.color = color;
@@ -29,7 +53,7 @@ public abstract class DefaultPiece {
     public Color getColor(){
         return color;
     }
-    public int getValue(){
+    public double getValue(){
         return piece.value;
     }
     public char getShorthand(){
@@ -64,8 +88,14 @@ public abstract class DefaultPiece {
    public int hashCode() {
        return Objects.hash(row,col,piece,color);
    }
+    /**
+     * Used to generate and get all possible moves for the piece on a given board
+     */
     public abstract Set<Move> getPossibleMoves(Board board);
     public abstract String toString();
+    /**
+     * Makes a move assuming the move is valid 
+     */
     public void move(Move move){
         setRow(move.getRow()); 
         setCol(move.getCol());
