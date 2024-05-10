@@ -2,6 +2,8 @@ package chess.GUI;
 import java.util.Map;
 
 import chess.*;
+import chess.Bot.Bot;
+import chess.Bot.Player;
 import chess.Pieces.DefaultPiece;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -37,6 +39,11 @@ public class ChessMenu extends Application{
     public static final String titleName = "Smart Chess";
     public static VBox menu;
     public static ChessGame currentGame;
+    // hardcoded human/bot
+    public static Player white = Player.HUMAN;
+    public static Player black = Player.BOT;
+    public static Bot whiteBot = null;
+    public static Bot blackBot = null;
     public static Label createTitle(){
         Label title = new Label(titleName);
         title.setFont(new Font("Georgia",50));
@@ -52,7 +59,7 @@ public class ChessMenu extends Application{
         Button button = new Button(text);
         button.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent event) {
-                currentGame = new ChessGame(gameType);
+                currentGame = new ChessGame(gameType,white,whiteBot,black,blackBot);
                 Scene scene = new Scene(currentGame.getBoard());
                 stage.setScene(scene);
             }

@@ -15,5 +15,11 @@ public abstract class Bot {
         this.color = color;
         this.board = board;
     }
+    public Color getColor(){
+        return color;
+    }
+    public Board getBoard(){
+        return board;
+    }
     public abstract Move getNextMove();
 }

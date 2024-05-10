@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import chess.*;
+import chess.Bot.*;
 import chess.Pieces.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -72,7 +73,12 @@ public class ChessGame {
     public HBox fullGame;
     public DefaultPiece selectedPiece;
     public Move selectedMove;
-    public ChessGame(GameType gameType){
+    // bot stuff
+    public Player white;
+    public Player black;
+    public Bot whiteBot;
+    public Bot blackBot;
+    public ChessGame(GameType gameType, Player white, Bot whiteBot, Player black, Bot blackBot){
         board = new Board(gameType,this);
         chessBoard = new GridPane();
         //textField = new TextField("");
@@ -90,6 +96,15 @@ public class ChessGame {
         fontSize = BOARD_SIZE/board.rows/3;
         selectedMove = null;
         selectedPiece = null;
+        this.white = white;
+        this.black = black;
+        // TODO hardcoded as random bot
+        if (white == Player.BOT){
+            this.whiteBot = new RandomBot(board,chess.Color.WHITE);
+        }
+        if (black == Player.BOT){
+            this.blackBot = new RandomBot(board,chess.Color.BLACK);
+        }
         fullGame.setBackground(Background.fill(Color.SADDLEBROWN));
         assembleChessBoard();
         //textField.setMaxSize(tileSize*8,tileSize*8);
@@ -136,7 +151,13 @@ public class ChessGame {
         turn.setFont(new Font("Century",fontSize/2));
         turn.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         turn.setPrefSize(BOARD_SIZE/4,50);
-        updateLabels();
+        updateLabels(getNextPlayer(),getNextBot());
+    }
+    public Player getNextPlayer(){
+        return board.getTurn() == chess.Color.WHITE ? white : black;
+    }
+    public Bot getNextBot(){
+        return board.getTurn() == chess.Color.WHITE ? whiteBot : blackBot;
     }
     public Image getPieceImage(DefaultPiece piece){
         String path = "";
@@ -245,7 +266,15 @@ public class ChessGame {
             game.turn.setText("");
             game.check.setText("Stalemate, " + "neither player wins");
         }
-        game.updateLabels();
+        game.updateLabels(getNextPlayer(),getNextBot());
+    }
+    public void processBot(Bot bot){
+        Move move = bot.getNextMove();
+        MoveUtils.processBotMove(board,this,move);
+        selectedPiece = null;
+        selectedMove = null;
+        error.setText("");
+        this.updateLabels(getNextPlayer(),getNextBot());
     }
     public StackPane getSpace(DefaultPiece piece, Color color,int row, int col){
         Image image = getPieceImage(piece);
@@ -301,8 +330,7 @@ public class ChessGame {
     public void updateChessBoard(int row, int col){
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
-    public void updateLabels(){
-        
+    public void updateLabels(Player player, Bot bot){
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         turn.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
         turn.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
@@ -310,6 +338,9 @@ public class ChessGame {
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
+        if (player == Player.BOT){
+            processBot(bot);
+        }
     }
     public HBox getBoard() {
         return fullGame;

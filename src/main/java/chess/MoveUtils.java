@@ -41,6 +41,15 @@ public class MoveUtils {
         }
         return newText;
      }
+     public static void processBotMove(Board board, ChessGame game, Move move){        
+        int row1 = move.getPiece().getRow();
+        int col1 = move.getPiece().getCol();
+        int row2 = move.getRow();
+        int col2 = move.getCol();
+        try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
+        game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
+        game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
+     }
      public static void processMove(Board board, ChessGame game, Move move){
         int row1 = move.getPiece().getRow();
         int col1 = move.getPiece().getCol();
@@ -52,7 +61,6 @@ public class MoveUtils {
             try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
             game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
             game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
-            game.updateLabels();
         }
         else{
             if (game.selectedMove != null){ // other move was selected previously, update highlights
