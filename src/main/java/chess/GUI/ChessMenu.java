@@ -52,12 +52,33 @@ public class ChessMenu extends Application{
     // hardcoded human/bot
     public static Player white = Player.HUMAN;
     public static Player black = Player.HUMAN;
-    public static Bot whiteBot = null;
-    public static Bot blackBot = null;
+    public static BotTypes whiteBot = null;
+    public static BotTypes blackBot = null;
     public static BotTypes[] botTypes = BotTypes.values();
-    //public static Button createBotTypeButton(Color color){
-    //    Button button = new Button(color == Color.WHITE ? "White: Human" : "Black: Bot");
-    //}
+    public static Button createBotTypeButton(Color color){
+        Button button = new Button(color == Color.WHITE ? "White Bot: " + botTypes[0].name() : "Black Bot: " + botTypes[0].name());
+        button.setOnAction(new EventHandler<ActionEvent>(){
+            public int currentIndex = 0;
+            public static int length = botTypes.length;
+            public void handle(ActionEvent event) {
+                currentIndex = (currentIndex + 1) % length;
+                if (color == Color.WHITE){
+                    button.setText("White Bot: " + botTypes[currentIndex].name());
+                    whiteBot = botTypes[currentIndex];
+                }
+                else{
+                    button.setText("Black Bot: " + botTypes[currentIndex].name());
+                    blackBot = botTypes[currentIndex];
+                }
+            }
+        });
+        button.setBackground(new Background(new BackgroundFill(color == Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        button.setPrefSize(PLAYER_SELECT_WIDTH,100);
+        button.setTextFill(color == Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        button.setFont(new Font("Georgia",BUTTON_FONT_SIZE));
+        return button;
+    }
     public static Button createSelectButton(Color color){
         Button button = new Button(color == Color.WHITE ? "White: Human" : "Black: Bot");
         button.setOnAction(new EventHandler<ActionEvent>(){
@@ -148,8 +169,12 @@ public class ChessMenu extends Application{
         playerSelect.getChildren().add(createPlayerSelect());
         Button white = createSelectButton(Color.WHITE);
         Button black = createSelectButton(Color.BLACK);
+        Button whiteBot = createBotTypeButton(Color.WHITE);
+        Button blackBot = createBotTypeButton(Color.BLACK);
         playerSelect.getChildren().add(white);
+        playerSelect.getChildren().add(whiteBot);
         playerSelect.getChildren().add(black);
+        playerSelect.getChildren().add(blackBot);
         menu = new HBox();
         menu.getChildren().add(gameSelect);
         menu.getChildren().add(playerSelect);

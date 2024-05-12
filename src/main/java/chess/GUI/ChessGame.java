@@ -78,7 +78,15 @@ public class ChessGame {
     public Player black;
     public Bot whiteBot;
     public Bot blackBot;
-    public ChessGame(GameType gameType, Player white, Bot whiteBot, Player black, Bot blackBot){
+    public Bot makeBot(BotTypes BotType){
+        switch (BotType){
+            case RANDOM:
+                return new RandomBot(board,chess.Color.WHITE);
+            default:
+                return null;
+        }
+    }
+    public ChessGame(GameType gameType, Player white, BotTypes whiteBotType, Player black, BotTypes blackBotType){
         board = new Board(gameType,this);
         chessBoard = new GridPane();
         //textField = new TextField("");
@@ -100,10 +108,10 @@ public class ChessGame {
         this.black = black;
         // TODO hardcoded as random bot
         if (white == Player.BOT){
-            this.whiteBot = new RandomBot(board,chess.Color.WHITE);
+            this.whiteBot = makeBot(whiteBotType);
         }
         if (black == Player.BOT){
-            this.blackBot = new RandomBot(board,chess.Color.BLACK);
+            this.blackBot = makeBot(blackBotType);
         }
         fullGame.setBackground(Background.fill(Color.SADDLEBROWN));
         assembleChessBoard();
