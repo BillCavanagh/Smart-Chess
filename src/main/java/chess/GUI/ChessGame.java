@@ -78,15 +78,19 @@ public class ChessGame {
     public Player black;
     public Bot whiteBot;
     public Bot blackBot;
-    public Bot makeBot(BotTypes BotType){
+    public BotTypes whiteBotType;
+    public BotTypes blackBotType;
+    public boolean started;
+    public Bot makeBot(BotTypes BotType, chess.Color color){
         switch (BotType){
             case RANDOM:
-                return new RandomBot(board,chess.Color.WHITE);
+                return new RandomBot(board,color);
             default:
                 return null;
         }
     }
     public ChessGame(GameType gameType, Player white, BotTypes whiteBotType, Player black, BotTypes blackBotType){
+        started = false;
         board = new Board(gameType,this);
         chessBoard = new GridPane();
         //textField = new TextField("");
@@ -106,13 +110,8 @@ public class ChessGame {
         selectedPiece = null;
         this.white = white;
         this.black = black;
-        // TODO hardcoded as random bot
-        if (white == Player.BOT){
-            this.whiteBot = makeBot(whiteBotType);
-        }
-        if (black == Player.BOT){
-            this.blackBot = makeBot(blackBotType);
-        }
+        this.whiteBotType = whiteBotType;
+        this.blackBotType = blackBotType;
         fullGame.setBackground(Background.fill(Color.SADDLEBROWN));
         assembleChessBoard();
         //textField.setMaxSize(tileSize*8,tileSize*8);
@@ -339,6 +338,18 @@ public class ChessGame {
         chessBoard.add(getSpace(board.getPiece(row,col),getSpaceColor(row, col),row,col),col,row);
     }
     public void updateLabels(Player player, Bot bot){
+        if (!started){
+            started = true;
+            if (white == Player.BOT){
+                this.whiteBot = makeBot(this.whiteBotType,chess.Color.WHITE);
+            }
+            if (black == Player.BOT){
+                this.blackBot = makeBot(this.blackBotType,chess.Color.BLACK);
+            }
+        }
+        if (player == Player.BOT){
+            processBot(bot);
+        }
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         turn.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
         turn.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
@@ -346,9 +357,6 @@ public class ChessGame {
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);
         fullGame.getChildren().add(moves);
-        if (player == Player.BOT){
-            processBot(bot);
-        }
     }
     public HBox getBoard() {
         return fullGame;

@@ -6,7 +6,7 @@ import chess.*;
 
 public class RandomBot extends Bot {
     private Random rand;
-    public RandomBot(Board board, Color color) {
+    public RandomBot(Board board, chess.Color color) {
         super(board,color);
         rand = new Random();
     }

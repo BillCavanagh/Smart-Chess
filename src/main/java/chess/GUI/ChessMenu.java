@@ -49,11 +49,11 @@ public class ChessMenu extends Application{
     public static int BUTTON_FONT_SIZE = 25;
     public static HBox menu;
     public static ChessGame currentGame;
-    // hardcoded human/bot
+    // bot related stuf
     public static Player white = Player.HUMAN;
-    public static Player black = Player.HUMAN;
-    public static BotTypes whiteBot = null;
-    public static BotTypes blackBot = null;
+    public static Player black = Player.BOT;
+    public static BotTypes whiteBot = BotTypes.RANDOM;
+    public static BotTypes blackBot = BotTypes.RANDOM;
     public static BotTypes[] botTypes = BotTypes.values();
     public static Button createBotTypeButton(Color color){
         Button button = new Button(color == Color.WHITE ? "White Bot: " + botTypes[0].name() : "Black Bot: " + botTypes[0].name());
@@ -167,6 +167,10 @@ public class ChessMenu extends Application{
         gameSelect.setPrefSize(ChessGame.BOARD_SIZE,ChessGame.BOARD_SIZE);
         playerSelect = new VBox();
         playerSelect.getChildren().add(createPlayerSelect());
+        white = Player.HUMAN;
+        black = Player.BOT;
+        whiteBot = BotTypes.RANDOM;
+        blackBot = BotTypes.RANDOM;
         Button white = createSelectButton(Color.WHITE);
         Button black = createSelectButton(Color.BLACK);
         Button whiteBot = createBotTypeButton(Color.WHITE);
