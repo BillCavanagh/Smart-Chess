@@ -81,6 +81,7 @@ public class ChessGame {
     public BotTypes whiteBotType;
     public BotTypes blackBotType;
     public boolean started;
+    public static int SLEEP_TIME = 1000;
     public Bot makeBot(BotTypes BotType, chess.Color color){
         switch (BotType){
             case RANDOM:
@@ -276,6 +277,7 @@ public class ChessGame {
         game.updateLabels(getNextPlayer(),getNextBot());
     }
     public void processBot(Bot bot){
+        try{Thread.sleep(SLEEP_TIME);}catch(InterruptedException e){System.out.println(e);}
         Move move = bot.getNextMove();
         MoveUtils.processBotMove(board,this,move);
         selectedPiece = null;
@@ -346,9 +348,14 @@ public class ChessGame {
             if (black == Player.BOT){
                 this.blackBot = makeBot(this.blackBotType,chess.Color.BLACK);
             }
+            if (player == Player.BOT){
+                processBot(getNextBot());
+            }
         }
-        if (player == Player.BOT){
-            processBot(bot);
+        else{
+            if (player == Player.BOT){
+                processBot(bot);
+            }
         }
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         turn.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
