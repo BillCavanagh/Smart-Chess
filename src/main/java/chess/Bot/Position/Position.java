@@ -1,4 +1,4 @@
-package chess.Bot;
+package chess.Bot.Position;
 
 import chess.Board;
 import chess.Color;

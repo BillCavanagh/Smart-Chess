@@ -81,17 +81,17 @@ public class Board {
      * The corresponding javaFX GUI for the board
      */
     public ChessGame game;
-    public Board(){
-        rows = 8; 
-        cols = 8;
-        turn = Color.WHITE;
-        init_available();
-        init_Board(GameType.CLASSIC);
-        init_pieces();
-        init_castles();
-        updatePossibleMoves();
-        this.game = new ChessGame(GameType.CLASSIC);
-    }
+    // public Board(){
+    //     rows = 8; 
+    //     cols = 8;
+    //     turn = Color.WHITE;
+    //     init_available();
+    //     init_Board(GameType.CLASSIC);
+    //     init_pieces();
+    //     init_castles();
+    //     updatePossibleMoves();
+    //     this.game = new ChessGame(GameType.CLASSIC);
+    // }
     public Board(GameType gameType, ChessGame game){
         this.rows = gameType.getRows();
         this.cols = gameType.getCols();
