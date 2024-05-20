@@ -24,14 +24,15 @@ public class BoardValue {
      */
     public static double piecesValue(Board board){
         double value = 0;
-        for(DefaultPiece piece : board.whitePieces){
-            if (!(piece instanceof King)){
-                value += piece.getValue();
-            }
-        }
-        for(DefaultPiece piece : board.blackPieces){
-            if (!(piece instanceof King)){
-                value -= piece.getValue();
+        for (int row = 0; row < board.rows; row++){
+            for (int col = 0; col < board.cols; col++){
+                DefaultPiece piece = board.getPiece(row, col);
+                if (piece != null && piece.getColor() == Color.WHITE){
+                    value += piece.getValue();
+                }
+                if (piece != null && piece.getColor() == Color.BLACK){
+                    value -= piece.getValue();
+                }
             }
         }
         return value;

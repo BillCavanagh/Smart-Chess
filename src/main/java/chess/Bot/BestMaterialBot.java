@@ -30,15 +30,16 @@ public class BestMaterialBot extends Bot{
         // TODO implement depth
         Set<Move> moves = color == Color.WHITE ? board.currentWhiteMoves : board.currentBlackMoves;
         Move best = null;
-        double max = -1;
+        double max = 0;
         for (Move move : moves){
             int oldRow = move.getPiece().getRow();
             int oldCol = move.getPiece().getCol();
             DefaultPiece capturedPiece = board.getPiece(move.getRow(), move.getCol());
             board.makeTempMove(move);
             Position position = BoardValue.getPosition(board, BoardValueType.PIECES_VALUE);
-            if (Math.abs(position.getAdvantage()) > max){
-                max = Math.abs(position.getAdvantage());
+            // negative indicates black advantage, positive indicates white advantage
+            if (best == null || (position.getAdvantage() > max && color == Color.WHITE) || (position.getAdvantage() < max && color == Color.BLACK)){
+                max = position.getAdvantage();
                 best = move;
             }
             board.undoTempMove(oldRow,oldCol,move.getPiece(),capturedPiece);

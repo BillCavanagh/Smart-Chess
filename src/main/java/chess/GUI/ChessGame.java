@@ -86,6 +86,8 @@ public class ChessGame {
         switch (BotType){
             case RANDOM:
                 return new RandomBot(board,color);
+            case BEST_MATERIAL:
+                return new BestMaterialBot(board,color);
             default:
                 return null;
         }
