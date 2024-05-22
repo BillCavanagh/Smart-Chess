@@ -34,8 +34,7 @@ public class BestMaterialBot extends Bot{
         for (Move move : moves){
             int oldRow = move.getPiece().getRow();
             int oldCol = move.getPiece().getCol();
-            DefaultPiece capturedPiece = board.getPiece(move.getRow(), move.getCol());
-            board.makeTempMove(move);
+            DefaultPiece capturedPiece = board.makeTempMove(move);
             Position position = BoardValue.getPosition(board, BoardValueType.PIECES_VALUE);
             // negative indicates black advantage, positive indicates white advantage
             if (best == null || (position.getAdvantage() > max && color == Color.WHITE) || (position.getAdvantage() < max && color == Color.BLACK)){

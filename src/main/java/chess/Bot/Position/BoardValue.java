@@ -13,8 +13,10 @@ public class BoardValue {
         switch(valueType){
             case PIECES_VALUE:
                 position.setAdvantage(piecesValue(board));
+                break;
             default:
                 position.setAdvantage(0);
+                break;
         }
         return position;
     }
@@ -27,6 +29,9 @@ public class BoardValue {
         for (int row = 0; row < board.rows; row++){
             for (int col = 0; col < board.cols; col++){
                 DefaultPiece piece = board.getPiece(row, col);
+                if (piece instanceof King){
+                    continue;
+                }
                 if (piece != null && piece.getColor() == Color.WHITE){
                     value += piece.getValue();
                 }
