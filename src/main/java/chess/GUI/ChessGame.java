@@ -81,7 +81,7 @@ public class ChessGame {
     public BotTypes whiteBotType;
     public BotTypes blackBotType;
     public boolean started;
-    public static int SLEEP_TIME = 1000;
+    public static final int SLEEP_TIME = 200;
     public Bot makeBot(BotTypes BotType, chess.Color color){
         switch (BotType){
             case RANDOM:
@@ -161,6 +161,16 @@ public class ChessGame {
         turn.setFont(new Font("Century",fontSize/2));
         turn.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         turn.setPrefSize(BOARD_SIZE/4,50);
+        check.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
+        check.setTextFill(text);
+        check.setFont(new Font("Century",fontSize/2));
+        check.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        check.setPrefSize(BOARD_SIZE/4,50);
+        error.setBackground(new Background(new BackgroundFill(background,CornerRadii.EMPTY,null)));
+        error.setTextFill(text);
+        error.setFont(new Font("Century",fontSize/2));
+        error.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        error.setPrefSize(BOARD_SIZE/4,50);
         updateLabels(getNextPlayer(),getNextBot());
     }
     public Player getNextPlayer(){
@@ -362,6 +372,12 @@ public class ChessGame {
         turn.setText(board.getTurn() == chess.Color.WHITE ? "White to Move" : "Black to Move");
         turn.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
         turn.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        check.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        check.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        error.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        error.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
+        resetButton.setBackground(new Background(new BackgroundFill(board.getTurn() == chess.Color.WHITE ? ChessGame.LIGHT : ChessGame.DARK,CornerRadii.EMPTY,null)));
+        resetButton.setTextFill(board.getTurn() == chess.Color.WHITE ? ChessGame.DARK : ChessGame.LIGHT);
         check.setText(board.kingIsInCheck(board.getTurn()) ? "Check" : "");
         moves = MoveUtils.makeInputMoveList(board,this);
         fullGame.getChildren().remove(1);

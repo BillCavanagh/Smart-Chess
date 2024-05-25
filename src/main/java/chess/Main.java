@@ -7,3 +7,4 @@ public class Main {
         ChessMenu.main(args);
     }
 }
+ 
