@@ -61,6 +61,7 @@ public class MoveUtils {
             try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
             game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
             game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
+            game.updateLabels(game.getNextPlayer(),game.getNextBot());
         }
         else{
             if (game.selectedMove != null){ // other move was selected previously, update highlights
