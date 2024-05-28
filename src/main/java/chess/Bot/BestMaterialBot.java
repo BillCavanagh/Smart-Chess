@@ -41,6 +41,10 @@ public class BestMaterialBot extends Bot{
                 max = position.getAdvantage();
                 best = move;
             }
+            // if the advantage is the same, randomly choose one of the two
+            if (position.getAdvantage() == max && Math.random() > 0.5){
+                best = move;
+            }
             board.undoTempMove(oldRow,oldCol,move.getPiece(),capturedPiece);
         }
         return best;

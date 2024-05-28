@@ -7,6 +7,18 @@ import java.util.Set;
 
 import chess.GUI.ChessGame;
 import chess.Pieces.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class Board {
     /**
@@ -341,7 +353,8 @@ public class Board {
         if (piece instanceof Pawn){ // potential promotion
             Pawn pawn = (Pawn)(piece);
             if (pawn.canPromote(this)){
-                pawn.promote(this, Piece.QUEEN);
+                // open a second window for choosing promotion
+                createPromotionWindow(pawn);
             }
         }
         if (game != null){
@@ -384,6 +397,55 @@ public class Board {
         init_available();
         updatePossibleMoves();
         return true;
+    }
+    public void createPromotionWindow(Pawn pawn){
+        Board board = this;
+        Stage stage = new Stage();
+        HBox options = new HBox();
+        javafx.scene.paint.Color spaceColor = this.game.getSpaceColor(pawn.getRow(),pawn.getCol());
+        for (Piece piece : Piece.values()){
+            Image image = null;
+            switch (piece){
+                case QUEEN:
+                    image = game.getPieceImage(new Queen(pawn.getColor(), pawn.getRow(),pawn.getCol()));
+                    break;
+                case ROOK:
+                    image = game.getPieceImage(new Rook(pawn.getColor(), pawn.getRow(),pawn.getCol()));
+                    break;
+                case BISHOP:
+                    image = game.getPieceImage(new Bishop(pawn.getColor(), pawn.getRow(),pawn.getCol()));
+                    break;
+                case KNIGHT:
+                    image = game.getPieceImage(new Knight(pawn.getColor(), pawn.getRow(),pawn.getCol()));
+                    break;
+                // cant promote to a pawn/king
+                default:
+                    continue;
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(game.tileSize);
+            imageView.setFitWidth(game.tileSize);
+            Button button = new Button("",imageView);
+            button.setMinSize(game.tileSize, game.tileSize);
+            button.setMaxSize(game.tileSize, game.tileSize);
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    // being clicked indicates the corresponding piece is chosen
+                    pawn.promote(board, piece);
+                    stage.close();
+                }
+            });
+            button.setBackground(Background.fill(spaceColor));
+            button.setBorder(new Border(new BorderStroke(javafx.scene.paint.Color.BLACK, BorderStrokeStyle.SOLID, null, null)));
+            options.getChildren().add(button);
+        }
+        stage.setTitle("Promote to:");        
+        stage.setResizable(false);
+        stage.centerOnScreen();
+        stage.setScene(new Scene(options));
+        stage.show();
+        pawn.promote(this, Piece.QUEEN);
     }
     public String toString(){
         String string = "";
