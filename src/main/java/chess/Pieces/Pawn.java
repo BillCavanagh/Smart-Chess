@@ -18,11 +18,21 @@ public class Pawn extends DefaultPiece {
     public void promote(Board board, Piece newPiece){ // return true if pawn replaced with promoted piece, false if not
         DefaultPiece replacement = null;
         switch(newPiece){
-            case KNIGHT: replacement = new Knight(color,row,col); break;
-            case BISHOP: replacement = new Bishop(color,row,col); break;
-            case ROOK: replacement = new Rook(color,row,col); replacement.hasMoved = true;break;
-            case QUEEN: replacement = new Queen(color,row,col); break;
-            default: return; // newPiece is a pawn or king, neither are valid to promote to
+            case KNIGHT: 
+                replacement = new Knight(color,row,col); 
+                break;
+            case BISHOP: 
+                replacement = new Bishop(color,row,col); 
+                break;
+            case ROOK: 
+                replacement = new Rook(color,row,col); 
+                replacement.hasMoved = true;
+                break;
+            case QUEEN: 
+                replacement = new Queen(color,row,col); 
+                break;
+            default: 
+                return; // newPiece is a pawn or king, neither are valid to promote to
         }
         board.setPiece(replacement,row,col); // replace the pawn with the new piece
         if (color == Color.WHITE){

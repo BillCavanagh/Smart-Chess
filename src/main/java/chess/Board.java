@@ -433,6 +433,7 @@ public class Board {
                 public void handle(ActionEvent event) {
                     // being clicked indicates the corresponding piece is chosen
                     pawn.promote(board, piece);
+                    game.updateLabels(game.getNextPlayer(),game.getNextBot());
                     stage.close();
                 }
             });
@@ -445,7 +446,6 @@ public class Board {
         stage.centerOnScreen();
         stage.setScene(new Scene(options));
         stage.show();
-        pawn.promote(this, Piece.QUEEN);
     }
     public String toString(){
         String string = "";
