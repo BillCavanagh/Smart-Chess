@@ -432,7 +432,10 @@ public class Board {
                 @Override
                 public void handle(ActionEvent event) {
                     // being clicked indicates the corresponding piece is chosen
+                    int newRow = pawn.getRow();
+                    int newCol = pawn.getCol();
                     pawn.promote(board, piece);
+                    game.updateChessBoard(newRow,newCol);
                     game.updateLabels(game.getNextPlayer(),game.getNextBot());
                     stage.close();
                 }
