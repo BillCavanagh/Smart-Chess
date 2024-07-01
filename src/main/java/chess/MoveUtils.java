@@ -3,6 +3,8 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import chess.Bot.Bot;
+import chess.Bot.Player;
 import chess.GUI.ChessGame;
 import chess.Pieces.King;
 import javafx.event.ActionEvent;
@@ -41,12 +43,12 @@ public class MoveUtils {
         }
         return newText;
      }
-     public static void processBotMove(Board board, ChessGame game, Move move){        
+     public static void processBotMove(Board board, ChessGame game, Move move, Bot bot){        
         int row1 = move.getPiece().getRow();
         int col1 = move.getPiece().getCol();
         int row2 = move.getRow();
         int col2 = move.getCol();
-        try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
+        try{board.makeMove(move,move.getPiece().getColor(),Player.BOT,bot);}catch(Exception e){}
         game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
         game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
      }
@@ -58,7 +60,7 @@ public class MoveUtils {
         if (game.selectedMove == move){
             game.selectedMove = null;
             game.selectedPiece = null;
-            try{board.makeMove(move,move.getPiece().getColor());}catch(Exception e){}
+            try{board.makeMove(move,move.getPiece().getColor(),Player.HUMAN,null);}catch(Exception e){}
             game.chessBoard.add(game.getSpace(board.getPiece(row1, col1),game.getSpaceColor(row1, col1),row1,col1),col1,row1);
             game.chessBoard.add(game.getSpace(board.getPiece(row2, col2),game.getSpaceColor(row2, col2),row2,col2),col2,row2);
             game.updateLabels(game.getNextPlayer(),game.getNextBot());

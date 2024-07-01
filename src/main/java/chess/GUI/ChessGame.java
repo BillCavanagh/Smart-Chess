@@ -291,7 +291,7 @@ public class ChessGame {
     public void processBot(Bot bot){
         try{Thread.sleep(SLEEP_TIME);}catch(InterruptedException e){System.out.println(e);}
         Move move = bot.getNextMove();
-        MoveUtils.processBotMove(board,this,move);
+        MoveUtils.processBotMove(board,this,move,bot);
         selectedPiece = null;
         selectedMove = null;
         error.setText("");

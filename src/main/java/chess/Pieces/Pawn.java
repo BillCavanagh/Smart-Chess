@@ -13,7 +13,7 @@ public class Pawn extends DefaultPiece {
         justMovedTwo = false;
     }
     public boolean canPromote(Board board){
-        return row == (color == Color.WHITE ? 0 : board.rows); // end of the board for white pawns is row 0, for black pawns row 7
+        return row == (color == Color.WHITE ? 0 : board.rows-1); // end of the board for white pawns is row 0, for black pawns row 7
     }
     public void promote(Board board, Piece newPiece){ // return true if pawn replaced with promoted piece, false if not
         DefaultPiece replacement = null;

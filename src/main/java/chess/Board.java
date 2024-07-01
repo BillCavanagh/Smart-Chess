@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import chess.Bot.Bot;
+import chess.Bot.Player;
 import chess.GUI.ChessGame;
 import chess.Pieces.*;
 import javafx.event.ActionEvent;
@@ -338,7 +340,7 @@ public class Board {
             }
         }
     }
-    public void movePiece(Move move) { 
+    public void movePiece(Move move, Player player, Bot bot) { 
         DefaultPiece piece = move.getPiece();
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();
@@ -353,8 +355,17 @@ public class Board {
         if (piece instanceof Pawn){ // potential promotion
             Pawn pawn = (Pawn)(piece);
             if (pawn.canPromote(this)){
-                // open a second window for choosing promotion
-                createPromotionWindow(pawn);
+                // open a second window for choosing promotion if human player
+                if (player == Player.HUMAN){
+                    createPromotionWindow(pawn);
+                }
+                // otherwise, prompt the bot to choose a promotion
+                else{
+                    Piece promotion = bot.getPromotion();
+                    pawn.promote(this, promotion);
+                    game.updateChessBoard(newRow,newCol);
+                    game.updateLabels(game.getNextPlayer(),game.getNextBot());
+                }
             }
         }
         if (game != null){
@@ -362,7 +373,7 @@ public class Board {
             game.updateChessBoard(newRow,newCol); // update new position
         }
     }
-    public boolean makeMove(Move move, Color color) {
+    public boolean makeMove(Move move, Color color, Player player, Bot bot) {
         if (move == null){
             return false;
         }
@@ -374,7 +385,7 @@ public class Board {
         }
         DefaultPiece piece = move.getPiece();
         if (!move.isCastle()){ // normal move or en passant
-            movePiece(move);
+            movePiece(move, player, bot);
             DefaultPiece piece2 = move.getPiece2();
             if (piece2 != null){
                 removePiece(piece2.getColor(), piece2.getRow(),piece2.getCol()); 
@@ -389,8 +400,8 @@ public class Board {
             int oldCol = piece.getCol();
             int newKingCol = move.getCol();
             int newRookCol = newKingCol > oldCol ? newKingCol-1 : newKingCol + 1; // if the new position is to the right of its previous position, the rook should be one space to the left of the king
-            movePiece(new Move(row,newKingCol,piece,this)); // move the king
-            movePiece(new Move(row,newRookCol,rook,this)); // move the rook
+            movePiece(new Move(row,newKingCol,piece,this),player,bot); // move the king
+            movePiece(new Move(row,newRookCol,rook,this),player,bot); // move the rook
         }
         turn = turn == Color.WHITE ? Color.BLACK : Color.WHITE; // change turn
         lastMove = move;

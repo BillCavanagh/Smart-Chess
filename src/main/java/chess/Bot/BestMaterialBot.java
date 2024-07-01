@@ -9,6 +9,7 @@ import chess.Bot.Position.BoardValue;
 import chess.Bot.Position.BoardValueType;
 import chess.Bot.Position.Position;
 import chess.Pieces.DefaultPiece;
+import chess.Pieces.Piece;
 
 /**
  * Bot that chooses the move that leads to the best material advantage
@@ -48,5 +49,8 @@ public class BestMaterialBot extends Bot{
             board.undoTempMove(oldRow,oldCol,move.getPiece(),capturedPiece);
         }
         return best;
+    }
+    public Piece getPromotion(){
+        return Piece.QUEEN;
     }
 }

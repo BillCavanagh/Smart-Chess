@@ -3,6 +3,7 @@ package chess.Bot;
 import java.util.Set;
 import java.util.Random;
 import chess.*;
+import chess.Pieces.Piece;
 
 public class RandomBot extends Bot {
     private Random rand;
@@ -22,4 +23,14 @@ public class RandomBot extends Bot {
         }
         return null;
     }   
+    public Piece getPromotion(){
+        int randomI = rand.nextInt(4);
+        switch(randomI){
+            case 0: return Piece.KNIGHT;
+            case 1: return Piece.BISHOP;
+            case 2: return Piece.ROOK;
+            case 3: return Piece.QUEEN;
+            default: return null;
+        }
+    }
 }

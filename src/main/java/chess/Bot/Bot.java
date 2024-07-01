@@ -1,6 +1,7 @@
 package chess.Bot;
 
 import chess.*;
+import chess.Pieces.Piece;
 
 /**
  * Parent class for all difficulties of bot
@@ -22,4 +23,5 @@ public abstract class Bot {
         return board;
     }
     public abstract Move getNextMove();
+    public abstract Piece getPromotion();
 }
